@@ -1,0 +1,30 @@
+name: Merge main into update
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:     # allows manual run from GitHub UI
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout update branch
+        uses: actions/checkout@v4
+        with:
+          ref: update
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Merge main into update
+        run: |
+          git fetch origin main
+          git merge origin/main --no-edit
+
+      - name: Push changes
+        run: git push origin update
