@@ -1,6 +1,8 @@
 package providers
 
 import (
+	"bufio"
+	"errors"
 	"openpoc/pkg/types"
 	"os"
 	"path/filepath"
@@ -32,8 +34,12 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 
 		// Common Repository
 		if strings.HasPrefix(url, "www.exploit-db.com") {
+			url = strings.TrimSuffix(url, "/")
 			found = true
 			trusted = true
+		}
+		if strings.Contains(url, "gist.github.com") {
+			found = true
 		}
 
 		// Find CVE in the name
@@ -51,6 +57,7 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 		for _, dbURL := range knownValidatedSources {
 			if dbURL == url {
 				found = true
+				trusted = true
 				break
 			}
 		}
@@ -73,8 +80,35 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 	return records, nil
 }
 
-func ParseTrickestReferences(textFilePath string) ([]*types.Trickest, error) {
-	return nil, nil
+func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, err error) {
+	var file *os.File
+	file, err = os.Open(textFilePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.Split(line, " - ")
+		if len(parts) != 2 {
+			err = errors.New("invalid trickest reference")
+			return
+		}
+		exploit := types.Trickest{
+			CveID:       parts[0],
+			URL:         parts[1],
+			AddedAt:     time.RFC3339,
+			Trustworthy: false,
+		}
+		exploits = append(exploits, &exploit)
+	}
+
+	if err = scanner.Err(); err != nil {
+		return
+	}
+	return
 }
 
 func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {
@@ -97,10 +131,6 @@ func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {
 			line = line[7:]
 		}
 		// At this point, the output looks like a link
-		skip := strings.Contains(line, "CVE-")
-		if skip {
-			continue
-		}
 		pocURLs = append(pocURLs, line)
 	}
 	return

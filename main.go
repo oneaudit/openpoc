@@ -145,17 +145,17 @@ func main() {
 	trickestFile := filepath.Join(trickest.Folder, trickestFilename)
 	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range)
 	trickestWorker := func(path string) error {
-		//if !providers.IsTrickestExploit(path) {
-		//	return nil
-		//}
-		//var results []*types.Trickest
-		//results, err = providers.ParseTrickest(path)
-		//if err != nil {
-		//	return err
-		//}
-		//for _, result := range results {
-		//	newTrickest = append(newTrickest, result)
-		//}
+		if !providers.IsTrickestExploit(path) {
+			return nil
+		}
+		var results []*types.Trickest
+		results, err = providers.ParseTrickest(path)
+		if err != nil {
+			return err
+		}
+		for _, result := range results {
+			newTrickest = append(newTrickest, result)
+		}
 		return nil
 	}
 
@@ -168,12 +168,12 @@ func main() {
 		}
 	}
 
-	if !trickest.Completed {
+	if trickest.Completed {
 		// Parses And Add To Trickest Each Markdown
 		if err = utils.ProcessFiles(trickest.Folder, trickestWorker); err == nil {
-			// Add add references
+			// Add references
 			var referencesTrickest []*types.Trickest
-			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err != nil {
+			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err == nil {
 				// References are more trustworthy, but not all CVEs are in "references"
 				// And we don't have a "date" for references
 				for _, candidate := range newTrickest {
@@ -182,6 +182,7 @@ func main() {
 						if candidate.GetURL() == ref.GetURL() {
 							found = true
 							ref.AddedAt = candidate.AddedAt
+							ref.Trustworthy = candidate.Trustworthy
 							break
 						}
 					}
