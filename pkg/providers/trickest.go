@@ -15,7 +15,7 @@ func IsTrickestExploit(candidateFilePath string) bool {
 	return filepath.Ext(candidateFilePath) == ".md" && strings.Contains(filepath.Base(candidateFilePath), "CVE-")
 }
 
-func UpdateTrickestExploit(markdownFilePath string) ([]*types.Trickest, error) {
+func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 	fileName := filepath.Base(markdownFilePath)
 	cveID := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
@@ -71,6 +71,10 @@ func UpdateTrickestExploit(markdownFilePath string) ([]*types.Trickest, error) {
 	}
 
 	return records, nil
+}
+
+func ParseTrickestReferences(textFilePath string) ([]*types.Trickest, error) {
+	return nil, nil
 }
 
 func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {

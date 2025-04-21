@@ -23,7 +23,7 @@ var (
 		Folder:    "datasources/exploitdb",
 		Branch:    "main",
 		Completed: true,
-		Range:     12,
+		Range:     24,
 	}
 	exploitDBFilename = "files_exploits.csv"
 
@@ -37,12 +37,13 @@ var (
 	inTheWildFilename = "pocs.json"
 
 	trickest = types.Target{
-		URL:       "https://inthewild.io/api/exploits",
-		Folder:    "datasources/inthewild",
-		Branch:    "",
-		Completed: false,
-		Range:     2,
+		URL:       "https://github.com/trickest/cve.git",
+		Folder:    "datasources/trickest",
+		Branch:    "main",
+		Completed: true,
+		Range:     24,
 	}
+	trickestFilename = "references.txt"
 )
 
 func main() {
@@ -84,9 +85,7 @@ func main() {
 			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
 		}
 	} else {
-		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
-			exploitDB.Completed = true
-		} else {
+		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err != nil {
 			fmt.Printf("Error parsing exploitdb database %s: %v\n", exploitDBFile, err)
 		}
 	}
@@ -134,17 +133,31 @@ func main() {
 			fmt.Printf("Error creating in the wild folder: %v\n", err)
 		}
 	} else {
-		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err == nil {
-			inTheWild.Completed = true
-		} else {
+		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err != nil {
 			fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)
 		}
 	}
 
 	//
-	// ExploitDB
+	// Trickest
 	//
 	var newTrickest []*types.Trickest
+	trickestFile := filepath.Join(trickest.Folder, trickestFilename)
+	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range)
+	trickestWorker := func(path string) error {
+		//if !providers.IsTrickestExploit(path) {
+		//	return nil
+		//}
+		//var results []*types.Trickest
+		//results, err = providers.ParseTrickest(path)
+		//if err != nil {
+		//	return err
+		//}
+		//for _, result := range results {
+		//	newTrickest = append(newTrickest, result)
+		//}
+		return nil
+	}
 
 	if !trickest.Completed {
 		// Clone repository (shallow and no checkout)
@@ -153,7 +166,36 @@ func main() {
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", trickest.URL, err)
 		}
-	} else {
+	}
+
+	if !trickest.Completed {
+		// Parses And Add To Trickest Each Markdown
+		if err = utils.ProcessFiles(trickest.Folder, trickestWorker); err == nil {
+			// Add add references
+			var referencesTrickest []*types.Trickest
+			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err != nil {
+				// References are more trustworthy, but not all CVEs are in "references"
+				// And we don't have a "date" for references
+				for _, candidate := range newTrickest {
+					var found bool
+					for _, ref := range referencesTrickest {
+						if candidate.GetURL() == ref.GetURL() {
+							found = true
+							ref.AddedAt = candidate.AddedAt
+							break
+						}
+					}
+					if !found {
+						referencesTrickest = append(referencesTrickest, candidate)
+					}
+				}
+				newTrickest = referencesTrickest
+			} else {
+				fmt.Printf("Error processing %s: %v\n", trickestFile, err)
+			}
+		} else {
+			fmt.Printf("Error processing %s: %v\n", trickest.URL, err)
+		}
 	}
 
 	//
@@ -290,6 +332,7 @@ func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[st
 		(*yearMap)[year][jsonFilePath] = &types.AggregatorResult{
 			InTheWild: []types.InTheWild{},
 			ExploitDB: []types.ExploitDB{},
+			Trickest:  []types.Trickest{},
 			Openpoc:   []types.OpenpocProduct{},
 		}
 	}
