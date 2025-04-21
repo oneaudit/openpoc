@@ -18,6 +18,7 @@ const (
 	isTesting       = true
 	indexLimit      = 10
 	disableTrickest = true
+	disableNomisec  = true
 )
 
 var (
@@ -25,7 +26,7 @@ var (
 		URL:       "https://gitlab.com/exploit-database/exploitdb.git",
 		Folder:    "datasources/exploitdb",
 		Branch:    "main",
-		Completed: isTesting,
+		Completed: false,
 		Range:     24,
 	}
 	exploitDBFilename = "files_exploits.csv"
@@ -34,7 +35,7 @@ var (
 		URL:       "https://inthewild.io/api/exploits",
 		Folder:    "datasources/inthewild",
 		Branch:    "",
-		Completed: isTesting,
+		Completed: false,
 		Range:     48,
 	}
 	inTheWildFilename = "pocs.json"
@@ -43,10 +44,19 @@ var (
 		URL:       "https://github.com/trickest/cve.git",
 		Folder:    "datasources/trickest",
 		Branch:    "main",
-		Completed: isTesting,
+		Completed: false,
 		Range:     24,
 	}
 	trickestFilename = "references.txt"
+
+	nomisec = types.Target{
+		URL:       "https://github.com/nomi-sec/PoC-in-GitHub.git",
+		Folder:    "datasources/nomisec",
+		Branch:    "master",
+		Completed: false,
+		Range:     24,
+	}
+	nomisecFilename = "README.md"
 )
 
 func main() {
@@ -177,7 +187,6 @@ func main() {
 			fmt.Printf("Error cloning %s: %v\n", trickest.URL, err)
 		}
 	}
-
 	if trickest.Completed && !disableTrickest {
 		fmt.Println("Process Trickest Results.")
 		// Parses And Add To Trickest Each Markdown
@@ -211,6 +220,44 @@ func main() {
 	}
 
 	//
+	// Nomisec
+	//
+	var newNomisec []*types.Nomisec
+	nomisecFile := filepath.Join(nomisec.Folder, nomisecFilename)
+	nomisec.Completed = utils.WasModifiedWithin(nomisecFile, nomisec.Range)
+	nomisecWorker := func(path string) error {
+		if !providers.IsNomisec(path) {
+			return nil
+		}
+		var results []*types.Nomisec
+		results, err = providers.ParseNomicsec(path)
+		if err != nil {
+			return err
+		}
+		for _, result := range results {
+			newNomisec = append(newNomisec, result)
+		}
+		return nil
+	}
+
+	if !nomisec.Completed {
+		fmt.Println("Download NomiSec Results.")
+		// Clone repository (shallow and no checkout)
+		if err = utils.GitClone("", nomisec.URL, nomisec.Folder, 0); err == nil {
+			nomisec.Completed = true
+		} else {
+			fmt.Printf("Error cloning %s: %v\n", nomisec.URL, err)
+		}
+	}
+	if nomisec.Completed && !disableNomisec {
+		fmt.Println("Process NomiSec Results.")
+		// Parses And Add To NomiSec Each JSON
+		if err = utils.ProcessFiles(nomisec.Folder, nomisecWorker); err != nil {
+			fmt.Printf("Error processing %s: %v\n", nomisec.URL, err)
+		}
+	}
+
+	//
 	// Add to the map
 	//
 	fmt.Println("Prepare results.")
@@ -230,6 +277,12 @@ func main() {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Trickest = append(yearMap[year][jsonFilePath].Trickest, *exploit)
+		}
+	}
+	for _, exploit := range newNomisec {
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].Nomisec = append(yearMap[year][jsonFilePath].Nomisec, *exploit)
 		}
 	}
 
@@ -283,6 +336,9 @@ func main() {
 			for _, exploit := range finalResult.ExploitDB { // good third
 				addToMerger(&exploit, &merger)
 			}
+			for _, exploit := range finalResult.Nomisec { // the best, fourth
+				addToMerger(&exploit, &merger)
+			}
 			for _, url := range merger {
 				finalResult.Openpoc = append(finalResult.Openpoc, *url)
 			}
@@ -294,6 +350,9 @@ func main() {
 			})
 			sort.Slice(finalResult.Trickest, func(i, j int) bool {
 				return finalResult.Trickest[i].GetURL() < finalResult.Trickest[j].GetURL()
+			})
+			sort.Slice(finalResult.Nomisec, func(i, j int) bool {
+				return finalResult.Nomisec[i].GetURL() < finalResult.Nomisec[j].GetURL()
 			})
 			sort.Slice(finalResult.Openpoc, func(i, j int) bool {
 				return finalResult.Openpoc[i].URL < finalResult.Openpoc[j].URL
@@ -340,6 +399,9 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 	if !trickest.Completed {
 		newResult.Trickest = oldResult.Trickest
 	}
+	if !nomisec.Completed {
+		newResult.Nomisec = oldResult.Nomisec
+	}
 	return newResult
 }
 
@@ -359,6 +421,7 @@ func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[st
 			InTheWild: []types.InTheWild{},
 			ExploitDB: []types.ExploitDB{},
 			Trickest:  []types.Trickest{},
+			Nomisec:   []types.Nomisec{},
 			Openpoc:   []types.OpenpocProduct{},
 		}
 	}

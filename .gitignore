@@ -1,1 +1,4 @@
-datasources
+datasources/**/*
+!datasources/inthewild
+datasources/inthewild/*
+!datasources/inthewild/pocs.json
