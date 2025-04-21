@@ -181,7 +181,7 @@ func main() {
 	if !trickest.Completed {
 		fmt.Println("Download Trickest Results.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", trickest.URL, trickest.Folder, 0); err == nil {
+		if err = utils.GitClone("", trickest.URL, trickest.Folder, 1); err == nil {
 			trickest.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", trickest.URL, err)
