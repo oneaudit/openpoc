@@ -16,7 +16,7 @@ func (i *InTheWild) GetURL() string {
 	return i.ReportURL
 }
 
-func (i *InTheWild) AddedAt() string {
+func (i *InTheWild) GetPublishDate() string {
 	return i.Timestamp
 }
 

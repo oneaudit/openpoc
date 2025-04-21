@@ -3,7 +3,7 @@ package types
 type OpenPocMetadata interface {
 	GetCve() string
 	GetURL() string
-	AddedAt() string
+	GetPublishDate() string
 	IsTrustworthy() bool
 }
 

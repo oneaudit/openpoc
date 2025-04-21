@@ -1,0 +1,134 @@
+package providers
+
+import (
+	"openpoc/pkg/types"
+	"os"
+	"path/filepath"
+	"regexp"
+	"strings"
+	"time"
+)
+
+var cveRegex = regexp.MustCompile(`CVE-\d{4}-\d{4,7}`)
+
+func IsTrickestExploit(candidateFilePath string) bool {
+	return filepath.Ext(candidateFilePath) == ".md" && strings.Contains(filepath.Base(candidateFilePath), "CVE-")
+}
+
+func UpdateTrickestExploit(markdownFilePath string) ([]*types.Trickest, error) {
+	fileName := filepath.Base(markdownFilePath)
+	cveID := strings.TrimSuffix(fileName, filepath.Ext(fileName))
+
+	file, err := os.ReadFile(markdownFilePath)
+	if err != nil {
+		return nil, err
+	}
+	pocURLs := extractTrickestCVEPoCLinks(string(file))
+
+	var records []*types.Trickest
+	for _, url := range pocURLs {
+		found := false
+		trusted := false
+
+		// Common Repository
+		if strings.HasPrefix(url, "www.exploit-db.com") {
+			found = true
+			trusted = true
+		}
+
+		// Find CVE in the name
+		// (most links are dead or renamed, so we don't trust them)
+		if !found && strings.Contains(url, "CVE-") {
+			found = cveRegex.MatchString(url)
+			if found {
+				cveID = cveRegex.FindString(url)
+			}
+		}
+
+		// These are big CVEs databases
+		// They may contain dead links, todos (false positives), etc.
+		// In practice, we should directly scrap them (but too much data is too much)
+		for _, dbURL := range knownValidatedSources {
+			if dbURL == url {
+				found = true
+				break
+			}
+		}
+
+		// I have chosen to trust this source, even if it's archived
+		if url == "github.com/ARPSyndicate/kenzer-templates" {
+			trusted = true
+		}
+
+		if found {
+			records = append(records, &types.Trickest{
+				CveID:       cveID,
+				URL:         "https://" + url,
+				AddedAt:     time.RFC3339,
+				Trustworthy: trusted,
+			})
+		}
+	}
+
+	return records, nil
+}
+
+func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {
+	lines := strings.Split(input, "\n")
+	canScrap := false
+	for _, line := range lines {
+		if !canScrap && strings.HasPrefix(line, "### POC") {
+			canScrap = true
+		}
+		if line == "" || line[0] != '-' {
+			continue
+		}
+		line = strings.Split(strings.TrimSpace(line[1:]), " ")[0]
+		if line == "" || !strings.HasPrefix(line, "http") {
+			continue
+		}
+		if strings.HasPrefix(line, "https://") {
+			line = line[8:]
+		} else {
+			line = line[7:]
+		}
+		// At this point, the output looks like a link
+		skip := strings.Contains(line, "CVE-")
+		if skip {
+			continue
+		}
+		pocURLs = append(pocURLs, line)
+	}
+	return
+}
+
+var knownValidatedSources = []string{
+	// More than 2k stars
+	"github.com/qazbnm456/awesome-cve-poc",
+	"github.com/tunz/js-vuln-db",
+	"github.com/xairy/linux-kernel-exploitation",
+	"github.com/Threekiii/Awesome-POC",
+	"github.com/Mr-xn/Penetration_Testing_POC",
+
+	// Less than 1k stars
+	"github.com/ycdxsb/WindowsPrivilegeEscalation",
+	"github.com/GhostTroops/TOP",
+	"github.com/eeeeeeeeee-code/POC",
+	"github.com/adysec/POC",
+	"github.com/jiayy/android_vuln_poc-exp",
+	"github.com/nu11secur1ty/Windows10Exploits",
+	"github.com/Al1ex/LinuxEelvation",
+
+	// Less than 200 stars
+	"github.com/tzwlhack/Vulnerability",
+	"github.com/NyxAzrael/Goby_POC",
+	"github.com/ARPSyndicate/kenzer-templates",
+	"github.com/DMW11525708/wiki",
+	"github.com/JlSakuya/Linux-Privilege-Escalation-Exploits",
+
+	// Not very good, but still valid
+	"github.com/n0-traces/cve_monitor",
+	"github.com/jev770/badmoodle-scan",
+	"github.com/TinyNiko/android_bulletin_notes",
+	"github.com/WindowsExploits/Exploits",
+}

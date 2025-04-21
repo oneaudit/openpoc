@@ -35,6 +35,14 @@ var (
 		Range:     48,
 	}
 	inTheWildFilename = "pocs.json"
+
+	trickest = types.Target{
+		URL:       "https://inthewild.io/api/exploits",
+		Folder:    "datasources/inthewild",
+		Branch:    "",
+		Completed: false,
+		Range:     2,
+	}
 )
 
 func main() {
@@ -134,6 +142,21 @@ func main() {
 	}
 
 	//
+	// ExploitDB
+	//
+	var newTrickest []*types.Trickest
+
+	if !trickest.Completed {
+		// Clone repository (shallow and no checkout)
+		if err = utils.GitClone("", trickest.URL, trickest.Folder, 0); err == nil {
+			trickest.Completed = true
+		} else {
+			fmt.Printf("Error cloning %s: %v\n", trickest.URL, err)
+		}
+	} else {
+	}
+
+	//
 	// Add to the map
 	//
 	for _, exploit := range newExploitDB {
@@ -146,6 +169,12 @@ func main() {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].InTheWild = append(yearMap[year][jsonFilePath].InTheWild, *exploit)
+		}
+	}
+	for _, exploit := range newTrickest {
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].Trickest = append(yearMap[year][jsonFilePath].Trickest, *exploit)
 		}
 	}
 
@@ -188,15 +217,20 @@ func main() {
 
 			// Create OpenPoC which is a sort of summary of all sources
 			merger := make(map[string]*types.OpenpocProduct)
-			for _, exploit := range finalResult.ExploitDB {
+			for _, exploit := range finalResult.Trickest { // dirty, first
 				addToMerger(&exploit, &merger)
 			}
-			for _, exploit := range finalResult.InTheWild {
+			for _, exploit := range finalResult.InTheWild { // not often updated, second
+				addToMerger(&exploit, &merger)
+			}
+			for _, exploit := range finalResult.ExploitDB { // good third
 				addToMerger(&exploit, &merger)
 			}
 			for _, url := range merger {
 				finalResult.Openpoc = append(finalResult.Openpoc, *url)
 			}
+
+			// fixme: sort results, to avoid diff
 
 			err = file.Truncate(0)
 			if err != nil {
@@ -235,6 +269,9 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 	if !inTheWild.Completed {
 		newResult.InTheWild = oldResult.InTheWild
 	}
+	if !trickest.Completed {
+		newResult.Trickest = oldResult.Trickest
+	}
 	return newResult
 }
 
@@ -265,7 +302,7 @@ func addToMerger[T types.OpenPocMetadata](exploit T, merger *map[string]*types.O
 		(*merger)[exploit.GetURL()] = &types.OpenpocProduct{
 			Cve:         exploit.GetCve(),
 			URL:         exploit.GetURL(),
-			AddedAt:     exploit.AddedAt(),
+			AddedAt:     exploit.GetPublishDate(),
 			Trustworthy: exploit.IsTrustworthy(),
 		}
 	} else if !value.Trustworthy {
