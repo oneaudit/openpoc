@@ -1,13 +1,6 @@
 package types
 
 type AggregatorResult struct {
-	Openpoc []OpenpocProduct `json:"openpoc"`
-}
-
-type Target struct {
-	URL       string
-	Folder    string
-	Branch    string
-	Skip      bool
-	Completed bool
+	ExploitDB []ExploitDB      `json:"exploitdb"`
+	Openpoc   []OpenpocProduct `json:"openpoc"`
 }
