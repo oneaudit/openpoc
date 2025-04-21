@@ -13,10 +13,8 @@ import (
 )
 
 const (
-	isTesting     = true
-	loadExploitDB = false
-	loadInTheWild = true
-	indexLimit    = 10
+	isTesting  = true
+	indexLimit = 10
 )
 
 var (
@@ -25,6 +23,7 @@ var (
 		Folder:    "datasources/exploitdb",
 		Branch:    "main",
 		Completed: true,
+		Range:     12,
 	}
 	exploitDBFilename = "files_exploits.csv"
 
@@ -33,6 +32,7 @@ var (
 		Folder:    "datasources/inthewild",
 		Branch:    "",
 		Completed: true,
+		Range:     48,
 	}
 	inTheWildFilename = "pocs.json"
 )
@@ -45,6 +45,9 @@ func main() {
 	// ExploitDB
 	//
 	var newExploitDB []*types.ExploitDB
+	exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
+	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range)
+
 	if !exploitDB.Completed {
 		// Clone repository (shallow and no checkout)
 		if err = utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "--no-checkout"); err == nil {
@@ -55,7 +58,6 @@ func main() {
 				if err = os.WriteFile(sparsePath, []byte(exploitDBFilename+"\n"), 0644); err == nil {
 					// We can process with the fetch
 					if err = utils.RunCommandDir(exploitDB.Folder, "git", "checkout", exploitDB.Branch); err == nil {
-						exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
 						if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
 							exploitDB.Completed = true
 						} else {
@@ -73,8 +75,7 @@ func main() {
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
 		}
-	} else if isTesting && loadExploitDB {
-		exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
+	} else {
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
 			exploitDB.Completed = true
 		} else {
@@ -83,9 +84,12 @@ func main() {
 	}
 
 	//
-	// ExploitDB
+	// InTheWild
 	//
 	var newInTheWild []*types.InTheWild
+	inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
+	inTheWild.Completed = utils.WasModifiedWithin(inTheWildFile, inTheWild.Range)
+
 	if !inTheWild.Completed {
 		var response *http.Response
 		var outFile *os.File
@@ -97,7 +101,6 @@ func main() {
 				// Ensure the response was successful
 				if response.StatusCode == http.StatusOK {
 					// Store the response
-					inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
 					outFile, err = os.Create(inTheWildFile)
 					if err == nil {
 						if _, err = io.Copy(outFile, response.Body); err == nil {
@@ -122,9 +125,7 @@ func main() {
 		} else {
 			fmt.Printf("Error creating in the wild folder: %v\n", err)
 		}
-	} else if isTesting && loadInTheWild {
-		var err error
-		inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
+	} else {
 		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err == nil {
 			inTheWild.Completed = true
 		} else {
@@ -180,7 +181,7 @@ func main() {
 					fmt.Printf("error decoding existing JSON file: %v\n", err)
 					return
 				}
-				finalResult = MergeAggregatorResults(finalResult, &existingResult)
+				finalResult = MergeAggregatorResults(result, &existingResult)
 			} else {
 				finalResult = result
 			}
@@ -188,6 +189,9 @@ func main() {
 			// Create OpenPoC which is a sort of summary of all sources
 			merger := make(map[string]*types.OpenpocProduct)
 			for _, exploit := range finalResult.ExploitDB {
+				addToMerger(&exploit, &merger)
+			}
+			for _, exploit := range finalResult.InTheWild {
 				addToMerger(&exploit, &merger)
 			}
 			for _, url := range merger {
@@ -228,6 +232,9 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 	if !exploitDB.Completed {
 		newResult.ExploitDB = oldResult.ExploitDB
 	}
+	if !inTheWild.Completed {
+		newResult.InTheWild = oldResult.InTheWild
+	}
 	return newResult
 }
 
@@ -243,7 +250,11 @@ func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[st
 	// While there is a regex, we add some protection just in case
 	jsonFilePath := filepath.Join(filepath.Base(year), filepath.Base(exploit.GetCve()+".json"))
 	if _, ok := (*yearMap)[year][jsonFilePath]; !ok {
-		(*yearMap)[year][jsonFilePath] = &types.AggregatorResult{}
+		(*yearMap)[year][jsonFilePath] = &types.AggregatorResult{
+			InTheWild: []types.InTheWild{},
+			ExploitDB: []types.ExploitDB{},
+			Openpoc:   []types.OpenpocProduct{},
+		}
 	}
 	return year, jsonFilePath
 }
