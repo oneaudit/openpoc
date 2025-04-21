@@ -15,10 +15,10 @@ import (
 )
 
 const (
-	isTesting       = true
+	isTesting       = false
 	indexLimit      = 10
-	disableTrickest = true
-	disableNomisec  = true
+	disableTrickest = false
+	disableNomisec  = false
 )
 
 var (
@@ -243,7 +243,7 @@ func main() {
 	if !nomisec.Completed {
 		fmt.Println("Download NomiSec Results.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", nomisec.URL, nomisec.Folder, 0); err == nil {
+		if err = utils.GitClone("", nomisec.URL, nomisec.Folder, 1); err == nil {
 			nomisec.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", nomisec.URL, err)
