@@ -1,6 +1,6 @@
-# Open PoCs
+# Open PoCs [![Sync Update Branch](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml/badge.svg)](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml)
 
-## Trickest 🗺️
+## Trickest Repository 🗺️
 
 [Trickest](https://github.com/trickest/cve) is one of the most popular open-source projects for monitoring exploits.<br>
 The main issue with their database is that it contains many dead links and irrelevant content.<br>
@@ -12,7 +12,9 @@ Aside from the links in `references.txt` and a few whitelisted sources, we are s
 > Update schedule: every 24 hours
 ```
 
-## Nomisec 👑
+It would be good to improve this source, such as by testing links or adding dates.
+
+## Nomisec Repository 👑
 
 [Nomisec](https://github.com/nomi-sec/PoC-in-GitHub/) is another popular open-source project for monitoring exploits.<br>
  While their content is more limited than Trickest, almost all of their links are relevant.
@@ -34,7 +36,7 @@ Their database is available in CSV format and is hosted on GitLab.
 
 One issue with this source is that some exploits are not linked to a CVE, or the linked CVE is not properly formatted. This affects a small part of their database (<1%). This project attempts to address that by using multiple sources to indirectly fetch and parse the exploit database.
 
-## In The Wild 🫏
+## In The Wild API 🫏
 
 [InTheWild](https://inthewild.io/) is a lesser-known but useful source for finding rare and hard-to-find exploits.<br>
 Their database was available on GitHub, and the API is still available for free use.
