@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"openpoc/pkg/providers"
 	"openpoc/pkg/types"
 	"openpoc/pkg/utils"
@@ -12,7 +14,7 @@ import (
 
 const (
 	isTesting     = true
-	loadExploitDB = true
+	loadExploitDB = false
 	loadInTheWild = true
 	indexLimit    = 10
 )
@@ -30,12 +32,13 @@ var (
 		URL:       "https://inthewild.io/api/exploits",
 		Folder:    "datasources/inthewild",
 		Branch:    "",
-		Completed: false,
+		Completed: true,
 	}
 	inTheWildFilename = "pocs.json"
 )
 
 func main() {
+	var err error
 	yearMap := make(map[string]map[string]*types.AggregatorResult)
 
 	//
@@ -44,10 +47,7 @@ func main() {
 	var newExploitDB []*types.ExploitDB
 	if !exploitDB.Completed {
 		// Clone repository (shallow and no checkout)
-		err := utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "--no-checkout")
-		if err != nil {
-			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
-		} else {
+		if err = utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "--no-checkout"); err == nil {
 			// We will only plan to clone specific files
 			if err = utils.RunCommandDir(exploitDB.Folder, "git", "config", "core.sparseCheckout", "true"); err == nil {
 				// We will only fetch the file below
@@ -62,22 +62,23 @@ func main() {
 							fmt.Printf("Error parsing database %s: %v\n", exploitDBFile, err)
 						}
 					} else {
-						fmt.Printf("Error setting sparseCheckout file: %v\n", err)
+						fmt.Printf("Error setting sparseCheckout file for exploitdb: %v\n", err)
 					}
 				} else {
-					fmt.Printf("Error setting sparseCheckout file: %v\n", err)
+					fmt.Printf("Error setting sparseCheckout file for exploitdb: %v\n", err)
 				}
 			} else {
-				fmt.Printf("Error setting sparseCheckout: %v\n", err)
+				fmt.Printf("Error setting sparseCheckout for exploitdb: %v\n", err)
 			}
+		} else {
+			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
 		}
 	} else if isTesting && loadExploitDB {
-		var err error
 		exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
 			exploitDB.Completed = true
 		} else {
-			fmt.Printf("Error parsing database %s: %v\n", exploitDBFile, err)
+			fmt.Printf("Error parsing exploitdb database %s: %v\n", exploitDBFile, err)
 		}
 	}
 
@@ -85,8 +86,42 @@ func main() {
 	// ExploitDB
 	//
 	var newInTheWild []*types.InTheWild
-	if !exploitDB.Completed {
-
+	if !inTheWild.Completed {
+		var response *http.Response
+		var outFile *os.File
+		// Create the folder to store the file
+		if err = os.MkdirAll(inTheWild.Folder, 0755); err == nil {
+			// Fetch the data from the API
+			if response, err = http.Get(inTheWild.URL); err == nil {
+				defer response.Body.Close()
+				// Ensure the response was successful
+				if response.StatusCode == http.StatusOK {
+					// Store the response
+					inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
+					outFile, err = os.Create(inTheWildFile)
+					if err == nil {
+						if _, err = io.Copy(outFile, response.Body); err == nil {
+							if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err == nil {
+								inTheWild.Completed = true
+							} else {
+								fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)
+							}
+						} else {
+							fmt.Printf("Error storing response in file %s: %v\n", inTheWildFile, err)
+						}
+						outFile.Close()
+					} else {
+						fmt.Printf("Error creating file: %v\n", err)
+					}
+				} else {
+					fmt.Printf("Unexpected status code for in the wild: %d", response.StatusCode)
+				}
+			} else {
+				fmt.Printf("Could not fetch %s: %v\n", inTheWild.URL, err)
+			}
+		} else {
+			fmt.Printf("Error creating in the wild folder: %v\n", err)
+		}
 	} else if isTesting && loadInTheWild {
 		var err error
 		inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
@@ -199,7 +234,7 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[string]*types.AggregatorResult) (string, string) {
 	year := utils.GetCVEYear(exploit.GetCve())
 	if year == "" {
-		fmt.Printf("[WRN] Error parsing: %s\n", exploit.GetCve())
+		fmt.Printf("[WRN] Error parsing: <%s>\n", exploit.GetCve())
 		return "", ""
 	}
 	if _, ok := (*yearMap)[year]; !ok {
