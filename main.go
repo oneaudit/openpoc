@@ -10,6 +10,11 @@ import (
 	"path/filepath"
 )
 
+const (
+	isTesting  = true
+	indexLimit = 10
+)
+
 var (
 	exploitDB = types.Target{
 		URL:       "https://gitlab.com/exploit-database/exploitdb.git",
@@ -54,27 +59,26 @@ func main() {
 				fmt.Printf("Error setting sparseCheckout: %v\n", err)
 			}
 		}
+	} else {
+		var err error
+		exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
+		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
+			exploitDB.Completed = true
+		} else {
+			fmt.Printf("Error parsing database %s: %v\n", exploitDBFile, err)
+		}
 	}
 
 	yearMap := make(map[string]map[string]*types.AggregatorResult)
 	for _, exploit := range newExploitDB {
-		addToYearMap(exploit, &yearMap)
-	}
-
-	// Create OpenPoC which is a sort of summary of all sources
-	for _, cveMap := range yearMap {
-		for _, cve := range cveMap {
-			merger := make(map[string]*types.OpenpocProduct)
-			for _, exploit := range cve.ExploitDB {
-				addToMerger(exploit, &merger)
-			}
-			for _, url := range merger {
-				cve.Openpoc = append(cve.Openpoc, *url)
-			}
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].ExploitDB = append(yearMap[year][jsonFilePath].ExploitDB, *exploit)
 		}
 	}
 
 	// Write to Disk
+	i := 0
 	for year, results := range yearMap {
 		err := os.MkdirAll(year, 0755)
 		if err != nil {
@@ -107,6 +111,16 @@ func main() {
 			} else {
 				finalResult = result
 			}
+
+			// Create OpenPoC which is a sort of summary of all sources
+			merger := make(map[string]*types.OpenpocProduct)
+			for _, exploit := range finalResult.ExploitDB {
+				addToMerger(&exploit, &merger)
+			}
+			for _, url := range merger {
+				finalResult.Openpoc = append(finalResult.Openpoc, *url)
+			}
+
 			err = file.Truncate(0)
 			if err != nil {
 				file.Close()
@@ -128,41 +142,49 @@ func main() {
 				fmt.Printf("error writing to JSON file: %v\n", err)
 				return
 			}
+
+			i++
+			if isTesting && i >= indexLimit {
+				break
+			}
 		}
 	}
 }
 
 func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.AggregatorResult) *types.AggregatorResult {
+	if !exploitDB.Completed {
+		newResult.ExploitDB = oldResult.ExploitDB
+	}
 	return newResult
 }
 
-func addToYearMap(exploit *types.ExploitDB, yearMap *map[string]map[string]*types.AggregatorResult) {
-	year := utils.GetCVEYear(exploit.Cve)
+func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[string]*types.AggregatorResult) (string, string) {
+	year := utils.GetCVEYear(exploit.GetCve())
 	if year == "" {
-		fmt.Printf("[WRN] Error parsing: %s\n", exploit.Cve)
-		return
+		fmt.Printf("[WRN] Error parsing: %s\n", exploit.GetCve())
+		return "", ""
 	}
 	if _, ok := (*yearMap)[year]; !ok {
 		(*yearMap)[year] = make(map[string]*types.AggregatorResult)
 	}
 	// While there is a regex, we add some protection just in case
-	jsonFilePath := filepath.Base(exploit.Cve + ".json")
+	jsonFilePath := filepath.Join(filepath.Base(year), filepath.Base(exploit.GetCve()+".json"))
 	if _, ok := (*yearMap)[year][jsonFilePath]; !ok {
 		(*yearMap)[year][jsonFilePath] = &types.AggregatorResult{}
 	}
-	(*yearMap)[year][jsonFilePath].ExploitDB = append((*yearMap)[year][jsonFilePath].ExploitDB, *exploit)
+	return year, jsonFilePath
 }
 
-func addToMerger(exploit types.ExploitDB, merger *map[string]*types.OpenpocProduct) {
-	value, found := (*merger)[exploit.URL]
+func addToMerger[T types.OpenPocMetadata](exploit T, merger *map[string]*types.OpenpocProduct) {
+	value, found := (*merger)[exploit.GetURL()]
 	if !found {
-		(*merger)[exploit.URL] = &types.OpenpocProduct{
-			Cve:         exploit.Cve,
-			URL:         exploit.URL,
-			AddedAt:     exploit.AddedAt,
-			Trustworthy: exploit.Trustworthy,
+		(*merger)[exploit.GetURL()] = &types.OpenpocProduct{
+			Cve:         exploit.GetCve(),
+			URL:         exploit.GetURL(),
+			AddedAt:     exploit.AddedAt(),
+			Trustworthy: exploit.IsTrustworthy(),
 		}
 	} else if !value.Trustworthy {
-		value.Trustworthy = exploit.Trustworthy
+		value.Trustworthy = exploit.IsTrustworthy()
 	}
 }

@@ -1,5 +1,12 @@
 package types
 
+type OpenPocMetadata interface {
+	GetCve() string
+	GetURL() string
+	AddedAt() string
+	IsTrustworthy() bool
+}
+
 type OpenpocProduct struct {
 	Cve         string `json:"cve"`
 	URL         string `json:"url"`

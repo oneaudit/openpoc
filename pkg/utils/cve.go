@@ -1,10 +1,17 @@
 package utils
 
-import "regexp"
+import (
+	"regexp"
+	"strings"
+)
 
 var (
 	cveMatcher = regexp.MustCompile(`^CVE-(\d{4})-\d{4,}$`)
 )
+
+func CleanCVE(cve string) string {
+	return strings.Replace(strings.TrimSpace(cve), "–", "-", -1)
+}
 
 func GetCVEYear(cve string) string {
 	matches := cveMatcher.FindStringSubmatch(cve)
