@@ -102,6 +102,12 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 			AddedAt:     time.RFC3339,
 			Trustworthy: false,
 		}
+		if exploit.CveID == "CVE-7600-2018" {
+			exploit.CveID = "CVE-2018-7600"
+		}
+		if exploit.CveID == "CVE-2121-442288" {
+			exploit.CveID = "CVE-2021-44228"
+		}
 		exploits = append(exploits, &exploit)
 	}
 

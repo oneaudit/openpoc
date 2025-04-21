@@ -10,11 +10,14 @@ import (
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
+	"sort"
+	"time"
 )
 
 const (
-	isTesting  = true
-	indexLimit = 10
+	isTesting       = true
+	indexLimit      = 10
+	disableTrickest = true
 )
 
 var (
@@ -22,7 +25,7 @@ var (
 		URL:       "https://gitlab.com/exploit-database/exploitdb.git",
 		Folder:    "datasources/exploitdb",
 		Branch:    "main",
-		Completed: true,
+		Completed: isTesting,
 		Range:     24,
 	}
 	exploitDBFilename = "files_exploits.csv"
@@ -31,7 +34,7 @@ var (
 		URL:       "https://inthewild.io/api/exploits",
 		Folder:    "datasources/inthewild",
 		Branch:    "",
-		Completed: true,
+		Completed: isTesting,
 		Range:     48,
 	}
 	inTheWildFilename = "pocs.json"
@@ -40,13 +43,15 @@ var (
 		URL:       "https://github.com/trickest/cve.git",
 		Folder:    "datasources/trickest",
 		Branch:    "main",
-		Completed: true,
+		Completed: isTesting,
 		Range:     24,
 	}
 	trickestFilename = "references.txt"
 )
 
 func main() {
+	fmt.Println(time.Now().String())
+
 	var err error
 	yearMap := make(map[string]map[string]*types.AggregatorResult)
 
@@ -58,6 +63,7 @@ func main() {
 	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range)
 
 	if !exploitDB.Completed {
+		fmt.Println("Download ExploitDB Results.")
 		// Clone repository (shallow and no checkout)
 		if err = utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "--no-checkout"); err == nil {
 			// We will only plan to clone specific files
@@ -85,6 +91,7 @@ func main() {
 			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
 		}
 	} else {
+		fmt.Println("Process ExploitDB Results.")
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err != nil {
 			fmt.Printf("Error parsing exploitdb database %s: %v\n", exploitDBFile, err)
 		}
@@ -98,6 +105,7 @@ func main() {
 	inTheWild.Completed = utils.WasModifiedWithin(inTheWildFile, inTheWild.Range)
 
 	if !inTheWild.Completed {
+		fmt.Println("Download InTheWild Results.")
 		var response *http.Response
 		var outFile *os.File
 		// Create the folder to store the file
@@ -133,6 +141,7 @@ func main() {
 			fmt.Printf("Error creating in the wild folder: %v\n", err)
 		}
 	} else {
+		fmt.Println("Process InTheWild Results.")
 		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err != nil {
 			fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)
 		}
@@ -160,6 +169,7 @@ func main() {
 	}
 
 	if !trickest.Completed {
+		fmt.Println("Download Trickest Results.")
 		// Clone repository (shallow and no checkout)
 		if err = utils.GitClone("", trickest.URL, trickest.Folder, 0); err == nil {
 			trickest.Completed = true
@@ -168,7 +178,8 @@ func main() {
 		}
 	}
 
-	if trickest.Completed {
+	if trickest.Completed && !disableTrickest {
+		fmt.Println("Process Trickest Results.")
 		// Parses And Add To Trickest Each Markdown
 		if err = utils.ProcessFiles(trickest.Folder, trickestWorker); err == nil {
 			// Add references
@@ -202,6 +213,7 @@ func main() {
 	//
 	// Add to the map
 	//
+	fmt.Println("Prepare results.")
 	for _, exploit := range newExploitDB {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
@@ -224,8 +236,10 @@ func main() {
 	//
 	// Write to Disk
 	//
+	fmt.Println("Write results to disk.")
 	i := 0
 	for year, results := range yearMap {
+		fmt.Printf("Write results for year [%s] to disk.\n", year)
 		err := os.MkdirAll(year, 0755)
 		if err != nil {
 			fmt.Printf("error creating directory: %v", err)
@@ -272,8 +286,18 @@ func main() {
 			for _, url := range merger {
 				finalResult.Openpoc = append(finalResult.Openpoc, *url)
 			}
-
-			// fixme: sort results, to avoid diff
+			sort.Slice(finalResult.ExploitDB, func(i, j int) bool {
+				return finalResult.ExploitDB[i].GetURL() < finalResult.ExploitDB[j].GetURL()
+			})
+			sort.Slice(finalResult.InTheWild, func(i, j int) bool {
+				return finalResult.InTheWild[i].GetURL() < finalResult.InTheWild[j].GetURL()
+			})
+			sort.Slice(finalResult.Trickest, func(i, j int) bool {
+				return finalResult.Trickest[i].GetURL() < finalResult.Trickest[j].GetURL()
+			})
+			sort.Slice(finalResult.Openpoc, func(i, j int) bool {
+				return finalResult.Openpoc[i].URL < finalResult.Openpoc[j].URL
+			})
 
 			err = file.Truncate(0)
 			if err != nil {
@@ -303,6 +327,7 @@ func main() {
 			}
 		}
 	}
+	fmt.Println(time.Now().String())
 }
 
 func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.AggregatorResult) *types.AggregatorResult {
