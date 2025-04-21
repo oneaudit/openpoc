@@ -1,0 +1,58 @@
+name: Sync Update Branch
+
+on:
+  schedule:
+    - cron: '0 4 * * *'  # runs every day at 4 AM UTC
+  workflow_dispatch:     # allows manual run from GitHub UI
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your repo
+        uses: actions/checkout@v4
+        with:
+          ref: update
+
+      - name: Install golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '^1.23.0'
+
+      - name: Install dependencies
+        run: |
+          go mod tidy
+
+      - name: Run NIST downloader script
+        run: |
+          go run main.go
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          batch_size=1000
+          counter=0
+          commit_needed=false
+          files_to_add=()
+          for target in $(git ls-files --others --exclude-standard; git diff --name-only); do
+            files_to_add+=("$target")
+            commit_needed=true
+            ((counter++)) || true
+            if (( counter >= batch_size )); then
+              git add "${files_to_add[@]}"
+              git commit -m "[chore] updating cpe files"
+              files_to_add=()
+              commit_needed=false
+              counter=0
+            fi
+          done
+
+          if $commit_needed; then
+            git add "${files_to_add[@]}"
+            git commit -m "[chore] updating cpe files"
+          fi
+
+          git push origin update || true
