@@ -6,7 +6,7 @@ on:
   workflow_dispatch:     # allows manual run from GitHub UI
 
 jobs:
-  update-csv:
+  sync-branch:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +24,7 @@ jobs:
         run: |
           go mod tidy
 
-      - name: Run NIST downloader script
+      - name: Run downloader script
         run: |
           go run main.go
 
