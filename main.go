@@ -11,8 +11,10 @@ import (
 )
 
 const (
-	isTesting  = true
-	indexLimit = 10
+	isTesting     = true
+	loadExploitDB = true
+	loadInTheWild = true
+	indexLimit    = 10
 )
 
 var (
@@ -23,9 +25,19 @@ var (
 		Completed: true,
 	}
 	exploitDBFilename = "files_exploits.csv"
+
+	inTheWild = types.Target{
+		URL:       "https://inthewild.io/api/exploits",
+		Folder:    "datasources/inthewild",
+		Branch:    "",
+		Completed: false,
+	}
+	inTheWildFilename = "pocs.json"
 )
 
 func main() {
+	yearMap := make(map[string]map[string]*types.AggregatorResult)
+
 	//
 	// ExploitDB
 	//
@@ -59,7 +71,7 @@ func main() {
 				fmt.Printf("Error setting sparseCheckout: %v\n", err)
 			}
 		}
-	} else {
+	} else if isTesting && loadExploitDB {
 		var err error
 		exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
@@ -69,15 +81,41 @@ func main() {
 		}
 	}
 
-	yearMap := make(map[string]map[string]*types.AggregatorResult)
+	//
+	// ExploitDB
+	//
+	var newInTheWild []*types.InTheWild
+	if !exploitDB.Completed {
+
+	} else if isTesting && loadInTheWild {
+		var err error
+		inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
+		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err == nil {
+			inTheWild.Completed = true
+		} else {
+			fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)
+		}
+	}
+
+	//
+	// Add to the map
+	//
 	for _, exploit := range newExploitDB {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].ExploitDB = append(yearMap[year][jsonFilePath].ExploitDB, *exploit)
 		}
 	}
+	for _, exploit := range newInTheWild {
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].InTheWild = append(yearMap[year][jsonFilePath].InTheWild, *exploit)
+		}
+	}
 
+	//
 	// Write to Disk
+	//
 	i := 0
 	for year, results := range yearMap {
 		err := os.MkdirAll(year, 0755)
