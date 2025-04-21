@@ -10,7 +10,13 @@ var (
 )
 
 func CleanCVE(cve string) string {
-	return strings.Replace(strings.TrimSpace(cve), "–", "-", -1)
+	return strings.Replace(
+		strings.Replace(
+			strings.Replace(cve, " ", "", -1),
+			"‑", "-", -1,
+		),
+		"–", "-", -1,
+	)
 }
 
 func GetCVEYear(cve string) string {
