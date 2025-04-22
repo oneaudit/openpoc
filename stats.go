@@ -6,10 +6,13 @@ import (
 	"openpoc/pkg/stats"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 	"time"
 )
+
+const scoreboardTop = 10
 
 func getDirectories() (dirs []string) {
 	startYear := 1999
@@ -48,7 +51,7 @@ func main() {
 					return nil
 				}
 				if info.Mode().IsRegular() && strings.HasSuffix(strings.ToLower(info.Name()), ".json") {
-					fileJobs <- stats.FileJob{Path: path, Folder: folder}
+					fileJobs <- stats.FileJob{Path: path, Folder: folder, CVE: strings.TrimSuffix(info.Name(), ".json")}
 				}
 				return nil
 			})
@@ -73,21 +76,54 @@ func main() {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
 			aggStats[r.FileJob.Folder] = &stats.Stats{}
 		}
+		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: len(r.Result.Openpoc)}
 		aggStats[r.FileJob.Folder].CVECount += 1
-		aggStats[r.FileJob.Folder].ExploitCount += len(r.Result.Openpoc)
+		aggStats[r.FileJob.Folder].ExploitCount += cveStats.ExploitCount
+		aggStats[r.FileJob.Folder].ScoreBoard = append(aggStats[r.FileJob.Folder].ScoreBoard, cveStats)
 	}
 
 	for _, stat := range aggStats {
+		// Compute Frequencies
 		if stat.CVECount > 0 {
 			stat.ExploitCountAverage = float64(stat.ExploitCount) / float64(stat.CVECount)
 		}
+		// Compute ScoreBoard
+		sort.Slice(stat.ScoreBoard, func(i, j int) bool {
+			return stat.ScoreBoard[i].ExploitCount > stat.ScoreBoard[j].ExploitCount
+		})
+		if len(stat.ScoreBoard) < scoreboardTop {
+			stat.ScoreBoard = stat.ScoreBoard[:len(stat.ScoreBoard)]
+		} else {
+			stat.ScoreBoard = stat.ScoreBoard[:scoreboardTop]
+		}
 	}
 
+	// Statistics computed for year: 1999
+	// Total CVEs with an exploit: 568
+	// Total Exploit Count: 827
+	// Exploit Count Average: 1.455986
+	// Top 10 CVEs with the most exploits:
+	//  - 1. CVE: CVE-1999-0502, Exploit Count: 26
+	//  - 2. CVE: CVE-1999-0016, Exploit Count: 7
+	//  - 3. CVE: CVE-1999-0874, Exploit Count: 7
+	//  - 4. CVE: CVE-1999-1053, Exploit Count: 6
+	//  - 5. CVE: CVE-1999-0504, Exploit Count: 6
+	//  - 6. CVE: CVE-1999-0040, Exploit Count: 5
+	//  - 7. CVE: CVE-1999-0977, Exploit Count: 5
+	//  - 8. CVE: CVE-1999-0767, Exploit Count: 5
+	//  - 9. CVE: CVE-1999-0153, Exploit Count: 4
+	//  - 10. CVE: CVE-1999-1510, Exploit Count: 4
 	for year, stat := range aggStats {
 		fmt.Println("Statistics computed for year:", year)
 		fmt.Printf("Total CVEs with an exploit: %d\n", stat.CVECount)
 		fmt.Printf("Total Exploit Count: %d\n", stat.ExploitCount)
 		fmt.Printf("Exploit Count Average: %f\n", stat.ExploitCountAverage)
+		fmt.Println("Top 10 CVEs with the most exploits:")
+		for i := 0; i < scoreboardTop; i++ {
+			entry := stat.ScoreBoard[i]
+			fmt.Printf("%d. CVE: %s, Exploit Count: %d\n",
+				i+1, entry.CveID, entry.ExploitCount)
+		}
 		fmt.Println()
 	}
 
