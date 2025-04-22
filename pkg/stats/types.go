@@ -1,12 +1,19 @@
 package stats
 
+import "openpoc/pkg/types"
+
 type Stats struct {
-	TotalFiles       int
-	TotalValue       float64
-	TotalCount       int
-	CategoryCounters map[string]int
+	CVECount            int
+	ExploitCount        int
+	ExploitCountAverage float64
 }
 
 type FileJob struct {
-	Path string
+	Path   string
+	Folder string
+}
+
+type StatResult struct {
+	FileJob FileJob
+	Result  *types.AggregatorResult
 }

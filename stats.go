@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/fs"
 	"openpoc/pkg/stats"
-	"openpoc/pkg/types"
 	"os"
 	"path/filepath"
 	"strings"
@@ -31,7 +30,7 @@ func main() {
 	directories := getDirectories()
 
 	fileJobs := make(chan stats.FileJob, 100)
-	results := make(chan *types.AggregatorResult, 100)
+	results := make(chan *stats.StatResult, 100)
 	numWorkers := 8
 	for i := 0; i < numWorkers; i++ {
 		wg.Add(1)
@@ -45,16 +44,16 @@ func main() {
 			defer walkWg.Done()
 			err := filepath.Walk(folder, func(path string, info fs.FileInfo, err error) error {
 				if err != nil {
-					fmt.Printf("Error accessing %s: %v\n", path, err)
+					fmt.Printf("Error accessing %aggStats: %v\n", path, err)
 					return nil
 				}
 				if info.Mode().IsRegular() && strings.HasSuffix(strings.ToLower(info.Name()), ".json") {
-					fileJobs <- stats.FileJob{Path: path}
+					fileJobs <- stats.FileJob{Path: path, Folder: folder}
 				}
 				return nil
 			})
 			if err != nil {
-				fmt.Printf("Error walking the directory %s: %v\n", folder, err)
+				fmt.Printf("Error walking the directory %aggStats: %v\n", folder, err)
 			}
 		}(dir)
 	}
@@ -69,17 +68,28 @@ func main() {
 		close(results)
 	}()
 
-	var s stats.Stats
-	s.CategoryCounters = make(map[string]int)
-	for _ = range results {
-		s.TotalFiles++
+	aggStats := make(map[string]*stats.Stats)
+	for r := range results {
+		if _, ok := aggStats[r.FileJob.Folder]; !ok {
+			aggStats[r.FileJob.Folder] = &stats.Stats{}
+		}
+		aggStats[r.FileJob.Folder].CVECount += 1
+		aggStats[r.FileJob.Folder].ExploitCount += len(r.Result.Openpoc)
 	}
 
-	// Output the computed s.
-	fmt.Println("Statistics computed from folder:", directories)
-	fmt.Printf("Total Files Processed: %d\n", s.TotalFiles)
-	fmt.Printf("Total Value Sum: %.2f\n", s.TotalValue)
-	fmt.Printf("Total Count Sum: %d\n", s.TotalCount)
+	for _, stat := range aggStats {
+		if stat.CVECount > 0 {
+			stat.ExploitCountAverage = float64(stat.ExploitCount) / float64(stat.CVECount)
+		}
+	}
+
+	for year, stat := range aggStats {
+		fmt.Println("Statistics computed for year:", year)
+		fmt.Printf("Total CVEs with an exploit: %d\n", stat.CVECount)
+		fmt.Printf("Total Exploit Count: %d\n", stat.ExploitCount)
+		fmt.Printf("Exploit Count Average: %f\n", stat.ExploitCountAverage)
+		fmt.Println()
+	}
 
 	fmt.Println(time.Now().String())
 }

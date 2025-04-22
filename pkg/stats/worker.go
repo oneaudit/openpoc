@@ -8,8 +8,8 @@ import (
 	"sync"
 )
 
-func processFile(filePath string) (*types.AggregatorResult, error) {
-	bytes, err := os.ReadFile(filePath)
+func processFile(fileJob FileJob) (*StatResult, error) {
+	bytes, err := os.ReadFile(fileJob.Path)
 	if err != nil {
 		return nil, err
 	}
@@ -17,13 +17,16 @@ func processFile(filePath string) (*types.AggregatorResult, error) {
 	if err = json.Unmarshal(bytes, &result); err != nil {
 		return nil, err
 	}
-	return &result, nil
+	var statResult StatResult
+	statResult.FileJob = fileJob
+	statResult.Result = &result
+	return &statResult, nil
 }
 
-func Worker(id int, jobs <-chan FileJob, results chan<- *types.AggregatorResult, wg *sync.WaitGroup) {
+func Worker(id int, jobs <-chan FileJob, results chan<- *StatResult, wg *sync.WaitGroup) {
 	defer wg.Done()
 	for job := range jobs {
-		res, err := processFile(job.Path)
+		res, err := processFile(job)
 		if err != nil {
 			fmt.Printf("[Worker %d] Error processing %s: %v\n", id, job.Path, err)
 			continue
