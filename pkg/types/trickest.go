@@ -1,10 +1,12 @@
 package types
 
+import "time"
+
 type Trickest struct {
-	CveID       string `json:"id"`
-	URL         string `json:"url"`
-	AddedAt     string `json:"added_at"`
-	Trustworthy bool   `json:"trustworthy"`
+	CveID       string    `json:"id"`
+	URL         string    `json:"url"`
+	AddedAt     time.Time `json:"added_at"`
+	Trustworthy bool      `json:"trustworthy"`
 }
 
 func (t *Trickest) GetCve() string {
@@ -15,7 +17,7 @@ func (t *Trickest) GetURL() string {
 	return t.URL
 }
 
-func (t *Trickest) GetPublishDate() string {
+func (t *Trickest) GetPublishDate() time.Time {
 	return t.AddedAt
 }
 

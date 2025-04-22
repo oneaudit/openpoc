@@ -11,6 +11,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -36,7 +37,7 @@ var (
 		Folder:    "datasources/inthewild",
 		Branch:    "",
 		Completed: false,
-		Range:     48,
+		Range:     96,
 	}
 	inTheWildFilename = "pocs.json"
 
@@ -70,7 +71,7 @@ func main() {
 	//
 	var newExploitDB []*types.ExploitDB
 	exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
-	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range)
+	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range) || isTesting
 
 	if !exploitDB.Completed {
 		fmt.Println("Download ExploitDB Results.")
@@ -162,7 +163,7 @@ func main() {
 	//
 	var newTrickest []*types.Trickest
 	trickestFile := filepath.Join(trickest.Folder, trickestFilename)
-	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range)
+	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range) || isTesting
 	trickestWorker := func(path string) error {
 		if !providers.IsTrickestExploit(path) {
 			return nil
@@ -431,13 +432,20 @@ func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[st
 func addToMerger[T types.OpenPocMetadata](exploit T, merger *map[string]*types.OpenpocProduct) {
 	value, found := (*merger)[exploit.GetURL()]
 	if !found {
-		(*merger)[exploit.GetURL()] = &types.OpenpocProduct{
+		value = &types.OpenpocProduct{
 			Cve:         exploit.GetCve(),
 			URL:         exploit.GetURL(),
-			AddedAt:     exploit.GetPublishDate(),
+			AddedAt:     exploit.GetPublishDate().Format(time.RFC3339),
 			Trustworthy: exploit.IsTrustworthy(),
 		}
-	} else if !value.Trustworthy {
-		value.Trustworthy = exploit.IsTrustworthy()
+		(*merger)[exploit.GetURL()] = value
+	} else {
+		if !value.Trustworthy {
+			value.Trustworthy = exploit.IsTrustworthy()
+		}
+		// Ensure the date is the best we can find
+		if value.AddedAt == types.DefaultDate.Format(time.RFC3339) {
+			value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
+		}
 	}
 }

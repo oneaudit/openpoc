@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 )
 
 var cveRegex = regexp.MustCompile(`CVE-\d{4}-\d{4,7}`)
@@ -71,7 +70,7 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 			records = append(records, &types.Trickest{
 				CveID:       cveID,
 				URL:         "https://" + url,
-				AddedAt:     time.RFC3339,
+				AddedAt:     types.DefaultDate,
 				Trustworthy: trusted,
 			})
 		}
@@ -99,7 +98,7 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 		exploit := types.Trickest{
 			CveID:       parts[0],
 			URL:         parts[1],
-			AddedAt:     time.RFC3339,
+			AddedAt:     types.DefaultDate,
 			Trustworthy: false,
 		}
 		if exploit.CveID == "CVE-7600-2018" {

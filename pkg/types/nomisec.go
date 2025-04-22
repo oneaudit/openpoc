@@ -45,8 +45,8 @@ func (n *Nomisec) GetURL() string {
 	return n.HTMLURL
 }
 
-func (n *Nomisec) GetPublishDate() string {
-	return n.CreatedAt.String()
+func (n *Nomisec) GetPublishDate() time.Time {
+	return n.CreatedAt
 }
 
 func (n *Nomisec) IsTrustworthy() bool {

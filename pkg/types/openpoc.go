@@ -1,9 +1,13 @@
 package types
 
+import "time"
+
+var DefaultDate = time.Now()
+
 type OpenPocMetadata interface {
 	GetCve() string
 	GetURL() string
-	GetPublishDate() string
+	GetPublishDate() time.Time
 	IsTrustworthy() bool
 }
 
