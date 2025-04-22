@@ -4,14 +4,17 @@ Aggregates multiple data sources related to CVE exploits/PoC.
 
 <table>
   <tr>
+    <th align="center">1999</th>
+    <th align="center">1999</th>
+  </tr>
+  <tr>
     <td align="center">
-<img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
-</td>
-<td align="center">
-<img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
-</td>
-<td></td>
-</tr>
+      <img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
+    </td>
+    <td align="center">
+      <img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
+    </td>
+  </tr>
 </table>
 
 ## Trickest Repository 🗺️
