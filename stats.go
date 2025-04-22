@@ -28,7 +28,7 @@ func getDirectories() (dirs []string) {
 	return dirs
 }
 
-func main() {
+func mainr() {
 	fmt.Println(time.Now().String())
 
 	var wg sync.WaitGroup

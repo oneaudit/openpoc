@@ -1,4 +1,18 @@
-# Open PoCs [![Sync Update Branch](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml/badge.svg)](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml)
+# Open PoCs [<img src="https://github.com/oneaudit/openpoc/actions/workflows/main.yaml/badge.svg" alt="" align="right">](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml)
+
+Aggregates multiple data sources related to CVE exploits/PoC.
+
+<table>
+  <tr>
+    <td align="center">
+<img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
+</td>
+<td align="center">
+<img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
+</td>
+<td></td>
+</tr>
+</table>
 
 ## Trickest Repository 🗺️
 
