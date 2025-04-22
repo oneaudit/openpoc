@@ -140,7 +140,7 @@ func cleanTrickestCve(cve string) string {
 	if cve == "CVE-7600-2018" {
 		cve = "CVE-2018-7600"
 	}
-	if cve == "CVE-2121-442288" {
+	if cve == "CVE-2121-44228" {
 		cve = "CVE-2021-44228"
 	}
 	return utils.CleanCVE(cve)

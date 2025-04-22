@@ -16,6 +16,7 @@ import (
 
 const (
 	isTesting       = false
+	statusByDefault = false
 	indexLimit      = 10
 	disableTrickest = false
 	disableNomisec  = false
@@ -26,7 +27,7 @@ var (
 		URL:       "https://gitlab.com/exploit-database/exploitdb.git",
 		Folder:    "datasources/exploitdb",
 		Branch:    "main",
-		Completed: false,
+		Completed: statusByDefault,
 		Range:     24,
 	}
 	exploitDBFilename = "files_exploits.csv"
@@ -35,7 +36,7 @@ var (
 		URL:       "https://inthewild.io/api/exploits",
 		Folder:    "datasources/inthewild",
 		Branch:    "",
-		Completed: false,
+		Completed: statusByDefault,
 		Range:     96,
 	}
 	inTheWildFilename = "pocs.json"
@@ -44,7 +45,7 @@ var (
 		URL:       "https://github.com/trickest/cve.git",
 		Folder:    "datasources/trickest",
 		Branch:    "main",
-		Completed: false,
+		Completed: statusByDefault,
 		Range:     24,
 	}
 	trickestFilename = "references.txt"
@@ -70,7 +71,7 @@ func main() {
 	//
 	var newExploitDB []*types.ExploitDB
 	exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
-	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range) || isTesting
+	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range) || exploitDB.Completed
 
 	if !exploitDB.Completed {
 		fmt.Println("Download ExploitDB Results.")
@@ -112,7 +113,7 @@ func main() {
 	//
 	var newInTheWild []*types.InTheWild
 	inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
-	inTheWild.Completed = utils.WasModifiedWithin(inTheWildFile, inTheWild.Range)
+	inTheWild.Completed = utils.WasModifiedWithin(inTheWildFile, inTheWild.Range) || inTheWild.Completed
 
 	if !inTheWild.Completed {
 		fmt.Println("Download InTheWild Results.")
@@ -165,7 +166,7 @@ func main() {
 	//
 	var newTrickest []*types.Trickest
 	trickestFile := filepath.Join(trickest.Folder, trickestFilename)
-	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range) || isTesting
+	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range) || trickest.Completed
 	trickestWorker := func(path string) error {
 		if !providers.IsTrickestExploit(path) {
 			return nil
@@ -227,7 +228,7 @@ func main() {
 	//
 	var newNomisec []*types.Nomisec
 	nomisecFile := filepath.Join(nomisec.Folder, nomisecFilename)
-	nomisec.Completed = utils.WasModifiedWithin(nomisecFile, nomisec.Range)
+	nomisec.Completed = utils.WasModifiedWithin(nomisecFile, nomisec.Range) || nomisec.Completed
 	nomisecWorker := func(path string) error {
 		if !providers.IsNomisec(path) {
 			return nil

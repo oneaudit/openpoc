@@ -22,5 +22,6 @@ func ParseInTheWild(jsonFilePath string) ([]*types.InTheWild, error) {
 	for _, d := range data {
 		d.CveID = utils.CleanCVE(d.CveID)
 	}
+
 	return data, nil
 }
