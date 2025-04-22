@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"openpoc/pkg/types"
+	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -68,7 +69,7 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 
 		if found {
 			records = append(records, &types.Trickest{
-				CveID:       cveID,
+				CveID:       cleanTrickestCve(cveID),
 				URL:         "https://" + url,
 				AddedAt:     types.DefaultDate,
 				Trustworthy: trusted,
@@ -96,16 +97,10 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 			return
 		}
 		exploit := types.Trickest{
-			CveID:       parts[0],
+			CveID:       cleanTrickestCve(parts[0]),
 			URL:         parts[1],
 			AddedAt:     types.DefaultDate,
 			Trustworthy: false,
-		}
-		if exploit.CveID == "CVE-7600-2018" {
-			exploit.CveID = "CVE-2018-7600"
-		}
-		if exploit.CveID == "CVE-2121-442288" {
-			exploit.CveID = "CVE-2021-44228"
 		}
 		exploits = append(exploits, &exploit)
 	}
@@ -139,6 +134,16 @@ func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {
 		pocURLs = append(pocURLs, line)
 	}
 	return
+}
+
+func cleanTrickestCve(cve string) string {
+	if cve == "CVE-7600-2018" {
+		cve = "CVE-2018-7600"
+	}
+	if cve == "CVE-2121-442288" {
+		cve = "CVE-2021-44228"
+	}
+	return utils.CleanCVE(cve)
 }
 
 var knownValidatedSources = []string{

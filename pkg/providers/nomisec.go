@@ -29,8 +29,22 @@ func ParseNomicsec(jsonFilePath string) ([]*types.Nomisec, error) {
 	}
 
 	for _, repo := range data {
-		repo.CveId = utils.CleanCVE(cveID)
+		repo.CveId = cleanNomisecCVE(cveID)
 	}
 
 	return data, nil
+}
+
+func cleanNomisecCVE(cve string) string {
+	// A few errors in NomiSec
+	if cve == "CVE-2017-75" {
+		cve = "CVE-2017-7529"
+	} else if cve == "CVE-2018-14" {
+		cve = "CVE-2018-14773"
+	} else if cve == "CVE-2021-22" {
+		cve = "CVE-2021-22555"
+	} else if cve == "CVE-2023-08" {
+		cve = "CVE-2022-31470"
+	}
+	return utils.CleanCVE(cve)
 }

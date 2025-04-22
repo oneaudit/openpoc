@@ -137,7 +137,10 @@ func main() {
 						} else {
 							fmt.Printf("Error storing response in file %s: %v\n", inTheWildFile, err)
 						}
-						outFile.Close()
+						err = outFile.Close()
+						if err != nil {
+							fmt.Printf("could not close file: %v\n", err)
+						}
 					} else {
 						fmt.Printf("Error creating file: %v\n", err)
 					}
@@ -307,7 +310,11 @@ func main() {
 			}
 			info, err := file.Stat()
 			if err != nil {
-				file.Close()
+				err = file.Close()
+				if err != nil {
+					fmt.Printf("could not close file: %v\n", err)
+					return
+				}
 				fmt.Printf("error stating file: %v\n", err)
 				return
 			}
@@ -316,7 +323,11 @@ func main() {
 				decoder := json.NewDecoder(file)
 				err = decoder.Decode(&existingResult)
 				if err != nil {
-					file.Close()
+					err = file.Close()
+					if err != nil {
+						fmt.Printf("could not close file: %v\n", err)
+						return
+					}
 					fmt.Printf("error decoding existing JSON file: %v\n", err)
 					return
 				}
@@ -357,16 +368,37 @@ func main() {
 			sort.Slice(finalResult.Openpoc, func(i, j int) bool {
 				return finalResult.Openpoc[i].URL < finalResult.Openpoc[j].URL
 			})
+			if len(finalResult.Openpoc) == 0 {
+				err = file.Close()
+				if err != nil {
+					fmt.Printf("could not close file: %v\n", err)
+					return
+				}
+				err = os.Remove(jsonFilePath)
+				if err != nil {
+					fmt.Printf("could not remove empty file: %v\n", err)
+					return
+				}
+				continue
+			}
 
 			err = file.Truncate(0)
 			if err != nil {
-				file.Close()
 				fmt.Printf("error truncating file: %v\n", err)
+				err = file.Close()
+				if err != nil {
+					fmt.Printf("could not close file: %v\n", err)
+					return
+				}
 				return
 			}
 			_, err = file.Seek(0, 0)
 			if err != nil {
-				file.Close()
+				err = file.Close()
+				if err != nil {
+					fmt.Printf("could not close file: %v\n", err)
+					return
+				}
 				fmt.Printf("error seeking to file start: %v\n", err)
 				return
 			}
@@ -374,9 +406,18 @@ func main() {
 			encoder := json.NewEncoder(file)
 			encoder.SetIndent("", "  ")
 			err = encoder.Encode(finalResult)
-			file.Close()
 			if err != nil {
 				fmt.Printf("error writing to JSON file: %v\n", err)
+				err = file.Close()
+				if err != nil {
+					fmt.Printf("could not close file: %v\n", err)
+					return
+				}
+				return
+			}
+			err = file.Close()
+			if err != nil {
+				fmt.Printf("could not close file: %v\n", err)
 				return
 			}
 
