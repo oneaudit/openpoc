@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/fs"
+	"net/url"
 	"openpoc/pkg/stats"
 	"os"
 	"path/filepath"
@@ -13,6 +14,7 @@ import (
 )
 
 const scoreboardTop = 10
+const domainTop = 3
 
 func getDirectories() (dirs []string) {
 	startYear := 1999
@@ -75,11 +77,24 @@ func main() {
 	for r := range results {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
 			aggStats[r.FileJob.Folder] = &stats.Stats{}
+			aggStats[r.FileJob.Folder].DomainMap = make(map[string]int)
 		}
 		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: len(r.Result.Openpoc)}
 		aggStats[r.FileJob.Folder].CVECount += 1
 		aggStats[r.FileJob.Folder].ExploitCount += cveStats.ExploitCount
-		aggStats[r.FileJob.Folder].ScoreBoard = append(aggStats[r.FileJob.Folder].ScoreBoard, cveStats)
+		aggStats[r.FileJob.Folder].CveScoreBoard = append(aggStats[r.FileJob.Folder].CveScoreBoard, cveStats)
+
+		for _, poc := range r.Result.Openpoc {
+			parsedUrl, err := url.Parse(poc.URL)
+			if err != nil {
+				continue
+			}
+			domain := parsedUrl.Host
+			if _, ok := aggStats[r.FileJob.Folder].DomainMap[domain]; !ok {
+				aggStats[r.FileJob.Folder].DomainMap[domain] = 0
+			}
+			aggStats[r.FileJob.Folder].DomainMap[domain] += 1
+		}
 	}
 
 	for _, stat := range aggStats {
@@ -87,15 +102,25 @@ func main() {
 		if stat.CVECount > 0 {
 			stat.ExploitCountAverage = float64(stat.ExploitCount) / float64(stat.CVECount)
 		}
-		// Compute ScoreBoard
-		sort.Slice(stat.ScoreBoard, func(i, j int) bool {
-			return stat.ScoreBoard[i].ExploitCount > stat.ScoreBoard[j].ExploitCount
+		// Compute CveScoreBoard
+		sort.Slice(stat.CveScoreBoard, func(i, j int) bool {
+			return stat.CveScoreBoard[i].ExploitCount > stat.CveScoreBoard[j].ExploitCount
 		})
-		if len(stat.ScoreBoard) < scoreboardTop {
-			stat.ScoreBoard = stat.ScoreBoard[:len(stat.ScoreBoard)]
-		} else {
-			stat.ScoreBoard = stat.ScoreBoard[:scoreboardTop]
+		if len(stat.CveScoreBoard) > scoreboardTop {
+			stat.CveScoreBoard = stat.CveScoreBoard[:scoreboardTop]
 		}
+		// Compute Top URLs
+		var counts []stats.DomainCount
+		for d, count := range stat.DomainMap {
+			counts = append(counts, stats.DomainCount{Domain: d, Count: count})
+		}
+		sort.Slice(counts, func(i, j int) bool {
+			return counts[i].Count > counts[j].Count
+		})
+		if len(counts) > domainTop {
+			counts = counts[:domainTop]
+		}
+		stat.DomainScoreBoard = counts
 	}
 
 	// Statistics computed for year: 1999
@@ -119,10 +144,16 @@ func main() {
 		fmt.Printf("Total Exploit Count: %d\n", stat.ExploitCount)
 		fmt.Printf("Exploit Count Average: %f\n", stat.ExploitCountAverage)
 		fmt.Println("Top 10 CVEs with the most exploits:")
-		for i := 0; i < scoreboardTop; i++ {
-			entry := stat.ScoreBoard[i]
+		for i := 0; i < scoreboardTop && i < len(stat.CveScoreBoard); i++ {
+			entry := stat.CveScoreBoard[i]
 			fmt.Printf("%d. CVE: %s, Exploit Count: %d\n",
 				i+1, entry.CveID, entry.ExploitCount)
+		}
+		fmt.Println("Top 3 CVEs with the most exploits:")
+		for i := 0; i < domainTop && i < len(stat.DomainScoreBoard); i++ {
+			entry := stat.DomainScoreBoard[i]
+			fmt.Printf("%d. Domain: %s, Count: %d\n",
+				i+1, entry.Domain, entry.Count)
 		}
 		fmt.Println()
 	}

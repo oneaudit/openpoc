@@ -1,162 +1,123 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="350">
     <defs>
         <style/>
     </defs>
     <style>
-        .container {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-          font-size: 14px;
-          color: #333;
-          background-color: #fff;
-          padding: 15px;
-        }
-        .title {
-          font-size: 18px;
-          color: #0366d6;
-          margin-bottom: 10px;
-        }
-        .stat {
-          margin: 4px 0;
-        }
-        .list-header {
-          font-weight: bold;
-          margin-top: 10px;
-          margin-bottom: 10px;
-        }
-        .list {
-          margin-left: 15px;
-          line-height: 1.5;
-        }
-        .row {
-            display:flex;flex-wrap:wrap
-        }
-        .row section{
-            flex:1 1 0
-        }
-        .field{margin-left:5px;margin-right:5px}
-        .field{display:flex;align-items:center;margin-bottom:2px;white-space:nowrap}
-        .field svg{margin:0 8px;fill:#959da5;flex-shrink:0}
-        .field,.field small{display:flex;justify-content:space-between}
+        .container {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px;color: #333;background-color: #fff;padding: 15px;}
+        .title {font-size: 18px;color: #0366d6;margin-bottom: 10px;}
+        .stats-row {display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 15px;}
+        .stat {flex: 1;display: flex;align-items: center;margin: 0px 0px;white-space: nowrap;}
+        .stat svg{margin-right: 8px; fill: #959da5; flex-shrink: 0;}
+        .stat-title{margin-right: 4px;}
+        .margin-top{margin-top: 4px;}
+        .list-header{font-weight: bold;margin-top: 10px;margin-bottom: 10px;}
+        .row{display:flex;flex-wrap:wrap;}
+        .row section{flex: 1 1 0;padding: 0 8px;}
+        .field {margin: 5px 0;display: flex;align-items: center; white-space: nowrap;}
+        .field svg{margin:0 8px;fill:#959da5;flex-shrink:0;}
+        .field,.field small{display:flex;justify-content:space-between;align-items:center;}
     </style>
-    <foreignObject x="0" y="0" width="500" height="300">
+    <foreignObject x="0" y="0" width="500" height="350">
         <div xmlns="http://www.w3.org/1999/xhtml" class="container">
             <div class="title">POC Statistics for Year 1999</div>
-            <div class="stat">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                    <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
-                    <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                </svg>
-                Total CVEs with an exploit: <strong>568</strong>
-            </div>
-            <div class="stat">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
-                    <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
-                </svg>
-                Total Exploit Count: <strong>827</strong>
-            </div>
-            <div class="stat">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                </svg>
-                Exploit Count Average: <strong>1.455986</strong>
+            <div class="stats-row">
+                <div class="stat">
+                    <span class="stat-title">POC Count:</span> <strong>827</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-title">CVEs with POC:</span> <strong>568</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.46</strong>
+                </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
-            <div xmlns="http://www.w3.org/1999/xhtml" class="row fill-width">
+            <div class="row">
                 <section>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0502
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0502
                         <small>26</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0016
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0016
                         <small>7</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0874
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0874
                         <small>7</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-1053
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-1053
                         <small>6</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0504
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0504
                         <small>6</small>
                     </div>
                 </section>
                 <section>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0040
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0040
                         <small>5</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0977
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0977
                         <small>5</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-076
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0767
                         <small>5</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-0153
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-0153
                         <small>4</small>
                     </div>
-                    <div class="field scoreboard details">
-                        <div class="field">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                            </svg>
-                            CVE-1999-1510
-                        </div>
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-1999-1510
                         <small>4</small>
                     </div>
                 </section>
+            </div>
+            <div class="stats-row margin-top">
+                <div class="stat">
+                    <span class="stat-title">Source1:</span> <strong>827</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-title">Source2:</span> <strong>568</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-title">Source3:</span> <strong>417</strong>
+                </div>
             </div>
         </div>
     </foreignObject>
