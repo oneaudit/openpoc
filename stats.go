@@ -17,9 +17,9 @@ const scoreboardTop = 10
 const domainTop = 3
 
 func getDirectories() (dirs []string) {
-	startYear := 1999
-	currentYear := 2001 //time.Now().Year()
-	for year := startYear; year <= currentYear; year++ {
+	currentYear := time.Now().Year()
+	startYear := currentYear - 4
+	for year := currentYear; year > startYear; year-- {
 		dir := fmt.Sprintf("%04d", year)
 		if _, err := os.Stat(dir); !os.IsNotExist(err) {
 			dirs = append(dirs, dir)
