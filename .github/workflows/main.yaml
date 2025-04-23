@@ -43,7 +43,7 @@ jobs:
             ((counter++)) || true
             if (( counter >= batch_size )); then
               git add "${files_to_add[@]}"
-              git commit -m "[chore] updating cpe files"
+              git commit -m "[chore] updating exploit files"
               files_to_add=()
               commit_needed=false
               counter=0
@@ -52,7 +52,7 @@ jobs:
 
           if $commit_needed; then
             git add "${files_to_add[@]}"
-            git commit -m "[chore] updating cpe files"
+            git commit -m "[chore] updating exploit files"
           fi
 
           git push origin update || true
