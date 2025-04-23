@@ -324,11 +324,6 @@ func main() {
 				decoder := json.NewDecoder(file)
 				err = decoder.Decode(&existingResult)
 				if err != nil {
-					err = file.Close()
-					if err != nil {
-						fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
-						return
-					}
 					fmt.Printf("error decoding existing JSON file %s: %v\n", jsonFilePath, err)
 
 					// Disregard the JSON file that could not be parsed
