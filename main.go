@@ -299,24 +299,24 @@ func main() {
 		fmt.Printf("Write results for year [%s] to disk.\n", year)
 		err := os.MkdirAll(year, 0755)
 		if err != nil {
-			fmt.Printf("error creating directory: %v", err)
+			fmt.Printf("error creating directory %s: %v", year, err)
 			return
 		}
 		for jsonFilePath, result := range results {
 			var finalResult *types.AggregatorResult
 			file, err := os.OpenFile(jsonFilePath, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
-				fmt.Printf("error opening JSON file: %v\n", err)
+				fmt.Printf("error opening JSON file %s: %v\n", jsonFilePath, err)
 				return
 			}
 			info, err := file.Stat()
 			if err != nil {
 				err = file.Close()
 				if err != nil {
-					fmt.Printf("could not close file: %v\n", err)
+					fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 					return
 				}
-				fmt.Printf("error stating file: %v\n", err)
+				fmt.Printf("error stating file %s: %v\n", jsonFilePath, err)
 				return
 			}
 			if info.Size() > 0 {
@@ -326,10 +326,10 @@ func main() {
 				if err != nil {
 					err = file.Close()
 					if err != nil {
-						fmt.Printf("could not close file: %v\n", err)
+						fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 						return
 					}
-					fmt.Printf("error decoding existing JSON file: %v\n", err)
+					fmt.Printf("error decoding existing JSON file %s: %v\n", jsonFilePath, err)
 					return
 				}
 				finalResult = MergeAggregatorResults(result, &existingResult)
@@ -372,12 +372,12 @@ func main() {
 			if len(finalResult.Openpoc) == 0 {
 				err = file.Close()
 				if err != nil {
-					fmt.Printf("could not close file: %v\n", err)
+					fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 					return
 				}
 				err = os.Remove(jsonFilePath)
 				if err != nil {
-					fmt.Printf("could not remove empty file: %v\n", err)
+					fmt.Printf("could not remove empty file %s: %v\n", jsonFilePath, err)
 					return
 				}
 				continue
@@ -385,10 +385,10 @@ func main() {
 
 			err = file.Truncate(0)
 			if err != nil {
-				fmt.Printf("error truncating file: %v\n", err)
+				fmt.Printf("error truncating file %s: %v\n", jsonFilePath, err)
 				err = file.Close()
 				if err != nil {
-					fmt.Printf("could not close file: %v\n", err)
+					fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 					return
 				}
 				return
@@ -397,10 +397,10 @@ func main() {
 			if err != nil {
 				err = file.Close()
 				if err != nil {
-					fmt.Printf("could not close file: %v\n", err)
+					fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 					return
 				}
-				fmt.Printf("error seeking to file start: %v\n", err)
+				fmt.Printf("error seeking to file start %s: %v\n", jsonFilePath, err)
 				return
 			}
 
@@ -408,17 +408,17 @@ func main() {
 			encoder.SetIndent("", "  ")
 			err = encoder.Encode(finalResult)
 			if err != nil {
-				fmt.Printf("error writing to JSON file: %v\n", err)
+				fmt.Printf("error writing to JSON file %s: %v\n", jsonFilePath, err)
 				err = file.Close()
 				if err != nil {
-					fmt.Printf("could not close file: %v\n", err)
+					fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 					return
 				}
 				return
 			}
 			err = file.Close()
 			if err != nil {
-				fmt.Printf("could not close file: %v\n", err)
+				fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
 				return
 			}
 
