@@ -330,9 +330,13 @@ func main() {
 						return
 					}
 					fmt.Printf("error decoding existing JSON file %s: %v\n", jsonFilePath, err)
-					return
+
+					// Disregard the JSON file that could not be parsed
+					// As it may be due to an update
+					finalResult = result
+				} else {
+					finalResult = MergeAggregatorResults(result, &existingResult)
 				}
-				finalResult = MergeAggregatorResults(result, &existingResult)
 			} else {
 				finalResult = result
 			}
