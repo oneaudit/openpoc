@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"text/template"
 	"time"
 )
 
@@ -28,7 +29,7 @@ func getDirectories() (dirs []string) {
 	return dirs
 }
 
-func mainr() {
+func main() {
 	fmt.Println(time.Now().String())
 
 	var wg sync.WaitGroup
@@ -76,7 +77,7 @@ func mainr() {
 	aggStats := make(map[string]*stats.Stats)
 	for r := range results {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
-			aggStats[r.FileJob.Folder] = &stats.Stats{}
+			aggStats[r.FileJob.Folder] = &stats.Stats{Year: r.FileJob.Folder}
 			aggStats[r.FileJob.Folder].DomainMap = make(map[string]int)
 		}
 		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: len(r.Result.Openpoc)}
@@ -156,6 +157,27 @@ func mainr() {
 				i+1, entry.Domain, entry.Count)
 		}
 		fmt.Println()
+	}
+
+	templateFileName := "stats/stats_example.svg"
+	tmpl, err := template.ParseFiles(templateFileName)
+	if err != nil {
+		fmt.Printf("Could not open template file %s: %v\n", templateFileName, err)
+		return
+	}
+
+	for year, stat := range aggStats {
+		outputFileName := fmt.Sprintf("%s.svg", year)
+		outputFile, err := os.Create(".github/images/" + outputFileName)
+		if err != nil {
+			fmt.Printf("Could not open output file %s: %v\n", outputFileName, err)
+			break
+		}
+		err = tmpl.Execute(outputFile, stat)
+		if err != nil {
+			fmt.Printf("Could not open run template on file %s: %v\n", outputFileName, err)
+		}
+		outputFile.Close()
 	}
 
 	fmt.Println(time.Now().String())

@@ -3,6 +3,7 @@ package stats
 import "openpoc/pkg/types"
 
 type Stats struct {
+	Year                string
 	CVECount            int
 	ExploitCount        int
 	ExploitCountAverage float64

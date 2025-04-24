@@ -19,93 +19,115 @@
     </style>
     <foreignObject x="0" y="0" width="500" height="350">
         <div xmlns="http://www.w3.org/1999/xhtml" class="container">
-            <div class="title">POC Statistics for Year 1999</div>
+            <div class="title">POC Statistics for Year 2023</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>827</strong>
+                    <span class="stat-title">POC Count:</span> <strong>15101</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>568</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>10840</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.46</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.39</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
             <div class="row">
                 <section>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0502
-                        <small>26</small>
+                        CVE-2023-38831
+                        <small>66</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0016
-                        <small>7</small>
+                        CVE-2023-23752
+                        <small>66</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0874
-                        <small>7</small>
+                        CVE-2023-44487
+                        <small>56</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-1053
-                        <small>6</small>
+                        CVE-2023-38646
+                        <small>48</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0504
-                        <small>6</small>
+                        CVE-2023-20198
+                        <small>38</small>
                     </div>
-                </section>
-                <section>
+                    
+                    
+                    </section>
+                    <section>
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0040
-                        <small>5</small>
+                        CVE-2023-46604
+                        <small>35</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0977
-                        <small>5</small>
+                        CVE-2023-23397
+                        <small>35</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0767
-                        <small>5</small>
+                        CVE-2023-4220
+                        <small>31</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-0153
-                        <small>4</small>
+                        CVE-2023-22515
+                        <small>30</small>
                     </div>
+                    
+                    
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-1999-1510
-                        <small>4</small>
+                        CVE-2023-22527
+                        <small>28</small>
                     </div>
+                    
                 </section>
             </div>
         </div>

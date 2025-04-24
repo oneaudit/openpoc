@@ -4,15 +4,27 @@ Aggregates multiple data sources related to CVE exploits/PoC.
 
 <table>
   <tr>
-    <th align="center">1999</th>
-    <th align="center">1999</th>
+    <th align="center">2025</th>
+    <th align="center">2024</th>
   </tr>
   <tr>
     <td align="center">
-      <img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
+      <img alt="" width="400" src=".github/images/2025.svg" alt=""/>
     </td>
     <td align="center">
-      <img alt="" width="400" src=".github/images/stats_example.svg" alt=""/>
+      <img alt="" width="400" src=".github/images/2024.svg" alt=""/>
+    </td>
+  </tr>
+  <tr>
+    <th align="center">2023</th>
+    <th align="center">2022</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img alt="" width="400" src=".github/images/2023.svg" alt=""/>
+    </td>
+    <td align="center">
+      <img alt="" width="400" src=".github/images/2022.svg" alt=""/>
     </td>
   </tr>
 </table>
