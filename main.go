@@ -15,11 +15,13 @@ import (
 )
 
 const (
-	isTesting       = false
-	statusByDefault = false
-	indexLimit      = 10
-	disableTrickest = false
-	disableNomisec  = false
+	isTesting        = false
+	statusByDefault  = false
+	indexLimit       = 10
+	disableExploitDB = false
+	disableInTheWild = false
+	disableTrickest  = false
+	disableNomisec   = false
 )
 
 var (
@@ -54,7 +56,7 @@ var (
 		URL:       "https://github.com/nomi-sec/PoC-in-GitHub.git",
 		Folder:    "datasources/nomisec",
 		Branch:    "master",
-		Completed: false,
+		Completed: statusByDefault,
 		Range:     24,
 	}
 	nomisecFilename = "README.md"
@@ -101,7 +103,7 @@ func main() {
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
 		}
-	} else {
+	} else if !disableExploitDB {
 		fmt.Println("Process ExploitDB Results.")
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err != nil {
 			fmt.Printf("Error parsing exploitdb database %s: %v\n", exploitDBFile, err)
@@ -154,7 +156,7 @@ func main() {
 		} else {
 			fmt.Printf("Error creating in the wild folder: %v\n", err)
 		}
-	} else {
+	} else if !disableInTheWild {
 		fmt.Println("Process InTheWild Results.")
 		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err != nil {
 			fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)

@@ -2,7 +2,8 @@ package types
 
 import "time"
 
-var DefaultDate = time.Now()
+// Ensure we don't have more than what the RFC3339 when using .String()
+var DefaultDate, _ = time.Parse(time.DateOnly, time.Unix(0, 0).Format(time.DateOnly))
 
 type OpenPocMetadata interface {
 	GetCve() string

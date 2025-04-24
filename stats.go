@@ -49,7 +49,7 @@ func mainr() {
 			defer walkWg.Done()
 			err := filepath.Walk(folder, func(path string, info fs.FileInfo, err error) error {
 				if err != nil {
-					fmt.Printf("Error accessing %aggStats: %v\n", path, err)
+					fmt.Printf("Error browsing %s: %v\n", path, err)
 					return nil
 				}
 				if info.Mode().IsRegular() && strings.HasSuffix(strings.ToLower(info.Name()), ".json") {
@@ -58,7 +58,7 @@ func mainr() {
 				return nil
 			})
 			if err != nil {
-				fmt.Printf("Error walking the directory %aggStats: %v\n", folder, err)
+				fmt.Printf("Error walking the directory %s: %v\n", folder, err)
 			}
 		}(dir)
 	}
