@@ -41,7 +41,7 @@ Aside from the links in `references.txt` and a few whitelisted sources, we are s
 > Update schedule: every 24 hours
 ```
 
-It would be good to improve this source, such as by testing links or adding dates.
+It would be good to improve this source, such as by testing links or adding dates as there are none. Addition
 
 ## Nomisec Repository 👑
 
@@ -74,6 +74,17 @@ Their database was available on GitHub, and the API is still available for free 
 > Source: https://inthewild.io/api/exploits?limit=1
 > Update schedule: once a week
 ```
+
+## Want more ? 🔍
+
+A few candidates that may be scrapped indirectly by Trickest:
+
+* ❌ `seclists.org`
+* ❌ `wpscan.com`
+* ❌ `packetstorm.news`
+* ❌ `snyk.io`
+* ❌ `talosintelligence.com`
+* ❌ `huntr.dev`
 
 ## License 📄
 

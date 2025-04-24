@@ -96,19 +96,51 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 			err = errors.New("invalid trickest reference")
 			return
 		}
-		exploit := types.Trickest{
+		url := cleanTrickestURL(parts[1])
+		if url == "" {
+			continue
+		}
+		exploits = append(exploits, &types.Trickest{
 			CveID:       cleanTrickestCve(parts[0]),
-			URL:         parts[1],
+			URL:         url,
 			AddedAt:     types.DefaultDate,
 			Trustworthy: false,
-		}
-		exploits = append(exploits, &exploit)
+		})
 	}
 
 	if err = scanner.Err(); err != nil {
 		return
 	}
 	return
+}
+
+func cleanTrickestURL(url string) string {
+	url = strings.Replace(url, "http://", "https://", -1)
+	// We don't want to know if there is an exploit
+	// We want a proof that there is at least one public exploit
+	if strings.HasPrefix(url, "https://vuldb.com/") {
+		return ""
+	}
+	if strings.HasPrefix(url, "https://security.samsungmobile.com/") {
+		return ""
+	}
+	if strings.HasPrefix(url, "https://www.oracle.com/") {
+		return ""
+	}
+	if strings.HasPrefix(url, "https://www.qualcomm.com/company/product-security/bulletins/") {
+		return ""
+	}
+	// Generic content that passed Trickest filters
+	if url == "https://www.foxit.com/support/security-bulletins.html" {
+		return ""
+	}
+	if url == "https://www.dlink.com/en/security-bulletin/" {
+		return ""
+	}
+	if url == "https://www.syss.de/pentest-blog/" {
+		return ""
+	}
+	return url
 }
 
 func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {
@@ -175,4 +207,12 @@ var knownValidatedSources = []string{
 	"github.com/jev770/badmoodle-scan",
 	"github.com/TinyNiko/android_bulletin_notes",
 	"github.com/WindowsExploits/Exploits",
+
+	// Closed source
+	"seclists.org/",
+	"wpscan.com",
+	"packetstorm.news",
+	"snyk.io",
+	"talosintelligence.com",
+	"huntr.dev",
 }
