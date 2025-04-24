@@ -19,16 +19,16 @@
     </style>
     <foreignObject x="0" y="0" width="500" height="350">
         <div xmlns="http://www.w3.org/1999/xhtml" class="container">
-            <div class="title">POC Statistics for Year 2023</div>
+            <div class="title">POC Statistics for Year 2002</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>14285</strong>
+                    <span class="stat-title">POC Count:</span> <strong>2012</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>10121</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>1049</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.41</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.92</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -40,8 +40,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-38831
-                        <small>67</small>
+                        CVE-2002-20001
+                        <small>10</small>
                     </div>
                     
                     
@@ -49,8 +49,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-23752
-                        <small>66</small>
+                        CVE-2002-1230
+                        <small>10</small>
                     </div>
                     
                     
@@ -58,8 +58,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-44487
-                        <small>56</small>
+                        CVE-2002-2007
+                        <small>8</small>
                     </div>
                     
                     
@@ -67,8 +67,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-38646
-                        <small>48</small>
+                        CVE-2002-1486
+                        <small>8</small>
                     </div>
                     
                     
@@ -76,8 +76,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-20198
-                        <small>39</small>
+                        CVE-2002-1120
+                        <small>6</small>
                     </div>
                     
                     
@@ -88,8 +88,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-23397
-                        <small>35</small>
+                        CVE-2002-2226
+                        <small>6</small>
                     </div>
                     
                     
@@ -97,8 +97,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-46604
-                        <small>34</small>
+                        CVE-2002-2192
+                        <small>6</small>
                     </div>
                     
                     
@@ -106,8 +106,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-22515
-                        <small>31</small>
+                        CVE-2002-2403
+                        <small>5</small>
                     </div>
                     
                     
@@ -115,8 +115,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-4220
-                        <small>31</small>
+                        CVE-2002-0391
+                        <small>5</small>
                     </div>
                     
                     
@@ -124,8 +124,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-4911
-                        <small>31</small>
+                        CVE-2002-2084
+                        <small>5</small>
                     </div>
                     
                 </section>

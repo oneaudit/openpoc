@@ -116,28 +116,12 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 
 func cleanTrickestURL(url string) string {
 	url = strings.Replace(url, "http://", "https://", -1)
-	// We don't want to know if there is an exploit
-	// We want a proof that there is at least one public exploit
-	if strings.HasPrefix(url, "https://vuldb.com/") {
-		return ""
+	for _, banned := range knownForbiddenSourcesPrefix {
+		if strings.HasPrefix(url, banned) {
+			return ""
+		}
 	}
-	if strings.HasPrefix(url, "https://security.samsungmobile.com/") {
-		return ""
-	}
-	if strings.HasPrefix(url, "https://www.oracle.com/") {
-		return ""
-	}
-	if strings.HasPrefix(url, "https://www.qualcomm.com/company/product-security/bulletins/") {
-		return ""
-	}
-	// Generic content that passed Trickest filters
-	if url == "https://www.foxit.com/support/security-bulletins.html" {
-		return ""
-	}
-	if url == "https://www.dlink.com/en/security-bulletin/" {
-		return ""
-	}
-	if url == "https://www.syss.de/pentest-blog/" {
+	if url == "https://cert.vde.com/en-us/advisories/" {
 		return ""
 	}
 	return url
@@ -210,9 +194,48 @@ var knownValidatedSources = []string{
 
 	// Closed source
 	"seclists.org/",
-	"wpscan.com",
-	"packetstorm.news",
-	"snyk.io",
-	"talosintelligence.com",
-	"huntr.dev",
+	"wpscan.com/",
+	"wpvulndb.com/",
+	"packetstorm.news/",
+	"snyk.io/",
+	"talosintelligence.com/",
+	"huntr.dev/",
+	"hackerone.com/",
+	"tenable.com/",
+	"medium.com/",
+	"www.vulnerability-lab.com/",
+	"www.openwall.com/",
+	"www.mend.io/vulnerability-database/",
+	"www.whitesourcesoftware.com/",
+
+	// Blogs
+	"codevigilant.com/",
+	"pierrekim.github.io/",
+}
+
+var knownForbiddenSourcesPrefix = []string{
+	// We don't want to know if there is an exploit
+	// We want a proof that there is at least one public exploit
+	"https://vuldb.com/",
+	// Generic content that passed Trickest filters
+	"https://security.samsungmobile.com/",
+	"https://www.oracle.com/",
+	"https://kb.netgear.com/",
+	"https://usn.ubuntu.com/",
+	"https://www.qualcomm.com/company/product-security/bulletins/",
+	"https://www.bentley.com/en/common-vulnerability-exposure/BE-2021-000",
+	"https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html",
+	"https://www.foxit.com/support/security-bulletins.html",
+	"https://www.foxitsoftware.com/support/security-bulletins.php",
+	"https://www.dlink.com/en/security-bulletin/",
+	"https://www.syss.de/pentest-blog/",
+	"https://kc.mcafee.com/corporate/",
+	"https://tools.cisco.com/security/center/content/",
+	"https://www.ibm.com/",
+	"https://www.forescout.com/",
+	"https://www.kb.cert.org/",
+	"https://www.autodesk.com/trust/security-advisories/",
+	"https://devolutions.net/security/advisories/",
+	"https://nvidia.custhelp.com/",
+	"https://cert.vde.com/",
 }

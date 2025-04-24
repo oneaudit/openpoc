@@ -428,6 +428,9 @@ func main() {
 				break
 			}
 		}
+		if isTesting && i >= indexLimit {
+			break
+		}
 	}
 	fmt.Println(time.Now().String())
 }

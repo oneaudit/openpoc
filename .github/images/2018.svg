@@ -19,16 +19,16 @@
     </style>
     <foreignObject x="0" y="0" width="500" height="350">
         <div xmlns="http://www.w3.org/1999/xhtml" class="container">
-            <div class="title">POC Statistics for Year 2023</div>
+            <div class="title">POC Statistics for Year 2018</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>14285</strong>
+                    <span class="stat-title">POC Count:</span> <strong>12518</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>10121</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>7393</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.41</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.69</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -40,8 +40,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-38831
-                        <small>67</small>
+                        CVE-2018-6574
+                        <small>99</small>
                     </div>
                     
                     
@@ -49,8 +49,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-23752
-                        <small>66</small>
+                        CVE-2018-7600
+                        <small>58</small>
                     </div>
                     
                     
@@ -58,8 +58,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-44487
-                        <small>56</small>
+                        CVE-2018-15473
+                        <small>47</small>
                     </div>
                     
                     
@@ -67,8 +67,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-38646
-                        <small>48</small>
+                        CVE-2018-10933
+                        <small>47</small>
                     </div>
                     
                     
@@ -76,8 +76,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-20198
-                        <small>39</small>
+                        CVE-2018-16763
+                        <small>44</small>
                     </div>
                     
                     
@@ -88,7 +88,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-23397
+                        CVE-2018-9995
                         <small>35</small>
                     </div>
                     
@@ -97,7 +97,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-46604
+                        CVE-2018-2628
                         <small>34</small>
                     </div>
                     
@@ -106,7 +106,16 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-22515
+                        CVE-2018-11776
+                        <small>34</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2018-20250
                         <small>31</small>
                     </div>
                     
@@ -115,17 +124,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-4220
-                        <small>31</small>
-                    </div>
-                    
-                    
-                    <div class="field">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                        </svg>
-                        CVE-2023-4911
-                        <small>31</small>
+                        CVE-2018-6389
+                        <small>28</small>
                     </div>
                     
                 </section>

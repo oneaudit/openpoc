@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2022</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>16644</strong>
+                    <span class="stat-title">POC Count:</span> <strong>15371</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>11774</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>10541</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.41</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.46</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -41,7 +41,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-0847
-                        <small>139</small>
+                        <small>142</small>
                     </div>
                     
                     
@@ -50,7 +50,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-22965
-                        <small>114</small>
+                        <small>112</small>
                     </div>
                     
                     
@@ -59,7 +59,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-30190
-                        <small>105</small>
+                        <small>106</small>
                     </div>
                     
                     
@@ -68,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-1388
-                        <small>95</small>
+                        <small>97</small>
                     </div>
                     
                     
@@ -89,7 +89,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-22947
-                        <small>86</small>
+                        <small>85</small>
                     </div>
                     
                     

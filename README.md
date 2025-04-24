@@ -80,11 +80,18 @@ Their database was available on GitHub, and the API is still available for free 
 A few candidates that may be scrapped indirectly by Trickest:
 
 * ❌ `seclists.org`
-* ❌ `wpscan.com`
+* ❌ `wpscan.com`, `wpvulndb.com`
 * ❌ `packetstorm.news`
 * ❌ `snyk.io`
 * ❌ `talosintelligence.com`
 * ❌ `huntr.dev`
+* ❌ `hackerone.com`
+* ❌ `tenable.com`
+* ❌ `medium.com`
+* ❌ `vulnerability-lab.com`
+* ❌ `openwall.com`
+* ❌ `securitylab.github.com/advisories/`
+* ❌ `whitesourcesoftware.com/`
 
 ## License 📄
 

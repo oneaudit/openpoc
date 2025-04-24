@@ -19,8 +19,8 @@ const domainTop = 3
 
 func getDirectories() (dirs []string) {
 	currentYear := time.Now().Year()
-	startYear := currentYear - 4
-	for year := currentYear; year > startYear; year-- {
+	startYear := 1999
+	for year := currentYear; year >= startYear; year-- {
 		dir := fmt.Sprintf("%04d", year)
 		if _, err := os.Stat(dir); !os.IsNotExist(err) {
 			dirs = append(dirs, dir)
