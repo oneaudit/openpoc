@@ -212,26 +212,42 @@ var knownValidatedSources = []string{
 
 	// Closed source
 	"seclists.org/",
-	"wpscan.com/", "wpvulndb.com/", // new vs old
-	"packetstorm.news/", "packetstormsecurity.com/", "packetstormsecurity.org/", // new vs old
-	"snyk.io/",
+	"wpscan.com/",
+	"packetstorm.news/",
+	"security.snyk.io/", "snyk.io/vuln/", // new vs old
 	"talosintelligence.com/",
 	"huntr.dev/",
 	"hackerone.com/",
 	"www.tenable.com/",
-	"marc.info/",
-	"www.mend.io/vulnerability-database/",
-	"www.whitesourcesoftware.com/",
-	"www.vulnerability-lab.com/",
 	"www.openwall.com/",
 }
 
 // Blogs or...
 var knownValidatedButNotTrustedSources = []string{
+	// old
+	"wpvulndb.com/",
+	"packetstormsecurity.com/",
+	"packetstormsecurity.org/",
+
+	// too generic
+	"medium.com/",
+	"gitlab.com/",
+	"www.youtube.com/",
+
+	// it's a personal choice, but open to changes
+	"git.kernel.org",
 	"codevigilant.com/",
 	"pierrekim.github.io/",
 	"blog.securityevaluators.com/",
-	"medium.com/",
+	"aluigi.altervista.org/",
+	"bugzilla.mozilla.org/show_bug.cgi",
+	"bugzilla.redhat.com/show_bug.cgi",
+	"blogs.gentoo.org/",
+	"marc.info/",
+	"www.mend.io/vulnerability-database/",
+	"www.whitesourcesoftware.com/",
+	"www.vulnerability-lab.com/",
+	"www-01.ibm.com/",
 }
 
 // We don't want to know if there is an exploit
@@ -261,5 +277,13 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://cert.vde.com/en-us/advisories/vde-",                                      // vuln details
 	"https://www.coresecurity.com/?action=item",                                       // this specific endpoint
 	"https://support.hpe.com/hpsc/doc/public/",                                        // vuln details
+	"https://h20566.www2.hpe.com/",                                                    // dead
 	"https://www.securityfocus.com/",                                                  // dead
+	"https://docs.microsoft.com/en-us/security-updates/",                              // vuln details
+	"https://www.vmware.com/",                                                         // junk
+	"https://www.mandriva.com/",                                                       // junk
+	"https://www.cisco.com/warp/",                                                     // junk
+	"https://cdn.kernel.org/pub/linux/kernel/",                                        // junk
+	"https://www.redhat.com/support/errata/",                                          // junk
+	"https://sourceforge.net/",                                                        // nothing
 }
