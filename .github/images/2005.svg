@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2005</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>5416</strong>
+                    <span class="stat-title">POC Count:</span> <strong>5411</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>2330</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>2328</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>2.32</strong>
@@ -88,7 +88,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2005-3520
+                        CVE-2005-1782
                         <small>10</small>
                     </div>
                     
@@ -97,7 +97,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2005-2467
+                        CVE-2005-1823
                         <small>10</small>
                     </div>
                     

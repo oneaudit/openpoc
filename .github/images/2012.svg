@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2012</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>4354</strong>
+                    <span class="stat-title">POC Count:</span> <strong>4353</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>1883</strong>
@@ -67,7 +67,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2012-0865
+                        CVE-2012-4869
                         <small>13</small>
                     </div>
                     
@@ -76,7 +76,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2012-4869
+                        CVE-2012-0865
                         <small>13</small>
                     </div>
                     
@@ -97,7 +97,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2012-5613
+                        CVE-2012-1935
                         <small>11</small>
                     </div>
                     
@@ -106,7 +106,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2012-1935
+                        CVE-2012-5613
                         <small>11</small>
                     </div>
                     
@@ -124,7 +124,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2012-1617
+                        CVE-2012-1664
                         <small>10</small>
                     </div>
                     

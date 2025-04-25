@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2002</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>1904</strong>
+                    <span class="stat-title">POC Count:</span> <strong>1903</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>969</strong>
@@ -58,15 +58,6 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2002-1486
-                        <small>8</small>
-                    </div>
-                    
-                    
-                    <div class="field">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                        </svg>
                         CVE-2002-2007
                         <small>8</small>
                     </div>
@@ -76,7 +67,16 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2002-2226
+                        CVE-2002-1486
+                        <small>8</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2002-2192
                         <small>6</small>
                     </div>
                     
@@ -97,7 +97,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2002-2192
+                        CVE-2002-2226
                         <small>6</small>
                     </div>
                     
@@ -106,7 +106,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2002-1643
+                        CVE-2002-1634
                         <small>5</small>
                     </div>
                     
@@ -124,7 +124,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2002-1814
+                        CVE-2002-1059
                         <small>5</small>
                     </div>
                     
