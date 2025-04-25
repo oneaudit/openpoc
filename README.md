@@ -53,6 +53,8 @@ It would be good to improve this source, such as by testing links or adding date
 > Update schedule: every 6 hours
 ```
 
+A relatively similar resource is: [CyberWarZone](https://cyberwarzone.com/githubfeed).
+
 ## Exploit Database 🪲
 
 [Exploit Database](https://www.exploit-db.com/) is a well-known and popular website with a large collection of PoCs.<br>
