@@ -84,7 +84,7 @@ A few candidates that may be scrapped indirectly by Trickest:
 * ❌ `packetstorm.news`
 * ❌ `security.snyk.io`, `snyk.io/vuln/`
 * ❌ `talosintelligence.com`
-* ❌ `huntr.dev`
+* ❌ `huntr.com`, `huntr.dev`
 * ❌ `hackerone.com`
 * ❌ `www.tenable.com`
 * ❌ `medium.com`
@@ -92,6 +92,7 @@ A few candidates that may be scrapped indirectly by Trickest:
 * ❌ `openwall.com`
 * ❌ `securitylab.github.com/advisories/`
 * ❌ `whitesourcesoftware.com/`
+* ❌ `osv.dev`, `osvdb.org`
 
 ## License 📄
 

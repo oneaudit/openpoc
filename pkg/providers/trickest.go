@@ -51,8 +51,11 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 			trusted = true
 		}
 
-		// Common Repository (Nomisec indexes GitHub, not gist)
+		// Common Repository (Nomisec indexes GitHub, no gists nor securitylabs)
 		if !found && strings.Contains(url, "gist.github.com") {
+			found = true
+		}
+		if !found && strings.Contains(url, "securitylab.github.com") {
 			found = true
 		}
 
@@ -142,6 +145,9 @@ func cleanTrickestURL(url string) string {
 	if url == "https://cert.vde.com/en-us/advisories/" {
 		return ""
 	}
+	if url == "https://www.coresecurity.com/advisories" {
+		return ""
+	}
 	return url
 }
 
@@ -216,7 +222,7 @@ var knownValidatedSources = []string{
 	"packetstorm.news/",
 	"security.snyk.io/", "snyk.io/vuln/", // new vs old
 	"talosintelligence.com/",
-	"huntr.dev/",
+	"huntr.dev/", "huntr.com/",
 	"hackerone.com/",
 	"www.tenable.com/",
 	"www.openwall.com/",
@@ -232,22 +238,27 @@ var knownValidatedButNotTrustedSources = []string{
 	// too generic
 	"medium.com/",
 	"gitlab.com/",
-	"www.youtube.com/",
+	"www.youtube.com/", "youtu.be",
 
 	// it's a personal choice, but open to changes
-	"git.kernel.org",
+	"www.syss.de/",
+	"git.kernel.org/",
 	"codevigilant.com/",
 	"pierrekim.github.io/",
+	"blog.nintechnet.com/",
 	"blog.securityevaluators.com/",
 	"aluigi.altervista.org/",
 	"bugzilla.mozilla.org/show_bug.cgi",
 	"bugzilla.redhat.com/show_bug.cgi",
-	"blogs.gentoo.org/",
+	"blogs.gentoo.org/", "bugs.gentoo.org/",
 	"marc.info/",
 	"www.mend.io/vulnerability-database/",
 	"www.whitesourcesoftware.com/",
 	"www.vulnerability-lab.com/",
-	"www-01.ibm.com/",
+	"www.zeroscience.mk/",
+	"evuln.com/",
+	"www.evuln.com/",
+	"securityreason.com/",
 }
 
 // We don't want to know if there is an exploit
@@ -286,4 +297,9 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://cdn.kernel.org/pub/linux/kernel/",                                        // junk
 	"https://www.redhat.com/support/errata/",                                          // junk
 	"https://sourceforge.net/",                                                        // nothing
+	"https://mattermost.com/security-updates/",                                        // nothing
+	"https://www-01.ibm.com/",                                                         // vuln details
+	"https://www.mozilla.org/security/",                                               // vuln details
+	"https://oval.cisecurity.org/repository/",                                         // dead
+	"https://www.osvdb.org/",                                                          // dead
 }

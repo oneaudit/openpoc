@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2006</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>10032</strong>
+                    <span class="stat-title">POC Count:</span> <strong>9475</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>4361</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>4057</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>2.30</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>2.34</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -76,7 +76,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2006-3172
+                        CVE-2006-4985
                         <small>24</small>
                     </div>
                     
@@ -88,7 +88,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2006-4985
+                        CVE-2006-3172
                         <small>24</small>
                     </div>
                     

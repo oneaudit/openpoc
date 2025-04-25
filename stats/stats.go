@@ -17,6 +17,39 @@ import (
 const scoreboardTop = 10
 const domainTop = 3
 
+var knownValidatedSources = []string{
+	"www.exploit-db.com",
+	"github.com",
+	"seclists.org",
+	"wpscan.com", "wpvulndb.com", // new vs old
+	"packetstorm.news", "packetstormsecurity.com", "packetstormsecurity.org", // new vs old
+	"security.snyk.io", "snyk.io", // new vs old
+	"talosintelligence.com", "www.talosintelligence.com", // both
+	"huntr.dev",
+	"hackerone.com",
+	"www.tenable.com",
+	"gist.github.com",
+	"medium.com",
+	"docs.google.com",
+	"www.youtube.com", "youtu.be", // both
+	"www.vulnerability-lab.com",
+	"www.openwall.com",
+	"www.mend.io",
+	"www.whitesourcesoftware.com",
+	"codevigilant.com",
+	"pierrekim.github.io",
+	"blog.securityevaluators.com",
+	"git.kernel.org",
+	"marc.info",
+	"bugzilla.mozilla.org",
+	"bugzilla.redhat.com",
+	"blogs.gentoo.org", "bugs.gentoo.org/",
+	"aluigi.altervista.org",
+	"gitlab.com",
+	"www.coresecurity.com",
+	"securitylab.github.com",
+}
+
 func getDirectories() (dirs []string) {
 	currentYear := time.Now().Year()
 	startYear := 1999
@@ -98,6 +131,7 @@ func main() {
 		}
 	}
 
+	collector := make(map[string]*stats.DomainCount)
 	for _, stat := range aggStats {
 		// Compute Frequencies
 		if stat.CVECount > 0 {
@@ -112,8 +146,18 @@ func main() {
 		}
 		// Compute Top URLs
 		var counts []stats.DomainCount
-		for d, count := range stat.DomainMap {
-			counts = append(counts, stats.DomainCount{Domain: d, Count: count})
+		for domain, count := range stat.DomainMap {
+			found := false
+			for _, knownValidatedSource := range knownValidatedSources {
+				if knownValidatedSource == domain {
+					found = true
+					break
+				}
+			}
+			if found {
+				continue
+			}
+			counts = append(counts, stats.DomainCount{Domain: domain, Count: count})
 		}
 		sort.Slice(counts, func(i, j int) bool {
 			return counts[i].Count > counts[j].Count
@@ -122,7 +166,23 @@ func main() {
 			counts = counts[:domainTop]
 		}
 		stat.DomainScoreBoard = counts
+
+		for _, domainCount := range stat.DomainScoreBoard {
+			if _, found := collector[domainCount.Domain]; !found {
+				collector[domainCount.Domain] = &stats.DomainCount{Domain: domainCount.Domain, Count: domainCount.Count}
+			} else {
+				collector[domainCount.Domain].Count += domainCount.Count
+			}
+		}
 	}
+
+	var counts []stats.DomainCount
+	for _, domainCount := range collector {
+		counts = append(counts, *domainCount)
+	}
+	sort.Slice(counts, func(i, j int) bool {
+		return counts[i].Count > counts[j].Count
+	})
 
 	// Statistics computed for year: 1999
 	// Total CVEs with an exploit: 568
@@ -144,13 +204,13 @@ func main() {
 		fmt.Printf("Total CVEs with an exploit: %d\n", stat.CVECount)
 		fmt.Printf("Total Exploit Count: %d\n", stat.ExploitCount)
 		fmt.Printf("Exploit Count Average: %f\n", stat.ExploitCountAverage)
-		fmt.Println("Top 10 CVEs with the most exploits:")
+		fmt.Println("Top CVEs with the most exploits:")
 		for i := 0; i < scoreboardTop && i < len(stat.CveScoreBoard); i++ {
 			entry := stat.CveScoreBoard[i]
 			fmt.Printf("%d. CVE: %s, Exploit Count: %d\n",
 				i+1, entry.CveID, entry.ExploitCount)
 		}
-		fmt.Println("Top 3 CVEs with the most exploits:")
+		fmt.Println("Top domains with the most exploits:")
 		for i := 0; i < domainTop && i < len(stat.DomainScoreBoard); i++ {
 			entry := stat.DomainScoreBoard[i]
 			fmt.Printf("%d. Domain: %s, Count: %d\n",
@@ -158,6 +218,15 @@ func main() {
 		}
 		fmt.Println()
 	}
+
+	fmt.Println()
+	fmt.Println("Top domains with the most exploits:")
+	for i := 0; i < domainTop && i < len(counts); i++ {
+		entry := counts[i]
+		fmt.Printf("%d. Domain: %s, Count: %d\n",
+			i+1, entry.Domain, entry.Count)
+	}
+	fmt.Println()
 
 	templateFileName := "stats/stats_example.svg"
 	tmpl, err := template.ParseFiles(templateFileName)
