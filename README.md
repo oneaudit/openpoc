@@ -1,6 +1,6 @@
 # Open PoCs [<img src="https://github.com/oneaudit/openpoc/actions/workflows/main.yaml/badge.svg" alt="" align="right">](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml)
 
-Aggregates multiple data sources related to CVE exploits/PoC.
+Aggregates multiple data sources related to CVE exploits/PoC. [Please read the license terms](#license-).
 
 <table>
   <tr>
@@ -95,5 +95,5 @@ A few candidates that may be scrapped indirectly by Trickest:
 
 ## License 📄
 
-This project is licensed under the MIT License.<br>
+This project is licensed under the GNU GPL v3.0 License.<br>
 You are free to use, modify, and distribute this software with proper attribution. See the [LICENSE](LICENSE) file for full details.

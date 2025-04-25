@@ -121,6 +121,7 @@ func cleanTrickestURL(url string) string {
 			return ""
 		}
 	}
+	// No advisory identifier in the URL
 	if url == "https://cert.vde.com/en-us/advisories/" {
 		return ""
 	}
@@ -222,13 +223,14 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.oracle.com/",
 	"https://kb.netgear.com/",
 	"https://usn.ubuntu.com/",
+	"https://www.ubuntu.com/",
 	"https://www.qualcomm.com/company/product-security/bulletins/",
-	"https://www.bentley.com/en/common-vulnerability-exposure/BE-2021-000",
+	"https://www.bentley.com/en/common-vulnerability-exposure/",
 	"https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html",
 	"https://www.foxit.com/support/security-bulletins.html",
 	"https://www.foxitsoftware.com/support/security-bulletins.php",
 	"https://www.dlink.com/en/security-bulletin/",
-	"https://www.syss.de/pentest-blog/",
+	"https://www.syss.de/pentest-blog/", // only the blog
 	"https://kc.mcafee.com/corporate/",
 	"https://tools.cisco.com/security/center/content/",
 	"https://www.ibm.com/",
