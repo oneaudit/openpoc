@@ -32,13 +32,32 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 		found := false
 		trusted := false
 
-		// Common Repository
-		if strings.HasPrefix(url, "www.exploit-db.com") {
+		// These are big CVEs databases
+		// They may contain dead links, todos (false positives), etc.
+		// In practice, we should directly scrap them (but too much data is too much)
+		for _, dbURL := range knownValidatedSources {
+			if dbURL == url {
+				found = true
+				trusted = true
+				break
+			}
+		}
+
+		// Common Repository (already index, but trickest often has a few
+		// more than even exploit-db did not properly indexed)
+		if !found && strings.HasPrefix(url, "www.exploit-db.com") {
 			url = strings.TrimSuffix(url, "/")
 			found = true
 			trusted = true
 		}
-		if strings.Contains(url, "gist.github.com") {
+
+		// Common Repository (Nomisec indexes GitHub, not gist)
+		if !found && strings.Contains(url, "gist.github.com") {
+			found = true
+		}
+
+		// OK, but we will never trust these
+		if !found && strings.Contains(url, "docs.google.com") {
 			found = true
 		}
 
@@ -51,14 +70,12 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 			}
 		}
 
-		// These are big CVEs databases
-		// They may contain dead links, todos (false positives), etc.
-		// In practice, we should directly scrap them (but too much data is too much)
-		for _, dbURL := range knownValidatedSources {
-			if dbURL == url {
-				found = true
-				trusted = true
-				break
+		if !found {
+			for _, dbURL := range knownValidatedButNotTrustedSources {
+				if dbURL == url {
+					found = true
+					break
+				}
 			}
 		}
 
@@ -195,49 +212,54 @@ var knownValidatedSources = []string{
 
 	// Closed source
 	"seclists.org/",
-	"wpscan.com/",
-	"wpvulndb.com/",
-	"packetstorm.news/",
+	"wpscan.com/", "wpvulndb.com/", // new vs old
+	"packetstorm.news/", "packetstormsecurity.com/", "packetstormsecurity.org/", // new vs old
 	"snyk.io/",
 	"talosintelligence.com/",
 	"huntr.dev/",
 	"hackerone.com/",
-	"tenable.com/",
-	"medium.com/",
-	"www.vulnerability-lab.com/",
-	"www.openwall.com/",
+	"www.tenable.com/",
+	"marc.info/",
 	"www.mend.io/vulnerability-database/",
 	"www.whitesourcesoftware.com/",
-
-	// Blogs
-	"codevigilant.com/",
-	"pierrekim.github.io/",
+	"www.vulnerability-lab.com/",
+	"www.openwall.com/",
 }
 
+// Blogs or...
+var knownValidatedButNotTrustedSources = []string{
+	"codevigilant.com/",
+	"pierrekim.github.io/",
+	"blog.securityevaluators.com/",
+	"medium.com/",
+}
+
+// We don't want to know if there is an exploit
+// We want a proof that there is at least one public exploit
 var knownForbiddenSourcesPrefix = []string{
-	// We don't want to know if there is an exploit
-	// We want a proof that there is at least one public exploit
-	"https://vuldb.com/",
-	// Generic content that passed Trickest filters
-	"https://security.samsungmobile.com/",
-	"https://www.oracle.com/",
-	"https://kb.netgear.com/",
-	"https://usn.ubuntu.com/",
-	"https://www.ubuntu.com/",
-	"https://www.qualcomm.com/company/product-security/bulletins/",
-	"https://www.bentley.com/en/common-vulnerability-exposure/",
-	"https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html",
-	"https://www.foxit.com/support/security-bulletins.html",
-	"https://www.foxitsoftware.com/support/security-bulletins.php",
-	"https://www.dlink.com/en/security-bulletin/",
-	"https://www.syss.de/pentest-blog/", // only the blog
-	"https://kc.mcafee.com/corporate/",
-	"https://tools.cisco.com/security/center/content/",
-	"https://www.ibm.com/",
-	"https://www.forescout.com/",
-	"https://www.kb.cert.org/",
-	"https://www.autodesk.com/trust/security-advisories/",
-	"https://devolutions.net/security/advisories/",
-	"https://nvidia.custhelp.com/",
-	"https://cert.vde.com/",
+	"https://vuldb.com/",                                          // vuln details
+	"https://security.samsungmobile.com/",                         // vuln details
+	"https://www.oracle.com/",                                     // vuln details
+	"https://kb.netgear.com/",                                     // vuln details
+	"https://usn.ubuntu.com/",                                     // vuln details
+	"https://www.ubuntu.com/usn/",                                 // vuln details
+	"https://www.qualcomm.com/company/product-security/bulletins", // vuln details
+	"https://www.bentley.com/en/common-vulnerability-exposure/",   // vuln details
+	"https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html", // dead
+	"https://www.foxit.com/support/security-bulletins.html",                           // junk
+	"https://www.foxitsoftware.com/support/security-bulletins.php",                    // junk
+	"https://www.dlink.com/en/security-bulletin/",                                     // junk
+	"https://www.syss.de/pentest-blog/",                                               // this specific endpoint
+	"https://kc.mcafee.com/corporate/",                                                // dead
+	"https://tools.cisco.com/security/center/content/",                                // vuln details
+	"https://www.ibm.com/",                                                            // vuln details
+	"https://www.forescout.com/",                                                      // vuln details + "nessus"
+	"https://www.kb.cert.org/",                                                        // vuln details
+	"https://www.autodesk.com/trust/security-advisories/",                             // vuln details
+	"https://devolutions.net/security/advisories/",                                    // vuln details
+	"https://nvidia.custhelp.com/app/answers/detail/a_id/",                            // vuln details
+	"https://cert.vde.com/en-us/advisories/vde-",                                      // vuln details
+	"https://www.coresecurity.com/?action=item",                                       // this specific endpoint
+	"https://support.hpe.com/hpsc/doc/public/",                                        // vuln details
+	"https://www.securityfocus.com/",                                                  // dead
 }

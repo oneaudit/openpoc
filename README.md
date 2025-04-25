@@ -82,11 +82,11 @@ A few candidates that may be scrapped indirectly by Trickest:
 * ❌ `seclists.org`
 * ❌ `wpscan.com`, `wpvulndb.com`
 * ❌ `packetstorm.news`
-* ❌ `snyk.io`
+* ❌ `security.snyk.io`
 * ❌ `talosintelligence.com`
 * ❌ `huntr.dev`
 * ❌ `hackerone.com`
-* ❌ `tenable.com`
+* ❌ `www.tenable.com`
 * ❌ `medium.com`
 * ❌ `vulnerability-lab.com`
 * ❌ `openwall.com`
