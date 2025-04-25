@@ -29,8 +29,8 @@ jobs:
       - name: Build and run stats
         working-directory: update_branch
         run: |
-          go build -o stats ./stats/stats.go
-          ./stats
+          go build -o compute_stats ./stats/stats.go
+          ./compute_stats
 
       - name: Copy generated images
         run: |
