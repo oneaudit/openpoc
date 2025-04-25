@@ -1,0 +1,45 @@
+name: Update Stats
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # every day at midnight UTC
+  workflow_dispatch:     # allows manual run from GitHub UI
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Checkout updates
+        uses: actions/checkout@v4
+        with:
+          ref: update
+          path: update_branch
+
+      - name: Install golang
+        uses: actions/setup-go@v5
+        with:
+          go-version: '^1.23.0'
+
+      - name: Build and run stats
+        working-directory: update_branch
+        run: |
+          go build -o stats ./stats/stats.go
+          ./stats
+
+      - name: Copy generated images
+        run: |
+          cp -r update_branch/.github/images/* .github/images/
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .github/images/*
+          git commit -m "[chore] update statistics" || echo "No changes to commit"
+          git push origin main
