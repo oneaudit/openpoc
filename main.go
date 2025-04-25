@@ -16,7 +16,7 @@ import (
 
 const (
 	isTesting        = false
-	statusByDefault  = true
+	statusByDefault  = false
 	indexLimit       = 10
 	disableExploitDB = false
 	disableInTheWild = false
