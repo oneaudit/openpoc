@@ -139,6 +139,10 @@ func main() {
 		}
 		// Compute CveScoreBoard
 		sort.Slice(stat.CveScoreBoard, func(i, j int) bool {
+			// More recent first
+			if stat.CveScoreBoard[i].ExploitCount == stat.CveScoreBoard[j].ExploitCount {
+				return stat.CveScoreBoard[i].CveID > stat.CveScoreBoard[j].CveID
+			}
 			return stat.CveScoreBoard[i].ExploitCount > stat.CveScoreBoard[j].ExploitCount
 		})
 		if len(stat.CveScoreBoard) > scoreboardTop {
@@ -160,6 +164,9 @@ func main() {
 			counts = append(counts, stats.DomainCount{Domain: domain, Count: count})
 		}
 		sort.Slice(counts, func(i, j int) bool {
+			if counts[i].Count == counts[j].Count {
+				return counts[i].Domain > counts[j].Domain
+			}
 			return counts[i].Count > counts[j].Count
 		})
 		if len(counts) > domainTop {
