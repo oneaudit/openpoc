@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -31,4 +32,16 @@ func ProcessFiles(rootDir string, process func(string) error) error {
 		}
 		return process(filepath.Join(rootDir, relPath))
 	})
+}
+
+func GetDirectories() (dirs []string) {
+	currentYear := time.Now().Year()
+	startYear := 1999
+	for year := currentYear; year >= startYear; year-- {
+		dir := fmt.Sprintf("%04d", year)
+		if _, err := os.Stat(dir); !os.IsNotExist(err) {
+			dirs = append(dirs, dir)
+		}
+	}
+	return dirs
 }

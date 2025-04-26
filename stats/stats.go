@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"openpoc/pkg/providers"
 	"openpoc/pkg/stats"
+	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
 	"sort"
@@ -18,26 +19,13 @@ import (
 const scoreboardTop = 10
 const domainTop = 3
 
-func getDirectories() (dirs []string) {
-	currentYear := time.Now().Year()
-	startYear := 1999
-	for year := currentYear; year >= startYear; year-- {
-		dir := fmt.Sprintf("%04d", year)
-		if _, err := os.Stat(dir); !os.IsNotExist(err) {
-			dirs = append(dirs, dir)
-		}
-	}
-	return dirs
-}
-
 func main() {
 	fmt.Println(time.Now().String())
 
 	knownValidatedSources := providers.ComputeValidatedSources()
+	directories := utils.GetDirectories()
 
 	var wg sync.WaitGroup
-	directories := getDirectories()
-
 	fileJobs := make(chan stats.FileJob, 100)
 	results := make(chan *stats.StatResult, 100)
 	numWorkers := 8

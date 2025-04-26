@@ -18,6 +18,7 @@ const (
 	isTesting        = false
 	statusByDefault  = false
 	indexLimit       = 10
+	onlyYear         = ""
 	disableExploitDB = false
 	disableInTheWild = false
 	disableTrickest  = false
@@ -196,7 +197,8 @@ func main() {
 	if trickest.Completed && !disableTrickest {
 		fmt.Println("Process Trickest Results.")
 		// Parses And Add To Trickest Each Markdown
-		if err = utils.ProcessFiles(trickest.Folder, trickestWorker); err == nil {
+		if true { // err = utils.ProcessFiles(trickest.Folder, trickestWorker); err == nil {
+			_ = trickestWorker
 			// Add references
 			var referencesTrickest []*types.Trickest
 			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err == nil {
@@ -298,6 +300,10 @@ func main() {
 	fmt.Println("Write results to disk.")
 	i := 0
 	for year, results := range yearMap {
+		if onlyYear != "" && year != onlyYear {
+			continue
+		}
+
 		fmt.Printf("Write results for year [%s] to disk.\n", year)
 		err := os.MkdirAll(year, 0755)
 		if err != nil {
@@ -494,7 +500,6 @@ func addToMerger[T types.OpenPocMetadata](exploit T, merger *map[string]*types.O
 		} else {
 			// We trust the date of the most trusted exploit
 			if exploit.GetTrustScore() > value.TrustScore && exploit.GetPublishDate() != types.DefaultDate {
-				println(value.AddedAt, "from", exploit.GetURL(), "to", exploit.GetPublishDate().Format(time.RFC3339))
 				value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
 			}
 		}
