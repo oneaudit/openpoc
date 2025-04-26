@@ -25,6 +25,11 @@ const (
 	disableNomisec   = false
 )
 
+const (
+	version         = "0.3.3"
+	versionFilename = ".version"
+)
+
 var (
 	exploitDB = types.Target{
 		URL:       "https://gitlab.com/exploit-database/exploitdb.git",
@@ -65,6 +70,39 @@ var (
 
 func main() {
 	fmt.Println(time.Now().String())
+
+	// Changes to the format means we need to recompile every file
+	if _, err := os.Stat(versionFilename); os.IsNotExist(err) {
+		err = os.WriteFile(versionFilename, []byte(version), 0644)
+		if err != nil {
+			fmt.Printf("Error creating file: %v\n", err)
+			return
+		}
+		fmt.Printf("File created with version: %s\n", version)
+	} else {
+		var data []byte
+		data, err = os.ReadFile(versionFilename)
+		if err != nil {
+			fmt.Printf("Error reading version file: %v\n", err)
+			return
+		}
+
+		storedVersion := string(data)
+		if storedVersion == version {
+			fmt.Println("Version matches:", storedVersion)
+		} else {
+			fmt.Printf("Version mismatch! Stored: %s, Current: %s\n", storedVersion, version)
+			folders := utils.GetDirectories()
+			for _, folder := range folders {
+				err = os.RemoveAll(folder)
+				if err != nil {
+					fmt.Printf("Error removing folder %s: %v\n", folder, err)
+					return
+				}
+			}
+			fmt.Println("All folders were removed.")
+		}
+	}
 
 	var err error
 	yearMap := make(map[string]map[string]*types.AggregatorResult)
