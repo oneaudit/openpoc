@@ -72,6 +72,9 @@ var knownValidatedButNotTrustedSources = []string{
 	"https://gist.github.com/",
 	"https://gitee.com/",
 
+	// Aggregators with multiple endpoints
+	"https://github.com/BlockChainsSecurity/EtherTokens/",
+
 	// it's a personal choice, but open to changes
 	"https://www.syss.de/",
 	"https://git.kernel.org/",
@@ -153,7 +156,7 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.wordfence.com/vulnerability-advisories/",                             // only this endpoint
 }
 
-func inspectAggregatorURL(url string, quick bool) (string, bool) {
+func inspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 	var trusted, found bool
 	url = strings.Replace(url, "http://", "https://", -1)
 	for _, banned := range knownForbiddenSourcesPrefix {
@@ -166,6 +169,20 @@ func inspectAggregatorURL(url string, quick bool) (string, bool) {
 		return "", trusted
 	}
 	if url == "https://www.coresecurity.com/advisories" {
+		return "", trusted
+	}
+	if url == "https://www.gruppotim.it/it/footer/red-team.html" {
+		// One CVE with a PoC, 75 others listed without one
+		if cveId == "CVE-2024-52949" {
+			return url, true
+		}
+		return "", trusted
+	}
+	if url == "https://explore.zoom.us/en/trust/security/security-bulletin/" {
+		return "", trusted
+	}
+	// Nothing useful in the context of PoC/Exploits
+	if url == "https://docs.google.com/spreadsheets/d/1t5GXwjw82SyunALVJb2w0zi3FoLRIkfGPc7AMjRF0r4/edit?usp=sharing" {
 		return "", trusted
 	}
 	// Renamed
@@ -217,11 +234,17 @@ func inspectAggregatorURL(url string, quick bool) (string, bool) {
 		}
 	}
 
+	if !found && strings.Contains(url, "https://github.com/") {
+		if strings.Contains(url, "/issues/") {
+			found = true
+		} else if strings.HasSuffix(url, ".md") {
+			found = true
+		}
+	}
+
 	// Deny all
 	if !quick && !found {
 		url = ""
-	} else if quick && !found {
-		println(url)
 	}
 
 	return url, trusted

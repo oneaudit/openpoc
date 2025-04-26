@@ -18,6 +18,7 @@ import (
 
 const scoreboardTop = 10
 const domainTop = 3
+const urlTop = 3
 
 func main() {
 	fmt.Println(time.Now().String())
@@ -70,6 +71,7 @@ func main() {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
 			aggStats[r.FileJob.Folder] = &stats.Stats{Year: r.FileJob.Folder}
 			aggStats[r.FileJob.Folder].DomainMap = make(map[string]int)
+			aggStats[r.FileJob.Folder].URLMap = make(map[string]int)
 		}
 		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: len(r.Result.Openpoc)}
 		aggStats[r.FileJob.Folder].CVECount += 1
@@ -86,10 +88,16 @@ func main() {
 				aggStats[r.FileJob.Folder].DomainMap[domain] = 0
 			}
 			aggStats[r.FileJob.Folder].DomainMap[domain] += 1
+
+			if _, ok := aggStats[r.FileJob.Folder].URLMap[poc.URL]; !ok {
+				aggStats[r.FileJob.Folder].URLMap[poc.URL] = 0
+			}
+			aggStats[r.FileJob.Folder].URLMap[poc.URL] += 1
 		}
 	}
 
-	collector := make(map[string]*stats.DomainCount)
+	domainCollector := make(map[string]*stats.DomainCount)
+	urlCollector := make(map[string]*stats.URLCount)
 	for _, stat := range aggStats {
 		// Compute Frequencies
 		if stat.CVECount > 0 {
@@ -106,8 +114,8 @@ func main() {
 		if len(stat.CveScoreBoard) > scoreboardTop {
 			stat.CveScoreBoard = stat.CveScoreBoard[:scoreboardTop]
 		}
-		// Compute Top URLs
-		var counts []stats.DomainCount
+		// Compute Top Domains
+		var dCount []stats.DomainCount
 		for domain, count := range stat.DomainMap {
 			found := false
 			for _, knownValidatedSource := range knownValidatedSources {
@@ -119,34 +127,66 @@ func main() {
 			if found {
 				continue
 			}
-			counts = append(counts, stats.DomainCount{Domain: domain, Count: count})
+			dCount = append(dCount, stats.DomainCount{Domain: domain, Count: count})
 		}
-		sort.Slice(counts, func(i, j int) bool {
-			if counts[i].Count == counts[j].Count {
-				return counts[i].Domain > counts[j].Domain
+		sort.Slice(dCount, func(i, j int) bool {
+			if dCount[i].Count == dCount[j].Count {
+				return dCount[i].Domain > dCount[j].Domain
 			}
-			return counts[i].Count > counts[j].Count
+			return dCount[i].Count > dCount[j].Count
 		})
-		if len(counts) > domainTop {
-			counts = counts[:domainTop]
+		if len(dCount) > domainTop {
+			dCount = dCount[:domainTop]
 		}
-		stat.DomainScoreBoard = counts
+		stat.DomainScoreBoard = dCount
 
+		// Compute Top URLs
+		var uCount []stats.URLCount
+		for pocURL, count := range stat.URLMap {
+			uCount = append(uCount, stats.URLCount{URL: pocURL, Count: count})
+		}
+		sort.Slice(uCount, func(i, j int) bool {
+			if uCount[i].Count == uCount[j].Count {
+				return uCount[i].URL > uCount[j].URL
+			}
+			return uCount[i].Count > uCount[j].Count
+		})
+		if len(uCount) > urlTop {
+			uCount = uCount[:urlTop]
+		}
+		stat.URLScoreBoard = uCount
+
+		// Global collectors
 		for _, domainCount := range stat.DomainScoreBoard {
-			if _, found := collector[domainCount.Domain]; !found {
-				collector[domainCount.Domain] = &stats.DomainCount{Domain: domainCount.Domain, Count: domainCount.Count}
+			if _, found := domainCollector[domainCount.Domain]; !found {
+				domainCollector[domainCount.Domain] = &stats.DomainCount{Domain: domainCount.Domain, Count: domainCount.Count}
 			} else {
-				collector[domainCount.Domain].Count += domainCount.Count
+				domainCollector[domainCount.Domain].Count += domainCount.Count
+			}
+		}
+		for _, urlCount := range stat.URLScoreBoard {
+			if _, found := urlCollector[urlCount.URL]; !found {
+				urlCollector[urlCount.URL] = &stats.URLCount{URL: urlCount.URL, Count: urlCount.Count}
+			} else {
+				urlCollector[urlCount.URL].Count += urlCount.Count
 			}
 		}
 	}
 
-	var counts []stats.DomainCount
-	for _, domainCount := range collector {
-		counts = append(counts, *domainCount)
+	var dCounts []stats.DomainCount
+	for _, domainCount := range domainCollector {
+		dCounts = append(dCounts, *domainCount)
 	}
-	sort.Slice(counts, func(i, j int) bool {
-		return counts[i].Count > counts[j].Count
+	sort.Slice(dCounts, func(i, j int) bool {
+		return dCounts[i].Count > dCounts[j].Count
+	})
+
+	var uCounts []stats.URLCount
+	for _, urlCount := range urlCollector {
+		uCounts = append(uCounts, *urlCount)
+	}
+	sort.Slice(uCounts, func(i, j int) bool {
+		return uCounts[i].Count > uCounts[j].Count
 	})
 
 	// Statistics computed for year: 1999
@@ -172,24 +212,32 @@ func main() {
 		fmt.Println("Top CVEs with the most exploits:")
 		for i := 0; i < scoreboardTop && i < len(stat.CveScoreBoard); i++ {
 			entry := stat.CveScoreBoard[i]
-			fmt.Printf("%d. CVE: %s, Exploit Count: %d\n",
-				i+1, entry.CveID, entry.ExploitCount)
+			fmt.Printf("%d. CVE: %s, Exploit Count: %d\n", i+1, entry.CveID, entry.ExploitCount)
 		}
 		fmt.Println("Top domains with the most exploits:")
 		for i := 0; i < domainTop && i < len(stat.DomainScoreBoard); i++ {
 			entry := stat.DomainScoreBoard[i]
-			fmt.Printf("%d. Domain: %s, Count: %d\n",
-				i+1, entry.Domain, entry.Count)
+			fmt.Printf("%d. Domain: %s, Count: %d\n", i+1, entry.Domain, entry.Count)
+		}
+		fmt.Println("Top domains with the most exploits:")
+		for i := 0; i < urlTop && i < len(stat.URLScoreBoard); i++ {
+			entry := stat.URLScoreBoard[i]
+			fmt.Printf("%d. URL: %s, Count: %d\n", i+1, entry.URL, entry.Count)
 		}
 		fmt.Println()
 	}
 
 	fmt.Println()
 	fmt.Println("Top domains with the most exploits:")
-	for i := 0; i < domainTop && i < len(counts); i++ {
-		entry := counts[i]
-		fmt.Printf("%d. Domain: %s, Count: %d\n",
-			i+1, entry.Domain, entry.Count)
+	for i := 0; i < domainTop && i < len(dCounts); i++ {
+		entry := dCounts[i]
+		fmt.Printf("%d. Domain: %s, Count: %d\n", i+1, entry.Domain, entry.Count)
+	}
+	fmt.Println()
+	fmt.Println("Top URLs with the most exploits:")
+	for i := 0; i < urlTop && i < len(uCounts); i++ {
+		entry := uCounts[i]
+		fmt.Printf("%d. URL: %s, Count: %d\n", i+1, entry.URL, entry.Count)
 	}
 	fmt.Println()
 

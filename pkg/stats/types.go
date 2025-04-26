@@ -10,11 +10,17 @@ type Stats struct {
 	CveScoreBoard       []CVEStat
 	DomainMap           map[string]int
 	DomainScoreBoard    []DomainCount
+	URLMap              map[string]int
+	URLScoreBoard       []URLCount
 }
 
 type DomainCount struct {
 	Domain string
 	Count  int
+}
+type URLCount struct {
+	URL   string
+	Count int
 }
 
 type CVEStat struct {
