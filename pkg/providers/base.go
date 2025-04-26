@@ -117,6 +117,7 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.sap.com/documents/2022/02/fa865ea4-167e-0010-bca6-c68f7e60039b.html", // dead
 	"https://www.foxit.com/support/security-bulletins.html",                           // junk
 	"https://www.foxitsoftware.com/support/security-bulletins.php",                    // junk
+	"https://www.foxitsoftware.com/support/security-bulletins.html",                   // junk
 	"https://www.dlink.com/en/security-bulletin/",                                     // junk
 	"https://www.syss.de/pentest-blog/",                                               // this specific endpoint
 	"https://kc.mcafee.com/corporate/",                                                // dead
@@ -154,9 +155,17 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.htbridge.com/",                                                       // dead
 	"https://lists.grok.org.uk/",                                                      // dead
 	"https://www.wordfence.com/vulnerability-advisories/",                             // only this endpoint
+	"https://antoniocannito.it/?p=137#uxss",                                           // junk
+	"https://www.elastic.co/community/security",                                       // junk
+	"https://ffmpeg.org/security.html",                                                // junk
+	"https://explore.zoom.us/en/trust/security/security-bulletin/",                    // junk
+	"https://helpx.adobe.com/security/products/acrobat/",                              // junk
+	"https://www.manageengine.com/",                                                   // junk
+	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
+	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
 }
 
-func inspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
+func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 	var trusted, found bool
 	url = strings.Replace(url, "http://", "https://", -1)
 	for _, banned := range knownForbiddenSourcesPrefix {
@@ -164,7 +173,7 @@ func inspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 			return "", trusted
 		}
 	}
-	// No advisory identifier in the URL
+	// No advisory identifier in the URL (but useful when there is one)
 	if url == "https://cert.vde.com/en-us/advisories/" {
 		return "", trusted
 	}
@@ -176,9 +185,6 @@ func inspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 		if cveId == "CVE-2024-52949" {
 			return url, true
 		}
-		return "", trusted
-	}
-	if url == "https://explore.zoom.us/en/trust/security/security-bulletin/" {
 		return "", trusted
 	}
 	// Nothing useful in the context of PoC/Exploits

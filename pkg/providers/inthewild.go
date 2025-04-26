@@ -22,7 +22,7 @@ func ParseInTheWild(jsonFilePath string) ([]*types.InTheWild, error) {
 	var final []*types.InTheWild
 	for _, candidate := range data {
 		candidate.CveID = utils.CleanCVE(candidate.CveID)
-		candidate.ReportURL, candidate.Trustworthy = inspectAggregatorURL(candidate.ReportURL, candidate.CveID, true)
+		candidate.ReportURL, candidate.Trustworthy = InspectAggregatorURL(candidate.ReportURL, candidate.CveID, true)
 		if candidate.ReportURL != "" {
 			final = append(final, candidate)
 		}

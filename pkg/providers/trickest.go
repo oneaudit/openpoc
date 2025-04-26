@@ -30,7 +30,7 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 	var records []*types.Trickest
 	for _, url := range pocURLs {
 		var trusted bool
-		url, trusted = inspectAggregatorURL(url, cveID, false)
+		url, trusted = InspectAggregatorURL(url, cveID, false)
 		if url != "" {
 			records = append(records, &types.Trickest{
 				CveID:       cleanTrickestCve(cveID),
@@ -61,7 +61,7 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 			return
 		}
 		cveId := cleanTrickestCve(parts[0])
-		url, trusted := inspectAggregatorURL(parts[1], cveId, true)
+		url, trusted := InspectAggregatorURL(parts[1], cveId, true)
 		if url == "" {
 			continue
 		}

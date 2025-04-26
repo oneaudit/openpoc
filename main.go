@@ -447,9 +447,17 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 	}
 	if !inTheWild.Completed {
 		newResult.InTheWild = oldResult.InTheWild
+		for i, v := range newResult.InTheWild {
+			_, v.Trustworthy = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
+			newResult.InTheWild[i] = v
+		}
 	}
 	if !trickest.Completed {
 		newResult.Trickest = oldResult.Trickest
+		for i, v := range newResult.Trickest {
+			_, v.Trustworthy = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
+			newResult.Trickest[i] = v
+		}
 	}
 	if !nomisec.Completed {
 		newResult.Nomisec = oldResult.Nomisec
