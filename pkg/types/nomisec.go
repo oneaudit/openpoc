@@ -54,3 +54,7 @@ func (n *Nomisec) GetTrustScore() float64 {
 	stars := float64(n.StargazersCount)
 	return min(stars/100, 1.0)
 }
+
+func (n *Nomisec) GetTemplateFor() string {
+	return ""
+}

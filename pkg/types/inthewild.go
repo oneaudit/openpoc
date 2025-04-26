@@ -32,6 +32,10 @@ func (i *InTheWild) GetTrustScore() float64 {
 	return i.Score
 }
 
+func (i *InTheWild) GetTemplateFor() string {
+	return ""
+}
+
 func (t *Timestamp) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {

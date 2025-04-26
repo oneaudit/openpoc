@@ -114,6 +114,19 @@ A few candidates indirectly scrapped by Trickest:
 * `whitesourcesoftware.com`
 * `osv.dev`, `osvdb.org`
 
+## How To Add A New Source
+
+The process is not straightforward but relatively easy:
+
+* ✅ Create a type implementing `OpenPocMetadata`
+* ✅ Add a field inside `AggregatorResult`
+* ✅ Edit `AggregatorResult#NewAggregatorResult` to create a default empty array
+* ✅ Edit `AggregatorResult#ComputeOpenPoc` to merge the new results in `openpoc`
+* ✅ Edit `AggregatorResult#Sort` to sort the new results
+* ✅ Edit `MergeAggregatorResults` to load cached results as a fallback
+* ✅ Add the logic inside `main.go` to generate results
+* ✅ Bump the version inside `main.go`
+
 ## License 📄
 
 This project is licensed under the GNU GPL v3.0 License.<br>

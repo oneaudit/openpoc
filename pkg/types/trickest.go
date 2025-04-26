@@ -24,3 +24,7 @@ func (t *Trickest) GetPublishDate() time.Time {
 func (t *Trickest) GetTrustScore() float64 {
 	return t.Score
 }
+
+func (t *Trickest) GetTemplateFor() string {
+	return ""
+}

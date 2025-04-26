@@ -10,11 +10,13 @@ type OpenPocMetadata interface {
 	GetURL() string
 	GetPublishDate() time.Time
 	GetTrustScore() float64
+	GetTemplateFor() string
 }
 
 type OpenpocProduct struct {
-	Cve        string  `json:"cve"`
-	URL        string  `json:"url"`
-	AddedAt    string  `json:"added_at"`
-	TrustScore float64 `json:"score"`
+	Cve         string  `json:"cve"`
+	URL         string  `json:"url"`
+	AddedAt     string  `json:"added_at"`
+	TrustScore  float64 `json:"score"`
+	TemplateFor string  `json:"template_for"`
 }

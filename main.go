@@ -10,7 +10,6 @@ import (
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
-	"sort"
 	"time"
 )
 
@@ -26,7 +25,7 @@ const (
 )
 
 const (
-	version         = "0.4.0"
+	version         = "0.5.0"
 	versionFilename = ".version"
 )
 
@@ -66,6 +65,15 @@ var (
 		Range:     24,
 	}
 	nomisecFilename = "README.md"
+
+	nucleiTemplates = types.Target{
+		URL:       "https://github.com/projectdiscovery/nuclei-templates.git",
+		Folder:    "datasources/nuclei-templates",
+		Branch:    "main",
+		Completed: statusByDefault,
+		Range:     24,
+	}
+	nucleiTemplatesFilename = ".new-additions"
 )
 
 func main() {
@@ -385,38 +393,11 @@ func main() {
 			}
 
 			// Create OpenPoC which is a sort of summary of all sources
-			merger := make(map[string]*types.OpenpocProduct)
-			for _, exploit := range finalResult.Trickest { // dirty, first
-				addToMerger(&exploit, &merger)
-			}
-			for _, exploit := range finalResult.InTheWild { // not often updated, second
-				addToMerger(&exploit, &merger)
-			}
-			for _, exploit := range finalResult.ExploitDB { // good third
-				addToMerger(&exploit, &merger)
-			}
-			for _, exploit := range finalResult.Nomisec { // the best, fourth
-				addToMerger(&exploit, &merger)
-			}
-			for _, url := range merger {
-				finalResult.Openpoc = append(finalResult.Openpoc, *url)
-			}
-			sort.Slice(finalResult.ExploitDB, func(i, j int) bool {
-				return finalResult.ExploitDB[i].GetURL() < finalResult.ExploitDB[j].GetURL()
-			})
-			sort.Slice(finalResult.InTheWild, func(i, j int) bool {
-				return finalResult.InTheWild[i].GetURL() < finalResult.InTheWild[j].GetURL()
-			})
-			sort.Slice(finalResult.Trickest, func(i, j int) bool {
-				return finalResult.Trickest[i].GetURL() < finalResult.Trickest[j].GetURL()
-			})
-			sort.Slice(finalResult.Nomisec, func(i, j int) bool {
-				return finalResult.Nomisec[i].GetURL() < finalResult.Nomisec[j].GetURL()
-			})
-			sort.Slice(finalResult.Openpoc, func(i, j int) bool {
-				return finalResult.Openpoc[i].URL < finalResult.Openpoc[j].URL
-			})
-			if len(finalResult.Openpoc) == 0 {
+			finalResult.ComputeOpenPoc()
+			finalResult.Sort()
+
+			// If there are no PoCs anymore, delete the file
+			if finalResult.IsEmpty() {
 				err = file.Close()
 				if err != nil {
 					fmt.Printf("could not close file %s: %v\n", jsonFilePath, err)
@@ -499,6 +480,9 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 			newResult.Trickest[i] = v
 		}
 	}
+	if !nucleiTemplates.Completed {
+		newResult.Nuclei = oldResult.Nuclei
+	}
 	if !nomisec.Completed {
 		newResult.Nomisec = oldResult.Nomisec
 	}
@@ -517,39 +501,7 @@ func addToYearMap[T types.OpenPocMetadata](exploit T, yearMap *map[string]map[st
 	// While there is a regex, we add some protection just in case
 	jsonFilePath := filepath.Join(filepath.Base(year), filepath.Base(exploit.GetCve()+".json"))
 	if _, ok := (*yearMap)[year][jsonFilePath]; !ok {
-		(*yearMap)[year][jsonFilePath] = &types.AggregatorResult{
-			InTheWild: []types.InTheWild{},
-			ExploitDB: []types.ExploitDB{},
-			Trickest:  []types.Trickest{},
-			Nomisec:   []types.Nomisec{},
-			Openpoc:   []types.OpenpocProduct{},
-		}
+		(*yearMap)[year][jsonFilePath] = types.NewAggregatorResult()
 	}
 	return year, jsonFilePath
-}
-
-func addToMerger[T types.OpenPocMetadata](exploit T, merger *map[string]*types.OpenpocProduct) {
-	value, found := (*merger)[exploit.GetURL()]
-	if !found {
-		value = &types.OpenpocProduct{
-			Cve:        exploit.GetCve(),
-			URL:        exploit.GetURL(),
-			AddedAt:    exploit.GetPublishDate().Format(time.RFC3339),
-			TrustScore: exploit.GetTrustScore(),
-		}
-		(*merger)[exploit.GetURL()] = value
-	} else {
-		if exploit.GetTrustScore() > value.TrustScore {
-			value.TrustScore = exploit.GetTrustScore()
-		}
-		// Ensure the date is the best we can find
-		if value.AddedAt == types.DefaultDate.Format(time.RFC3339) {
-			value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
-		} else {
-			// We trust the date of the most trusted exploit
-			if exploit.GetTrustScore() > value.TrustScore && exploit.GetPublishDate() != types.DefaultDate {
-				value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
-			}
-		}
-	}
 }
