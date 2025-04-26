@@ -45,12 +45,17 @@ var knownValidatedSourcesPrefix = []string{
 	"https://wpscan.com/",
 	"https://packetstorm.news/",
 	"https://security.snyk.io/", "https://snyk.io/vuln/", // new vs old
-	"https://talosintelligence.com/",
+	"https://talosintelligence.com/", "https://www.talosintelligence.com/",
 	"https://huntr.dev/", "https://huntr.com/",
 	"https://hackerone.com/",
 	"https://www.tenable.com/",
-	"https://www.openwall.com/",
+	"https://www.openwall.com/", "https://openwall.com/",
 	"https://securitylab.github.com/",
+	"https://plugins.trac.wordpress.org/",
+
+	// These are known platform with articles
+	"https://hackmd.io/",
+	"https://medium.com/",
 }
 
 // Blogs or...
@@ -61,11 +66,11 @@ var knownValidatedButNotTrustedSources = []string{
 	"https://packetstormsecurity.org/",
 
 	// too generic
-	"https://medium.com/",
 	"https://gitlab.com/",
-	"https://www.youtube.com/", "https://youtu.be",
-	"https://docs.google.com",
+	"https://www.youtube.com/", "https://youtu.be/",
+	"https://docs.google.com/", "https://drive.google.com/",
 	"https://gist.github.com/",
+	"https://gitee.com/",
 
 	// it's a personal choice, but open to changes
 	"https://www.syss.de/",
@@ -86,6 +91,13 @@ var knownValidatedButNotTrustedSources = []string{
 	"https://evuln.com/",
 	"https://www.evuln.com/",
 	"https://securityreason.com/",
+	"https://crbug.com/", "https://bugs.chromium.org/", "https://issues.chromium.org/",
+	"https://code.google.com/", // some are dead
+	"https://fluidattacks.com/",
+	"https://antoniocannito.it/",
+	"https://jira.xwiki.org/",
+	"https://bugs.debian.org/",
+	"https://bugs.php.net/",
 }
 
 // We don't want to know if there is an exploit
@@ -117,6 +129,8 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://support.hpe.com/hpsc/doc/public/",                                        // vuln details
 	"https://h20566.www2.hpe.com/",                                                    // dead
 	"https://www.securityfocus.com/",                                                  // dead
+	"https://downloads.securityfocus.com/",                                            // dead
+	"https://online.securityfocus.com/",                                               // dead
 	"https://docs.microsoft.com/en-us/security-updates/",                              // vuln details
 	"https://www.vmware.com/",                                                         // junk
 	"https://www.mandriva.com/",                                                       // junk
@@ -129,6 +143,14 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.mozilla.org/security/",                                               // vuln details
 	"https://oval.cisecurity.org/repository/",                                         // dead
 	"https://www.osvdb.org/",                                                          // dead
+	"https://osvdb.org/",                                                              // dead
+	"https://archives.neohapsis.com/",                                                 // dead
+	"https://secunia.com/",                                                            // dead
+	"https://www.securitytracker.com/",                                                // dead
+	"https://securitytracker.com/",                                                    // dead
+	"https://www.htbridge.com/",                                                       // dead
+	"https://lists.grok.org.uk/",                                                      // dead
+	"https://www.wordfence.com/vulnerability-advisories/",                             // only this endpoint
 }
 
 func inspectAggregatorURL(url string, quick bool) (string, bool) {
@@ -145,6 +167,10 @@ func inspectAggregatorURL(url string, quick bool) (string, bool) {
 	}
 	if url == "https://www.coresecurity.com/advisories" {
 		return "", trusted
+	}
+	// Renamed
+	if strings.HasPrefix(url, "https://antoniocannito.it/phpkb1") {
+		url = strings.Replace(url, "https://antoniocannito.it/phpkb1", "https://antoniocannito.it/en/phpkb", 1)
 	}
 
 	// Common Repository (already index, but trickest often has a few
