@@ -16,5 +16,5 @@ type OpenpocProduct struct {
 	Cve        string  `json:"cve"`
 	URL        string  `json:"url"`
 	AddedAt    string  `json:"added_at"`
-	TrustScore float64 `json:"trust_score"`
+	TrustScore float64 `json:"score"`
 }

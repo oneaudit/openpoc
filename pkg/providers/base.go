@@ -1,6 +1,9 @@
 package providers
 
-import "strings"
+import (
+	"net/url"
+	"strings"
+)
 
 var knownValidatedSources = []string{
 	// More than 2k stars
@@ -196,4 +199,29 @@ func inspectAggregatorURL(url string, quick bool) (string, bool) {
 	}
 
 	return url, trusted
+}
+
+func ComputeValidatedSources() (sources []string) {
+	for _, knownURL := range knownValidatedSources {
+		parsedUrl, err := url.Parse(knownURL)
+		if err != nil {
+			continue
+		}
+		sources = append(sources, parsedUrl.Host)
+	}
+	for _, knownURL := range knownValidatedSourcesPrefix {
+		parsedUrl, err := url.Parse(knownURL)
+		if err != nil {
+			continue
+		}
+		sources = append(sources, parsedUrl.Host)
+	}
+	for _, knownURL := range knownValidatedButNotTrustedSources {
+		parsedUrl, err := url.Parse(knownURL)
+		if err != nil {
+			continue
+		}
+		sources = append(sources, parsedUrl.Host)
+	}
+	return
 }

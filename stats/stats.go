@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"net/url"
+	"openpoc/pkg/providers"
 	"openpoc/pkg/stats"
 	"os"
 	"path/filepath"
@@ -16,39 +17,6 @@ import (
 
 const scoreboardTop = 10
 const domainTop = 3
-
-var knownValidatedSources = []string{
-	"www.exploit-db.com",
-	"github.com",
-	"seclists.org",
-	"wpscan.com", "wpvulndb.com", // new vs old
-	"packetstorm.news", "packetstormsecurity.com", "packetstormsecurity.org", // new vs old
-	"security.snyk.io", "snyk.io", // new vs old
-	"talosintelligence.com", "www.talosintelligence.com", // both
-	"huntr.dev",
-	"hackerone.com",
-	"www.tenable.com",
-	"gist.github.com",
-	"medium.com",
-	"docs.google.com",
-	"www.youtube.com", "youtu.be", // both
-	"www.vulnerability-lab.com",
-	"www.openwall.com",
-	"www.mend.io",
-	"www.whitesourcesoftware.com",
-	"codevigilant.com",
-	"pierrekim.github.io",
-	"blog.securityevaluators.com",
-	"git.kernel.org",
-	"marc.info",
-	"bugzilla.mozilla.org",
-	"bugzilla.redhat.com",
-	"blogs.gentoo.org", "bugs.gentoo.org/",
-	"aluigi.altervista.org",
-	"gitlab.com",
-	"www.coresecurity.com",
-	"securitylab.github.com",
-}
 
 func getDirectories() (dirs []string) {
 	currentYear := time.Now().Year()
@@ -64,6 +32,8 @@ func getDirectories() (dirs []string) {
 
 func main() {
 	fmt.Println(time.Now().String())
+
+	knownValidatedSources := providers.ComputeValidatedSources()
 
 	var wg sync.WaitGroup
 	directories := getDirectories()
