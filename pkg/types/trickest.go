@@ -6,7 +6,7 @@ type Trickest struct {
 	CveID       string    `json:"id"`
 	URL         string    `json:"url"`
 	AddedAt     time.Time `json:"added_at"`
-	Trustworthy bool      `json:"trustworthy"`
+	Trustworthy bool      `json:"-"`
 }
 
 func (t *Trickest) GetCve() string {

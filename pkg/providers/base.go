@@ -34,17 +34,20 @@ var knownValidatedSources = []string{
 	"https://github.com/jev770/badmoodle-scan",
 	"https://github.com/TinyNiko/android_bulletin_notes",
 	"https://github.com/WindowsExploits/Exploits",
+}
 
-	// Closed source
+// Must ends with a slash to be a valid prefix
+var knownValidatedSourcesPrefix = []string{
 	"https://seclists.org/",
 	"https://wpscan.com/",
 	"https://packetstorm.news/",
 	"https://security.snyk.io/", "https://snyk.io/vuln/", // new vs old
 	"https://talosintelligence.com/",
-	"https://huntr.dev/", "huntr.com/",
+	"https://huntr.dev/", "https://huntr.com/",
 	"https://hackerone.com/",
 	"https://www.tenable.com/",
 	"https://www.openwall.com/",
+	"https://securitylab.github.com/",
 }
 
 // Blogs or...
@@ -59,6 +62,7 @@ var knownValidatedButNotTrustedSources = []string{
 	"https://gitlab.com/",
 	"https://www.youtube.com/", "https://youtu.be",
 	"https://docs.google.com",
+	"https://gist.github.com/",
 
 	// it's a personal choice, but open to changes
 	"https://www.syss.de/",
@@ -124,62 +128,60 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.osvdb.org/",                                                          // dead
 }
 
-func inspectAggregatorURL(url string, quick bool) (string, string, bool) {
+func inspectAggregatorURL(url string, quick bool) (string, bool) {
 	var trusted, found bool
-	var cveId string
 	url = strings.Replace(url, "http://", "https://", -1)
 	for _, banned := range knownForbiddenSourcesPrefix {
 		if strings.HasPrefix(url, banned) {
-			return "", cveId, trusted
+			return "", trusted
 		}
 	}
 	// No advisory identifier in the URL
 	if url == "https://cert.vde.com/en-us/advisories/" {
-		return "", cveId, trusted
+		return "", trusted
 	}
 	if url == "https://www.coresecurity.com/advisories" {
-		return "", cveId, trusted
-	}
-
-	// These are big CVEs databases
-	// They may contain dead links, todos (false positives), etc.
-	// In practice, we should directly scrap them (but too much data is too much)
-	for _, dbURL := range knownValidatedSources {
-		if dbURL == url {
-			found = true
-			trusted = true
-			break
-		}
+		return "", trusted
 	}
 
 	// Common Repository (already index, but trickest often has a few
-	// more than even exploit-db did not properly indexed)
-	if !found && strings.HasPrefix(url, "https://www.exploit-db.com") {
+	// more than even exploit-db did not properly index)
+	if strings.HasPrefix(url, "https://www.exploit-db.com") {
 		url = strings.TrimSuffix(url, "/")
 		found = true
 		trusted = true
 	}
 
-	// GitHub Extra Sources
-	if !found && strings.Contains(url, "gist.github.com") {
-		found = true
+	// These are big CVEs databases
+	// They may contain dead links, todos (false positives), etc.
+	// In practice, we should directly scrap them (but too much data is too much)
+	if !found {
+		for _, dbURL := range knownValidatedSources {
+			if dbURL == url {
+				found = true
+				trusted = true
+				break
+			}
+		}
 	}
-	if !found && strings.Contains(url, "securitylab.github.com") {
-		found = true
-		trusted = true
+	if !found {
+		for _, dbURL := range knownValidatedSourcesPrefix {
+			if strings.HasPrefix(url, dbURL) {
+				found = true
+				trusted = true
+				break
+			}
+		}
 	}
 
 	// Find CVE in the name
 	if !found && strings.Contains(url, "CVE-") {
 		found = cveRegex.MatchString(url)
-		if found {
-			cveId = cveRegex.FindString(url)
-		}
 	}
 
 	if !found {
 		for _, dbURL := range knownValidatedButNotTrustedSources {
-			if dbURL == url {
+			if strings.HasPrefix(url, dbURL) {
 				found = true
 				break
 			}
@@ -193,5 +195,5 @@ func inspectAggregatorURL(url string, quick bool) (string, string, bool) {
 		println(url)
 	}
 
-	return url, cveId, trusted
+	return url, trusted
 }
