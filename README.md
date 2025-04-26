@@ -41,7 +41,7 @@ Aside from the links in `references.txt` and a few whitelisted sources, we are s
 > Update schedule: every 24 hours
 ```
 
-It would be good to improve this source, such as by testing links or adding dates as there are none. Addition
+It would be good to improve this source, such as by testing links or adding dates as there are none.
 
 ## Nomisec Repository 👑
 
@@ -65,7 +65,7 @@ Their database is available in CSV format and is hosted on GitLab.
 > Update schedule: every 24 hours
 ```
 
-One issue with this source is that some exploits are not linked to a CVE, or the linked CVE is not properly formatted. This affects a small part of their database (<1%). This project attempts to address that by using multiple sources to indirectly fetch and parse the exploit database.
+One issue with this source is that some exploits are not linked to a CVE, or the linked CVE is not properly formatted. This affects a small part of their database (<1%).
 
 ## In The Wild API 🫏
 
@@ -77,24 +77,42 @@ Their database was available on GitHub, and the API is still available for free 
 > Update schedule: once a week
 ```
 
+## Nuclei Repository 🐲
+
+XXX
+
+```
+> Source: XXX
+> Update schedule: xxxx
+```
+
+## Metasploit Repository 🚢
+
+XXX
+
+```
+> Source: XXX
+> Update schedule: xxxx
+```
+
 ## Want more ? 🔍
 
-A few candidates that may be scrapped indirectly by Trickest:
+A few candidates indirectly scrapped by Trickest:
 
-* ❌ `seclists.org`
-* ❌ `wpscan.com`, `wpvulndb.com`
-* ❌ `packetstorm.news`
-* ❌ `security.snyk.io`, `snyk.io/vuln/`
-* ❌ `talosintelligence.com`
-* ❌ `huntr.com`, `huntr.dev`
-* ❌ `hackerone.com`
-* ❌ `www.tenable.com`
-* ❌ `medium.com`
-* ❌ `vulnerability-lab.com`
-* ❌ `openwall.com`
-* ❌ `securitylab.github.com/advisories/`
-* ❌ `whitesourcesoftware.com/`
-* ❌ `osv.dev`, `osvdb.org`
+* `seclists.org`
+* `wpscan.com`, `wpvulndb.com`
+* `packetstorm.news`
+* `security.snyk.io`, `snyk.io/vuln/`
+* `talosintelligence.com`
+* `huntr.com`, `huntr.dev`
+* `hackerone.com`
+* `www.tenable.com`
+* `openwall.com`
+* `securitylab.github.com`
+* `medium.com`
+* `vulnerability-lab.com`
+* `whitesourcesoftware.com`
+* `osv.dev`, `osvdb.org`
 
 ## License 📄
 
