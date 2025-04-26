@@ -11,6 +11,7 @@ type InTheWild struct {
 	ReferenceURL string    `json:"referenceURL"`
 	ReportURL    string    `json:"reportURL"`
 	Timestamp    Timestamp `json:"timeStamp"`
+	Trustworthy  bool      `json:"-"`
 }
 
 type Timestamp time.Time
@@ -27,8 +28,11 @@ func (i *InTheWild) GetPublishDate() time.Time {
 	return time.Time(i.Timestamp)
 }
 
-func (i *InTheWild) IsTrustworthy() bool {
-	return true
+func (i *InTheWild) GetTrustScore() float64 {
+	if i.Trustworthy {
+		return 0.5
+	}
+	return 0.0
 }
 
 func (t *Timestamp) UnmarshalJSON(data []byte) error {

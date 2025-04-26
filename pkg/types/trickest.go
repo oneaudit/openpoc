@@ -21,6 +21,9 @@ func (t *Trickest) GetPublishDate() time.Time {
 	return t.AddedAt
 }
 
-func (t *Trickest) IsTrustworthy() bool {
-	return t.Trustworthy
+func (t *Trickest) GetTrustScore() float64 {
+	if t.Trustworthy {
+		return 0.5
+	}
+	return 0.0
 }

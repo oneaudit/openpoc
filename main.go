@@ -478,19 +478,25 @@ func addToMerger[T types.OpenPocMetadata](exploit T, merger *map[string]*types.O
 	value, found := (*merger)[exploit.GetURL()]
 	if !found {
 		value = &types.OpenpocProduct{
-			Cve:         exploit.GetCve(),
-			URL:         exploit.GetURL(),
-			AddedAt:     exploit.GetPublishDate().Format(time.RFC3339),
-			Trustworthy: exploit.IsTrustworthy(),
+			Cve:        exploit.GetCve(),
+			URL:        exploit.GetURL(),
+			AddedAt:    exploit.GetPublishDate().Format(time.RFC3339),
+			TrustScore: exploit.GetTrustScore(),
 		}
 		(*merger)[exploit.GetURL()] = value
 	} else {
-		if !value.Trustworthy {
-			value.Trustworthy = exploit.IsTrustworthy()
+		if exploit.GetTrustScore() > value.TrustScore {
+			value.TrustScore = exploit.GetTrustScore()
 		}
 		// Ensure the date is the best we can find
 		if value.AddedAt == types.DefaultDate.Format(time.RFC3339) {
 			value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
+		} else {
+			// We trust the date of the most trusted exploit
+			if exploit.GetTrustScore() > value.TrustScore && exploit.GetPublishDate() != types.DefaultDate {
+				println(value.AddedAt, "from", exploit.GetURL(), "to", exploit.GetPublishDate().Format(time.RFC3339))
+				value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
+			}
 		}
 	}
 }

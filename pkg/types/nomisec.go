@@ -49,6 +49,10 @@ func (n *Nomisec) GetPublishDate() time.Time {
 	return n.CreatedAt
 }
 
-func (n *Nomisec) IsTrustworthy() bool {
-	return true
+func (n *Nomisec) GetTrustScore() float64 {
+	// Having a lot of stars means it is somewhat trustworthy?
+	if n.StargazersCount > 1000 {
+		return 1.0
+	}
+	return float64(n.StargazersCount) / 1000.0
 }
