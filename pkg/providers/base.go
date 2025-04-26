@@ -249,6 +249,9 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64
 		} else if strings.HasSuffix(url, ".md") {
 			found = true
 			trusted = 0.4
+		} else if strings.Contains(url, "/security/advisories/") {
+			found = true
+			trusted = 0.4
 		}
 	}
 

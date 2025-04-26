@@ -72,7 +72,7 @@ func main() {
 	fmt.Println(time.Now().String())
 
 	// Changes to the format means we need to recompile every file
-	if _, err := os.Stat(versionFilename); os.IsExist(err) {
+	if _, err := os.Stat(versionFilename); err == nil || !os.IsNotExist(err) {
 		var data []byte
 		data, err = os.ReadFile(versionFilename)
 		if err != nil {
@@ -95,6 +95,8 @@ func main() {
 			}
 			fmt.Println("All folders were removed.")
 		}
+	} else if err != nil {
+		fmt.Printf("Error reading version file: %v\n", err)
 	}
 
 	if err := os.WriteFile(versionFilename, []byte(version), 0644); err != nil {
