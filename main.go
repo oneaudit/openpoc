@@ -14,18 +14,19 @@ import (
 )
 
 const (
-	isTesting        = false
-	statusByDefault  = false
-	indexLimit       = 10
-	onlyYear         = ""
-	disableExploitDB = false
-	disableInTheWild = false
-	disableTrickest  = false
-	disableNomisec   = false
+	isTesting              = false
+	statusByDefault        = false
+	indexLimit             = 10
+	onlyYear               = ""
+	disableExploitDB       = false
+	disableInTheWild       = false
+	disableTrickest        = false
+	disableNomisec         = false
+	disableNucleiTemplates = false
 )
 
 const (
-	version         = "0.5.0"
+	version         = "0.5.1"
 	versionFilename = ".version"
 )
 
@@ -125,7 +126,7 @@ func main() {
 	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range) || exploitDB.Completed
 
 	if !exploitDB.Completed {
-		fmt.Println("Download ExploitDB Results.")
+		fmt.Println("Download ExploitDB CSV.")
 		// Clone repository (shallow and no checkout)
 		if err = utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "--no-checkout"); err == nil {
 			// We will only plan to clone specific files
@@ -167,7 +168,7 @@ func main() {
 	inTheWild.Completed = utils.WasModifiedWithin(inTheWildFile, inTheWild.Range) || inTheWild.Completed
 
 	if !inTheWild.Completed {
-		fmt.Println("Download InTheWild Results.")
+		fmt.Println("Download InTheWild JSON.")
 		var response *http.Response
 		var outFile *os.File
 		// Create the folder to store the file
@@ -234,7 +235,7 @@ func main() {
 	}
 
 	if !trickest.Completed {
-		fmt.Println("Download Trickest Results.")
+		fmt.Println("Download Trickest.")
 		// Clone repository (shallow and no checkout)
 		if err = utils.GitClone("", trickest.URL, trickest.Folder, 1); err == nil {
 			trickest.Completed = true
@@ -297,7 +298,7 @@ func main() {
 	}
 
 	if !nomisec.Completed {
-		fmt.Println("Download NomiSec Results.")
+		fmt.Println("Download NomiSec.")
 		// Clone repository (shallow and no checkout)
 		if err = utils.GitClone("", nomisec.URL, nomisec.Folder, 1); err == nil {
 			nomisec.Completed = true
@@ -307,9 +308,48 @@ func main() {
 	}
 	if nomisec.Completed && !disableNomisec {
 		fmt.Println("Process NomiSec Results.")
-		// Parses And Add To NomiSec Each JSON
+		// Parses And Adds Each JSON To NomiSec
 		if err = utils.ProcessFiles(nomisec.Folder, nomisecWorker); err != nil {
 			fmt.Printf("Error processing %s: %v\n", nomisec.URL, err)
+		}
+	}
+
+	//
+	// Nuclei Templates
+	//
+	var newNuclei []*types.Nuclei
+	nucleiTemplatesFile := filepath.Join(nucleiTemplates.Folder, nucleiTemplatesFilename)
+	nucleiTemplates.Completed = utils.WasModifiedWithin(nucleiTemplatesFile, nucleiTemplates.Range) || nucleiTemplates.Completed
+	nucleiTemplatesWorker := func(path string) error {
+		if !providers.IsNucleiTemplate(path) {
+			return nil
+		}
+		var results []*types.Nuclei
+		results, err = providers.ParseNucleiTemplate(nucleiTemplates.Folder, path)
+		if err != nil {
+			return err
+		}
+		for _, result := range results {
+			newNuclei = append(newNuclei, result)
+		}
+		return nil
+	}
+
+	if !nucleiTemplates.Completed {
+		fmt.Println("Download Nuclei Templates.")
+		// Clone repository (shallow and no checkout)
+		if err = utils.GitClone("", nucleiTemplates.URL, nucleiTemplates.Folder, 1); err == nil {
+			nucleiTemplates.Completed = true
+		} else {
+			fmt.Printf("Error cloning %s: %v\n", nucleiTemplates.URL, err)
+		}
+	}
+
+	if nucleiTemplates.Completed && !disableNucleiTemplates {
+		fmt.Println("Process Nuclei Templates Results.")
+		// Parses And Adds Each JSON To Nuclei Templates
+		if err = utils.ProcessFiles(nucleiTemplates.Folder, nucleiTemplatesWorker); err != nil {
+			fmt.Printf("Error processing %s: %v\n", nucleiTemplates.URL, err)
 		}
 	}
 
@@ -339,6 +379,12 @@ func main() {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Nomisec = append(yearMap[year][jsonFilePath].Nomisec, *exploit)
+		}
+	}
+	for _, exploit := range newNuclei {
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].Nuclei = append(yearMap[year][jsonFilePath].Nuclei, *exploit)
 		}
 	}
 

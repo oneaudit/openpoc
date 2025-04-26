@@ -76,10 +76,11 @@ func addToMerger[T OpenPocMetadata](exploit T, merger *map[string]*OpenpocProduc
 	value, found := (*merger)[exploit.GetURL()]
 	if !found {
 		value = &OpenpocProduct{
-			Cve:        exploit.GetCve(),
-			URL:        exploit.GetURL(),
-			AddedAt:    exploit.GetPublishDate().Format(time.RFC3339),
-			TrustScore: exploit.GetTrustScore(),
+			Cve:         exploit.GetCve(),
+			URL:         exploit.GetURL(),
+			AddedAt:     exploit.GetPublishDate().Format(time.RFC3339),
+			TrustScore:  exploit.GetTrustScore(),
+			TemplateFor: exploit.GetTemplateFor(),
 		}
 		(*merger)[exploit.GetURL()] = value
 	} else {

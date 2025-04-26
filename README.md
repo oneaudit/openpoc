@@ -125,6 +125,7 @@ The process is not straightforward but relatively easy:
 * ✅ Edit `AggregatorResult#Sort` to sort the new results
 * ✅ Edit `MergeAggregatorResults` to load cached results as a fallback
 * ✅ Add the logic inside `main.go` to generate results
+* ✅ Do not forget to add results to `yearMap`
 * ✅ Bump the version inside `main.go`
 
 ## License 📄
