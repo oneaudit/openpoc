@@ -165,8 +165,9 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
 }
 
-func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
-	var trusted, found bool
+func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64) {
+	var found bool
+	var trusted float64
 	url = strings.Replace(url, "http://", "https://", -1)
 	for _, banned := range knownForbiddenSourcesPrefix {
 		if strings.HasPrefix(url, banned) {
@@ -183,7 +184,7 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 	if url == "https://www.gruppotim.it/it/footer/red-team.html" {
 		// One CVE with a PoC, 75 others listed without one
 		if cveId == "CVE-2024-52949" {
-			return url, true
+			return url, 0.5
 		}
 		return "", trusted
 	}
@@ -201,7 +202,7 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 	if strings.HasPrefix(url, "https://www.exploit-db.com") {
 		url = strings.TrimSuffix(url, "/")
 		found = true
-		trusted = true
+		trusted = 0.5
 	}
 
 	// These are big CVEs databases
@@ -211,7 +212,7 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 		for _, dbURL := range knownValidatedSources {
 			if dbURL == url {
 				found = true
-				trusted = true
+				trusted = 0.9
 				break
 			}
 		}
@@ -220,7 +221,7 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 		for _, dbURL := range knownValidatedSourcesPrefix {
 			if strings.HasPrefix(url, dbURL) {
 				found = true
-				trusted = true
+				trusted = 0.7
 				break
 			}
 		}
@@ -235,6 +236,7 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 		for _, dbURL := range knownValidatedButNotTrustedSources {
 			if strings.HasPrefix(url, dbURL) {
 				found = true
+				trusted = 0.4
 				break
 			}
 		}
@@ -243,8 +245,10 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, bool) {
 	if !found && strings.Contains(url, "https://github.com/") {
 		if strings.Contains(url, "/issues/") {
 			found = true
+			trusted = 0.4
 		} else if strings.HasSuffix(url, ".md") {
 			found = true
+			trusted = 0.4
 		}
 	}
 

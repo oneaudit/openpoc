@@ -3,10 +3,10 @@ package types
 import "time"
 
 type Trickest struct {
-	CveID       string    `json:"id"`
-	URL         string    `json:"url"`
-	AddedAt     time.Time `json:"added_at"`
-	Trustworthy bool      `json:"-"`
+	CveID   string    `json:"id"`
+	URL     string    `json:"url"`
+	AddedAt time.Time `json:"added_at"`
+	Score   float64   `json:"-"`
 }
 
 func (t *Trickest) GetCve() string {
@@ -22,8 +22,5 @@ func (t *Trickest) GetPublishDate() time.Time {
 }
 
 func (t *Trickest) GetTrustScore() float64 {
-	if t.Trustworthy {
-		return 0.5
-	}
-	return 0.0
+	return t.Score
 }

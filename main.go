@@ -26,7 +26,7 @@ const (
 )
 
 const (
-	version         = "0.3.3"
+	version         = "0.4.0"
 	versionFilename = ".version"
 )
 
@@ -72,14 +72,7 @@ func main() {
 	fmt.Println(time.Now().String())
 
 	// Changes to the format means we need to recompile every file
-	if _, err := os.Stat(versionFilename); os.IsNotExist(err) {
-		err = os.WriteFile(versionFilename, []byte(version), 0644)
-		if err != nil {
-			fmt.Printf("Error creating file: %v\n", err)
-			return
-		}
-		fmt.Printf("File created with version: %s\n", version)
-	} else {
+	if _, err := os.Stat(versionFilename); os.IsExist(err) {
 		var data []byte
 		data, err = os.ReadFile(versionFilename)
 		if err != nil {
@@ -102,6 +95,13 @@ func main() {
 			}
 			fmt.Println("All folders were removed.")
 		}
+	}
+
+	if err := os.WriteFile(versionFilename, []byte(version), 0644); err != nil {
+		fmt.Printf("Error creating file: %v\n", err)
+		return
+	} else {
+		fmt.Printf("File created with version: %s\n", version)
 	}
 
 	var err error
@@ -248,7 +248,7 @@ func main() {
 						if candidate.GetURL() == ref.GetURL() {
 							found = true
 							ref.AddedAt = candidate.AddedAt
-							ref.Trustworthy = candidate.Trustworthy
+							ref.Score = candidate.Score
 							break
 						}
 					}
@@ -486,14 +486,14 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 	if !inTheWild.Completed {
 		newResult.InTheWild = oldResult.InTheWild
 		for i, v := range newResult.InTheWild {
-			_, v.Trustworthy = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
+			_, v.Score = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
 			newResult.InTheWild[i] = v
 		}
 	}
 	if !trickest.Completed {
 		newResult.Trickest = oldResult.Trickest
 		for i, v := range newResult.Trickest {
-			_, v.Trustworthy = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
+			_, v.Score = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
 			newResult.Trickest[i] = v
 		}
 	}
