@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 1999</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>614</strong>
+                    <span class="stat-title">POC Count:</span> <strong>721</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>465</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>570</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.32</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.26</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
