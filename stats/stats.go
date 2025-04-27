@@ -107,7 +107,10 @@ func main() {
 		sort.Slice(stat.CveScoreBoard, func(i, j int) bool {
 			// More recent first
 			if stat.CveScoreBoard[i].ExploitCount == stat.CveScoreBoard[j].ExploitCount {
-				return stat.CveScoreBoard[i].CveID > stat.CveScoreBoard[j].CveID
+				// It's always the same year
+				_, ridA := utils.GetCvePartsAsInt(stat.CveScoreBoard[i].CveID)
+				_, ridB := utils.GetCvePartsAsInt(stat.CveScoreBoard[j].CveID)
+				return ridA > ridB
 			}
 			return stat.CveScoreBoard[i].ExploitCount > stat.CveScoreBoard[j].ExploitCount
 		})

@@ -3,11 +3,12 @@ package utils
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 var (
-	cveMatcher          = regexp.MustCompile(`^CVE-(\d{4})-\d{4,}$`)
+	cveMatcher          = regexp.MustCompile(`^CVE-(\d{4})-(\d{4,})$`)
 	cveBadParserMatcher = regexp.MustCompile(`CVE-(\d{4})-(\d{1,3})$`)
 )
 
@@ -33,9 +34,19 @@ func CleanCVE(cve string) string {
 	return strings.TrimSpace(cve)
 }
 
-func GetCVEYear(cve string) string {
+func GetCvePartsAsInt(cve string) (int64, int64) {
 	matches := cveMatcher.FindStringSubmatch(cve)
 	if len(matches) == 2 {
+		year, _ := strconv.ParseInt(matches[1], 10, 64)
+		rid, _ := strconv.ParseInt(matches[2], 10, 64)
+		return year, rid
+	}
+	return 0, 0
+}
+
+func GetCVEYear(cve string) string {
+	matches := cveMatcher.FindStringSubmatch(cve)
+	if len(matches) == 3 {
 		return matches[1]
 	}
 	return ""
