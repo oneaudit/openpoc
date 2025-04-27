@@ -6,13 +6,14 @@ import (
 	"openpoc/pkg/utils"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 func IsNucleiTemplate(candidateFilePath string) bool {
 	return filepath.Ext(candidateFilePath) == ".yaml" && strings.Contains(filepath.Base(candidateFilePath), "CVE-")
 }
 
-func ParseNucleiTemplate(rootDir string, yamlFilePath string) ([]*types.Nuclei, error) {
+func ParseNucleiTemplate(rootDir string, yamlFilePath string, cache *sync.Map) ([]*types.Nuclei, error) {
 	fileName := filepath.Base(yamlFilePath)
 	cveID := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
@@ -34,7 +35,7 @@ func ParseNucleiTemplate(rootDir string, yamlFilePath string) ([]*types.Nuclei, 
 			CveID:        cveID,
 			URL:          fmt.Sprintf("https://github.com/projectdiscovery/nuclei-templates/blob/main/%s", relativePath),
 			TemplatePath: relativePath,
-			AddedAt:      types.DefaultDate,
+			AddedAt:      utils.GetDateFromGitFile(rootDir, relativePath, cache, types.DefaultDate),
 		},
 	}, nil
 }

@@ -34,13 +34,12 @@ func GetDirectories() (dirs []string) {
 	return dirs
 }
 
-func ProcessFiles[T any](rootDir string, processFile types.ProcessFunction[T]) ([]*T, error) {
+func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.ProcessFunction[T]) ([]*T, error) {
 	var wg sync.WaitGroup
 	var exploits []*T
 	fileJobs := make(chan types.FileJob, 100)
 	results := make(chan *T, 100)
 	errors := make(chan error, 1)
-	numWorkers := 8
 	ctx, cancel := context.WithCancel(context.Background())
 	for i := 0; i < numWorkers; i++ {
 		wg.Add(1)
