@@ -32,8 +32,12 @@ Aggregates multiple data sources related to CVE exploits/PoC. [Please read the l
 ## Trickest Repository 🗺️
 
 [Trickest](https://github.com/trickest/cve) is one of the most popular open-source projects for monitoring exploits.<br>
-The main issue with their database is that it contains many dead links and irrelevant content.<br>
-Aside from the links in `references.txt` and a few whitelisted sources, we are skipping around 90% of their links.<br>
+The main issue with their database is that it contains many dead links or irrelevant content.<br>
+
+* ✅ Automated continuous integration
+* ✅ Manual filtering using a deny/allow list approach
+* ✅ Trust score implementation based on the source
+* ❌ Date exploits using the commit date
 
 ```
 > Source: https://github.com/trickest/cve
@@ -41,36 +45,42 @@ Aside from the links in `references.txt` and a few whitelisted sources, we are s
 > Update schedule: every 24 hours
 ```
 
-It would be good to improve this source, such as by testing links or adding dates as there are none.
-
 ## Nomisec Repository 👑
 
 [Nomisec](https://github.com/nomi-sec/PoC-in-GitHub/) is another popular open-source project for monitoring exploits.<br>
  While their content is more limited than Trickest, almost all of their links are relevant.
+
+* ✅ Automated continuous integration
+* ✅ Trust score implementation based on the stargazer count
+
 
 ```
 > Source: https://github.com/nomi-sec/PoC-in-GitHub/
 > Update schedule: every 6 hours
 ```
 
-A relatively similar resource is: [CyberWarZone](https://cyberwarzone.com/githubfeed).
-
 ## Exploit Database 🪲
 
 [Exploit Database](https://www.exploit-db.com/) is a well-known and popular website with a large collection of PoCs.<br>
 Their database is available in CSV format and is hosted on GitLab.
+
+* ✅ Automated continuous integration
+* ✅ Patch missing and invalid CVE codes
+* ✅ Trust score implementation based on the "verified" flag
 
 ```
 > Source: https://gitlab.com/exploit-database/exploitdb.git
 > Update schedule: every 24 hours
 ```
 
-One issue with this source is that some exploits are not linked to a CVE, or the linked CVE is not properly formatted. This affects a small part of their database (<1%).
-
 ## In The Wild API 🫏
 
 [InTheWild](https://inthewild.io/) is a lesser-known but useful source for finding rare and hard-to-find exploits.<br>
 Their database was available on GitHub, and the API is still available for free use.
+
+* ✅ Automated continuous integration
+* ✅ Manual filtering using a deny/allow list approach
+* ✅ Trust score implementation based on the source
 
 ```
 > Source: https://inthewild.io/api/exploits?limit=1
@@ -79,16 +89,24 @@ Their database was available on GitHub, and the API is still available for free 
 
 ## Nuclei Repository 🐲
 
-XXX
+[Nuclei](https://github.com/projectdiscovery/nuclei) is popular vulnerability scanner. Nuclei [templates](https://github.com/projectdiscovery/nuclei-templates) cover many CVEs.
+
+* ✅ Automated continuous integration
+* ✅ Trust score set to `1.0`
+* ❌ Date exploits using the commit date
 
 ```
-> Source: XXX
-> Update schedule: xxxx
+> Source: https://github.com/projectdiscovery/nuclei-templates
+> Update schedule: every 12 hours
 ```
 
 ## Metasploit Repository 🚢
 
-XXX
+...
+
+* ❌ Automated continuous integration
+* ✅ Trust score set to `1.0`
+* ❌ Date exploits using the commit date
 
 ```
 > Source: XXX
@@ -113,6 +131,7 @@ A few candidates indirectly scrapped by Trickest:
 * `vulnerability-lab.com`
 * `whitesourcesoftware.com`
 * `osv.dev`, `osvdb.org`
+* `cyberwarzone.com`
 
 ## How To Add A New Source
 
