@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2007</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>5353</strong>
+                    <span class="stat-title">POC Count:</span> <strong>5468</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>3550</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>3655</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.51</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.50</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
