@@ -1,6 +1,9 @@
 package types
 
-import "time"
+import (
+	"io/fs"
+	"time"
+)
 
 type Target struct {
 	URL       string
@@ -10,3 +13,11 @@ type Target struct {
 	Completed bool
 	Range     time.Duration
 }
+
+type FileJob struct {
+	Path     string
+	Folder   string
+	FileInfo fs.FileInfo
+}
+
+type ProcessFunction[T any] func(job FileJob) ([]*T, error)

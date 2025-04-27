@@ -1,9 +1,13 @@
 package utils
 
 import (
+	"context"
 	"fmt"
+	"io/fs"
+	"openpoc/pkg/types"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
@@ -18,22 +22,6 @@ func WasModifiedWithin(filePath string, duration time.Duration) bool {
 	return diff <= (duration-1)*time.Hour
 }
 
-func ProcessFiles(rootDir string, process func(string) error) error {
-	return filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if info.IsDir() {
-			return nil
-		}
-		relPath, err := filepath.Rel(rootDir, path)
-		if err != nil {
-			return err
-		}
-		return process(filepath.Join(rootDir, relPath))
-	})
-}
-
 func GetDirectories() (dirs []string) {
 	currentYear := time.Now().Year()
 	startYear := 1999
@@ -44,4 +32,81 @@ func GetDirectories() (dirs []string) {
 		}
 	}
 	return dirs
+}
+
+func ProcessFiles[T any](rootDir string, processFile types.ProcessFunction[T]) ([]*T, error) {
+	var wg sync.WaitGroup
+	var exploits []*T
+	fileJobs := make(chan types.FileJob, 100)
+	results := make(chan *T, 100)
+	errors := make(chan error, 1)
+	numWorkers := 8
+	ctx, cancel := context.WithCancel(context.Background())
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go worker[T](ctx, fileJobs, results, errors, &wg, processFile)
+	}
+
+	go func() {
+		for result := range results {
+			exploits = append(exploits, result)
+		}
+	}()
+
+	err := filepath.Walk(rootDir, func(path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return fmt.Errorf("error browsing %s: %v", path, err)
+		}
+		if info.Mode().IsRegular() {
+			fileJobs <- types.FileJob{Path: path, Folder: rootDir, FileInfo: info}
+		}
+		return nil
+	})
+	if err != nil {
+		cancel()
+		return nil, fmt.Errorf("error walking the directory %s: %v", rootDir, err)
+	}
+
+	go func() {
+		close(fileJobs)
+	}()
+
+	go func() {
+		wg.Wait()
+		close(results)
+		close(errors)
+	}()
+
+	select {
+	case err := <-errors:
+		cancel()
+		return nil, fmt.Errorf("error received by runner for %s: %v", rootDir, err)
+	default:
+		cancel()
+		return exploits, nil
+	}
+}
+
+func worker[T any](ctx context.Context, fileJobs <-chan types.FileJob, final chan<- *T, errors chan<- error, wg *sync.WaitGroup, processFile types.ProcessFunction[T]) {
+	defer wg.Done()
+
+	for {
+		select {
+		case <-ctx.Done(): // stop on cancelled
+			return
+		case job, ok := <-fileJobs:
+			if !ok { // done
+				return
+			}
+
+			results, err := processFile(job)
+			if err != nil {
+				errors <- err
+				return
+			}
+			for _, result := range results {
+				final <- result
+			}
+		}
+	}
 }
