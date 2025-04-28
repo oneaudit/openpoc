@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2020</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>11928</strong>
+                    <span class="stat-title">POC Count:</span> <strong>11929</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>8042</strong>
