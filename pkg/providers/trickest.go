@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 var cveRegex = regexp.MustCompile(`CVE-\d{4}-\d{4,7}`)
@@ -17,7 +18,7 @@ func IsTrickestExploit(candidateFilePath string) bool {
 	return filepath.Ext(candidateFilePath) == ".md" && strings.Contains(filepath.Base(candidateFilePath), "CVE-")
 }
 
-func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
+func ParseTrickest(rootDir string, markdownFilePath string, cache *sync.Map) ([]*types.Trickest, error) {
 	fileName := filepath.Base(markdownFilePath)
 	cveID := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
@@ -25,7 +26,15 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	relativePath, err := filepath.Rel(rootDir, markdownFilePath)
+	if err != nil {
+		return nil, err
+	}
+	relativePath = filepath.ToSlash(relativePath)
+
 	pocURLs := extractTrickestCVEPoCLinks(string(file))
+	addedDate := utils.GetDateFromGitFile(rootDir, relativePath, cache, types.DefaultDate)
 
 	var records []*types.Trickest
 	for _, url := range pocURLs {
@@ -35,7 +44,7 @@ func ParseTrickest(markdownFilePath string) ([]*types.Trickest, error) {
 			records = append(records, &types.Trickest{
 				CveID:   cleanTrickestCve(cveID),
 				URL:     url,
-				AddedAt: types.DefaultDate,
+				AddedAt: addedDate,
 				Score:   score,
 			})
 		}
