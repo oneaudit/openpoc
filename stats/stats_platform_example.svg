@@ -3,17 +3,100 @@
         <style/>
     </defs>
     <style>
-        svg {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px;color: #333;background-color: #fff;padding: 15px;}
-        .title {font-size: 18px;color: #0366d6;margin-bottom: 10px;}
-        .label {font-size: 14px;font-weight: bold;fill: #333;}
-        .bar {fill: steelblue;}
-        .background-bar {fill: lightgray;}
+        svg {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #333;
+        background-color: #fff;
+        padding: 15px;
+        }
+        .title {
+        font-size: 18px;
+        color: #0366d6;
+        margin-bottom: 10px;
+        }
+        .label {
+        font-size: 14px;
+        font-weight: bold;
+        fill: #333;
+        }
+        .bar {
+        fill: steelblue;
+        }
+        .background-bar {
+        fill: lightgray;
+        }
+
+        .bar-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 10px 0;
+        }
+
+        .label {
+        font-size: 16px;
+        width: 80px;
+        }
+
+        .bar-container {
+        flex-grow: 1;
+        background-color: #e0e0e0;
+        border-radius: 10px;
+        height: 20px;
+        position: relative;
+        margin-right: 15px;
+        }
+
+        .bar-fill {
+        height: 100%;
+        background-color: steelblue;
+        border-radius: 10px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        }
+
+        .percentage {
+        font-size: 14px;
+        font-weight: bold;
+        width: 60px;
+        text-align: right;
+        }
     </style>
 
+    <!-- Title Section -->
     <foreignObject x="0" y="0" width="500" height="350">
-    <div xmlns="http://www.w3.org/1999/xhtml" class="container">
-    <div class="title">Title</div>
-
-    </div>
+        <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+            <div class="title">Performance Dashboard</div>
+            <div class="bar-item">
+                <div class="label">Name1</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: 60%"></div>
+                </div>
+                <div class="percentage">60%</div>
+            </div>
+            <div class="bar-item">
+                <div class="label">Name2</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: 75%"></div>
+                </div>
+                <div class="percentage">75%</div>
+            </div>
+            <div class="bar-item">
+                <div class="label">Name3</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: 90%"></div>
+                </div>
+                <div class="percentage">90%</div>
+            </div>
+            <div class="bar-item">
+                <div class="label">Name4</div>
+                <div class="bar-container">
+                    <div class="bar-fill" style="width: 45%"></div>
+                </div>
+                <div class="percentage">45%</div>
+            </div>
+        </div>
     </foreignObject>
 </svg>
