@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2023</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>13730</strong>
+                    <span class="stat-title">POC Count:</span> <strong>13733</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>10064</strong>
@@ -107,7 +107,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2023-22515
-                        <small>29</small>
+                        <small>30</small>
                     </div>
                     
                     

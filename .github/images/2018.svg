@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2018</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>10650</strong>
+                    <span class="stat-title">POC Count:</span> <strong>10652</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>7215</strong>
@@ -50,7 +50,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2018-7600
-                        <small>47</small>
+                        <small>48</small>
                     </div>
                     
                     
