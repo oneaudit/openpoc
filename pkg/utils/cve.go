@@ -31,7 +31,7 @@ func CleanCVE(cve string) string {
 		}
 		return match
 	})
-	return strings.TrimSpace(cve)
+	return strings.TrimSpace(strings.ToUpper(cve))
 }
 
 func GetCvePartsAsInt(cve string) (int64, int64) {

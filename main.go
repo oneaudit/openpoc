@@ -28,7 +28,7 @@ const (
 )
 
 const (
-	version         = "0.6.0"
+	version         = "0.6.1"
 	versionFilename = ".version"
 )
 
@@ -84,10 +84,10 @@ var (
 		URL:       "https://github.com/rapid7/metasploit-framework.git",
 		Folder:    "datasources/metasploit",
 		Branch:    "master",
-		Completed: false, // fixme: ...
+		Completed: statusByDefault,
 		Range:     24,
 	}
-	metasploitFilename      = ".new-additions"
+	metasploitFilename      = "Gemfile.lock"
 	metasploitCacheFilename = "datasources/metasploit.cache"
 )
 
@@ -345,14 +345,14 @@ func main() {
 	if nucleiTemplates.Completed && !disableNucleiTemplates {
 		fmt.Println("Process Nuclei Templates Results.")
 		// Parses And Adds Each JSON To Nuclei Templates
-		if newNuclei, err = utils.ProcessFiles(nucleiTemplates.Folder, 8, nucleiTemplatesWorker); err == nil {
-			// Save the latest version of the cache
-			err = utils.SaveCache(nucleiCacheFilename, nucleiDatesCache)
-			if err != nil {
-				fmt.Printf("Error caching %s: %v\n", nucleiTemplates.Folder, err)
-			}
-		} else {
+		if newNuclei, err = utils.ProcessFiles(nucleiTemplates.Folder, 8, nucleiTemplatesWorker); err != nil {
 			fmt.Printf("Error processing %s: %v\n", nucleiTemplates.URL, err)
+		}
+
+		// Save the latest version of the cache
+		err = utils.SaveCache(nucleiCacheFilename, nucleiDatesCache)
+		if err != nil {
+			fmt.Printf("Error caching %s: %v\n", nucleiCacheFilename, err)
 		}
 	}
 
@@ -405,6 +405,12 @@ func main() {
 			}
 		} else {
 			fmt.Printf("Error processing %s: %v\n", metasploit.URL, err)
+		}
+
+		// Save the latest version of the cache
+		err = utils.SaveCache(metasploitCacheFilename, metasploitDatesCache)
+		if err != nil {
+			fmt.Printf("Error caching %s: %v\n", metasploitCacheFilename, err)
 		}
 	}
 

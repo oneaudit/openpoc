@@ -53,7 +53,7 @@ func LoadCache(filename string) *sync.Map {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Printf("No cache yet? Got error for %s: %v\n", filename, err)
-		return nil
+		return &cache
 	}
 	defer file.Close()
 
@@ -78,6 +78,7 @@ func LoadCache(filename string) *sync.Map {
 	for k, v := range tempMap {
 		cache.Store(k, v)
 	}
+	fmt.Printf("Loaded cache for %s\n", filename)
 	return &cache
 }
 

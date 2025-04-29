@@ -26,5 +26,5 @@ func (m *Metasploit) GetTrustScore() float64 {
 }
 
 func (m *Metasploit) GetTemplateFor() string {
-	return "nuclei"
+	return "metasploit"
 }

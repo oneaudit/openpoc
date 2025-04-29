@@ -2,5 +2,6 @@ datasources/**/*
 !datasources/inthewild
 !datasources/nuclei.cache
 !datasources/trickest.cache
+!datasources/metasploit.cache
 datasources/inthewild/*
 !datasources/inthewild/pocs.json

@@ -102,15 +102,15 @@ Their database was available on GitHub, and the API is still available for free 
 
 ## Metasploit Repository 🚢
 
-...
+Metasploit is a well-known security framework. The main downside is that they only have a limited number of CVE exploits.
 
-* ❌ Automated continuous integration
+* ✅ Automated continuous integration
 * ✅ Trust score set to `1.0`
-* ❌ Date exploits using the commit date
+* ✅ Exploits are associated with the earliest commit date
 
 ```
-> Source: XXX
-> Update schedule: xxxx
+> Source: https://github.com/rapid7/metasploit-framework
+> Update schedule: every 6 hours
 ```
 
 ## Want more ? 🔍
