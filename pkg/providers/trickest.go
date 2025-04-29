@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"openpoc/pkg/types"
+	providertypes "openpoc/pkg/types/public"
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
@@ -18,7 +19,7 @@ func IsTrickestExploit(candidateFilePath string) bool {
 	return filepath.Ext(candidateFilePath) == ".md" && strings.Contains(filepath.Base(candidateFilePath), "CVE-")
 }
 
-func ParseTrickest(rootDir string, markdownFilePath string, cache *sync.Map) ([]*types.Trickest, error) {
+func ParseTrickest(rootDir string, markdownFilePath string, cache *sync.Map) ([]*providertypes.Trickest, error) {
 	fileName := filepath.Base(markdownFilePath)
 	cveID := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
@@ -36,12 +37,12 @@ func ParseTrickest(rootDir string, markdownFilePath string, cache *sync.Map) ([]
 	pocURLs := extractTrickestCVEPoCLinks(string(file))
 	addedDate := utils.GetDateFromGitFile(rootDir, relativePath, cache, types.DefaultDate)
 
-	var records []*types.Trickest
+	var records []*providertypes.Trickest
 	for _, url := range pocURLs {
 		var score float64
 		url, score = InspectAggregatorURL(url, cveID, false)
 		if url != "" {
-			records = append(records, &types.Trickest{
+			records = append(records, &providertypes.Trickest{
 				CveID:   cleanTrickestCve(cveID),
 				URL:     url,
 				AddedAt: addedDate,
@@ -53,7 +54,7 @@ func ParseTrickest(rootDir string, markdownFilePath string, cache *sync.Map) ([]
 	return records, nil
 }
 
-func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, err error) {
+func ParseTrickestReferences(textFilePath string) (exploits []*providertypes.Trickest, err error) {
 	var file *os.File
 	file, err = os.Open(textFilePath)
 	if err != nil {
@@ -74,7 +75,7 @@ func ParseTrickestReferences(textFilePath string) (exploits []*types.Trickest, e
 		if url == "" {
 			continue
 		}
-		exploits = append(exploits, &types.Trickest{
+		exploits = append(exploits, &providertypes.Trickest{
 			CveID:   cveId,
 			URL:     url,
 			AddedAt: types.DefaultDate,

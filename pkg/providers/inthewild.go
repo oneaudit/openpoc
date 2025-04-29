@@ -2,24 +2,24 @@ package providers
 
 import (
 	"encoding/json"
-	"openpoc/pkg/types"
+	providertypes "openpoc/pkg/types/public"
 	"openpoc/pkg/utils"
 	"os"
 )
 
-func ParseInTheWild(jsonFilePath string) ([]*types.InTheWild, error) {
+func ParseInTheWild(jsonFilePath string) ([]*providertypes.InTheWild, error) {
 	file, err := os.ReadFile(jsonFilePath)
 	if err != nil {
 		return nil, err
 	}
 
-	var data []*types.InTheWild
+	var data []*providertypes.InTheWild
 	err = json.Unmarshal(file, &data)
 	if err != nil {
 		return nil, err
 	}
 
-	var final []*types.InTheWild
+	var final []*providertypes.InTheWild
 	for _, candidate := range data {
 		candidate.CveID = utils.CleanCVE(candidate.CveID)
 		candidate.ReportURL, candidate.Score = InspectAggregatorURL(candidate.ReportURL, candidate.CveID, true)

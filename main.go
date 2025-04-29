@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"openpoc/pkg/providers"
 	"openpoc/pkg/types"
+	providertypes "openpoc/pkg/types/public"
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
@@ -123,7 +124,7 @@ func main() {
 	//
 	// ExploitDB
 	//
-	var newExploitDB []*types.ExploitDB
+	var newExploitDB []*providertypes.ExploitDB
 	exploitDBFile := filepath.Join(exploitDB.Folder, exploitDBFilename)
 	exploitDB.Completed = utils.WasModifiedWithin(exploitDBFile, exploitDB.Range) || exploitDB.Completed
 
@@ -165,7 +166,7 @@ func main() {
 	//
 	// InTheWild
 	//
-	var newInTheWild []*types.InTheWild
+	var newInTheWild []*providertypes.InTheWild
 	inTheWildFile := filepath.Join(inTheWild.Folder, inTheWildFilename)
 	inTheWild.Completed = utils.WasModifiedWithin(inTheWildFile, inTheWild.Range) || inTheWild.Completed
 
@@ -218,11 +219,11 @@ func main() {
 	//
 	// Trickest
 	//
-	var newTrickest []*types.Trickest
+	var newTrickest []*providertypes.Trickest
 	trickestDatesCache := utils.LoadCache(trickestCacheFilename)
 	trickestFile := filepath.Join(trickest.Folder, trickestFilename)
 	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range) || trickest.Completed
-	trickestWorker := func(fileInfo types.FileJob) ([]*types.Trickest, error) {
+	trickestWorker := func(fileInfo types.FileJob) ([]*providertypes.Trickest, error) {
 		if !providers.IsTrickestExploit(fileInfo.Path) {
 			return nil, nil
 		}
@@ -243,7 +244,7 @@ func main() {
 		// Parses And Add To Trickest Each Markdown
 		if newTrickest, err = utils.ProcessFiles(trickest.Folder, 15, trickestWorker); err == nil {
 			// Add references
-			var referencesTrickest []*types.Trickest
+			var referencesTrickest []*providertypes.Trickest
 			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err == nil {
 				// References are more trustworthy, but not all CVEs are in "references"
 				// And we don't have a "date" for references
@@ -279,10 +280,10 @@ func main() {
 	//
 	// Nomisec
 	//
-	var newNomisec []*types.Nomisec
+	var newNomisec []*providertypes.Nomisec
 	nomisecFile := filepath.Join(nomisec.Folder, nomisecFilename)
 	nomisec.Completed = utils.WasModifiedWithin(nomisecFile, nomisec.Range) || nomisec.Completed
-	nomisecWorker := func(fileInfo types.FileJob) ([]*types.Nomisec, error) {
+	nomisecWorker := func(fileInfo types.FileJob) ([]*providertypes.Nomisec, error) {
 		if !providers.IsNomisec(fileInfo.Path) {
 			return nil, nil
 		}
@@ -309,11 +310,11 @@ func main() {
 	//
 	// Nuclei Templates
 	//
-	var newNuclei []*types.Nuclei
+	var newNuclei []*providertypes.Nuclei
 	nucleiDatesCache := utils.LoadCache(nucleiCacheFilename)
 	nucleiTemplatesFilePath := filepath.Join(nucleiTemplates.Folder, nucleiTemplatesFilename)
 	nucleiTemplates.Completed = utils.WasModifiedWithin(nucleiTemplatesFilePath, nucleiTemplates.Range) || nucleiTemplates.Completed
-	nucleiTemplatesWorker := func(fileInfo types.FileJob) ([]*types.Nuclei, error) {
+	nucleiTemplatesWorker := func(fileInfo types.FileJob) ([]*providertypes.Nuclei, error) {
 		if !providers.IsNucleiTemplate(fileInfo.Path) {
 			return nil, nil
 		}

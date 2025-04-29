@@ -1,26 +1,27 @@
 package types
 
 import (
+	providertypes "openpoc/pkg/types/public"
 	"sort"
 	"time"
 )
 
 type AggregatorResult struct {
-	ExploitDB []ExploitDB      `json:"exploitdb"`
-	InTheWild []InTheWild      `json:"itw"`
-	Trickest  []Trickest       `json:"trickest"`
-	Nomisec   []Nomisec        `json:"nomisec"`
-	Nuclei    []Nuclei         `json:"nuclei"`
-	Openpoc   []OpenpocProduct `json:"openpoc"`
+	ExploitDB []providertypes.ExploitDB `json:"exploitdb"`
+	InTheWild []providertypes.InTheWild `json:"itw"`
+	Trickest  []providertypes.Trickest  `json:"trickest"`
+	Nomisec   []providertypes.Nomisec   `json:"nomisec"`
+	Nuclei    []providertypes.Nuclei    `json:"nuclei"`
+	Openpoc   []OpenpocProduct          `json:"openpoc"`
 }
 
 func NewAggregatorResult() *AggregatorResult {
 	return &AggregatorResult{
-		InTheWild: []InTheWild{},
-		ExploitDB: []ExploitDB{},
-		Trickest:  []Trickest{},
-		Nomisec:   []Nomisec{},
-		Nuclei:    []Nuclei{},
+		InTheWild: []providertypes.InTheWild{},
+		ExploitDB: []providertypes.ExploitDB{},
+		Trickest:  []providertypes.Trickest{},
+		Nomisec:   []providertypes.Nomisec{},
+		Nuclei:    []providertypes.Nuclei{},
 		Openpoc:   []OpenpocProduct{},
 	}
 }

@@ -2,7 +2,7 @@ package providers
 
 import (
 	"encoding/json"
-	"openpoc/pkg/types"
+	providertypes "openpoc/pkg/types/public"
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
@@ -13,7 +13,7 @@ func IsNomisec(candidateFilePath string) bool {
 	return filepath.Ext(candidateFilePath) == ".json" && strings.Contains(filepath.Base(candidateFilePath), "CVE-")
 }
 
-func ParseNomicsec(jsonFilePath string) ([]*types.Nomisec, error) {
+func ParseNomicsec(jsonFilePath string) ([]*providertypes.Nomisec, error) {
 	fileName := filepath.Base(jsonFilePath)
 	cveID := strings.TrimSuffix(fileName, filepath.Ext(fileName))
 
@@ -22,7 +22,7 @@ func ParseNomicsec(jsonFilePath string) ([]*types.Nomisec, error) {
 		return nil, err
 	}
 
-	var data []*types.Nomisec
+	var data []*providertypes.Nomisec
 	err = json.Unmarshal(file, &data)
 	if err != nil {
 		return nil, err
