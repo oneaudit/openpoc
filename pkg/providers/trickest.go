@@ -102,11 +102,9 @@ func extractTrickestCVEPoCLinks(input string) (pocURLs []string) {
 		if line == "" || !strings.HasPrefix(line, "http") {
 			continue
 		}
-		if strings.HasPrefix(line, "https://") {
-			line = line[8:]
-		} else {
-			line = line[7:]
-		}
+		line = strings.TrimPrefix(line, "https://")
+		line = strings.TrimPrefix(line, "http://")
+		line = "https://" + line
 		// At this point, the output looks like a link
 		pocURLs = append(pocURLs, line)
 	}

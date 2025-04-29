@@ -26,7 +26,7 @@ const (
 )
 
 const (
-	version         = "0.5.1"
+	version         = "0.5.4"
 	versionFilename = ".version"
 )
 
@@ -56,7 +56,8 @@ var (
 		Completed: statusByDefault,
 		Range:     24,
 	}
-	trickestFilename = "references.txt"
+	trickestFilename      = "references.txt"
+	trickestCacheFilename = "datasources/trickest.json"
 
 	nomisec = types.Target{
 		URL:       "https://github.com/nomi-sec/PoC-in-GitHub.git",
@@ -75,6 +76,7 @@ var (
 		Range:     24,
 	}
 	nucleiTemplatesFilename = ".new-additions"
+	nucleiCacheFilename     = "datasources/nuclei.json"
 )
 
 func main() {
@@ -217,27 +219,20 @@ func main() {
 	// Trickest
 	//
 	var newTrickest []*types.Trickest
+	trickestDatesCache := utils.LoadCache(trickestCacheFilename)
 	trickestFile := filepath.Join(trickest.Folder, trickestFilename)
 	trickest.Completed = utils.WasModifiedWithin(trickestFile, trickest.Range) || trickest.Completed
-	trickestWorker := func(path string) error {
-		if !providers.IsTrickestExploit(path) {
-			return nil
+	trickestWorker := func(fileInfo types.FileJob) ([]*types.Trickest, error) {
+		if !providers.IsTrickestExploit(fileInfo.Path) {
+			return nil, nil
 		}
-		var results []*types.Trickest
-		results, err = providers.ParseTrickest(path)
-		if err != nil {
-			return err
-		}
-		for _, result := range results {
-			newTrickest = append(newTrickest, result)
-		}
-		return nil
+		return providers.ParseTrickest(fileInfo.Folder, fileInfo.Path, trickestDatesCache)
 	}
 
 	if !trickest.Completed {
 		fmt.Println("Download Trickest.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", trickest.URL, trickest.Folder, 1); err == nil {
+		if err = utils.GitClone("", trickest.URL, trickest.Folder, 0); err == nil {
 			trickest.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", trickest.URL, err)
@@ -246,8 +241,7 @@ func main() {
 	if trickest.Completed && !disableTrickest {
 		fmt.Println("Process Trickest Results.")
 		// Parses And Add To Trickest Each Markdown
-		if true { // err = utils.ProcessFiles(trickest.Folder, trickestWorker); err == nil {
-			_ = trickestWorker
+		if newTrickest, err = utils.ProcessFiles(trickest.Folder, 15, trickestWorker); err == nil {
 			// Add references
 			var referencesTrickest []*types.Trickest
 			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err == nil {
@@ -274,6 +268,12 @@ func main() {
 		} else {
 			fmt.Printf("Error processing %s: %v\n", trickest.URL, err)
 		}
+
+		// Save the latest version of the cache
+		err = utils.SaveCache(trickestCacheFilename, trickestDatesCache)
+		if err != nil {
+			fmt.Printf("Error caching %s: %v\n", trickestCacheFilename, err)
+		}
 	}
 
 	//
@@ -282,19 +282,11 @@ func main() {
 	var newNomisec []*types.Nomisec
 	nomisecFile := filepath.Join(nomisec.Folder, nomisecFilename)
 	nomisec.Completed = utils.WasModifiedWithin(nomisecFile, nomisec.Range) || nomisec.Completed
-	nomisecWorker := func(path string) error {
-		if !providers.IsNomisec(path) {
-			return nil
+	nomisecWorker := func(fileInfo types.FileJob) ([]*types.Nomisec, error) {
+		if !providers.IsNomisec(fileInfo.Path) {
+			return nil, nil
 		}
-		var results []*types.Nomisec
-		results, err = providers.ParseNomicsec(path)
-		if err != nil {
-			return err
-		}
-		for _, result := range results {
-			newNomisec = append(newNomisec, result)
-		}
-		return nil
+		return providers.ParseNomicsec(fileInfo.Path)
 	}
 
 	if !nomisec.Completed {
@@ -309,7 +301,7 @@ func main() {
 	if nomisec.Completed && !disableNomisec {
 		fmt.Println("Process NomiSec Results.")
 		// Parses And Adds Each JSON To NomiSec
-		if err = utils.ProcessFiles(nomisec.Folder, nomisecWorker); err != nil {
+		if newNomisec, err = utils.ProcessFiles(nomisec.Folder, 8, nomisecWorker); err != nil {
 			fmt.Printf("Error processing %s: %v\n", nomisec.URL, err)
 		}
 	}
@@ -318,27 +310,20 @@ func main() {
 	// Nuclei Templates
 	//
 	var newNuclei []*types.Nuclei
-	nucleiTemplatesFile := filepath.Join(nucleiTemplates.Folder, nucleiTemplatesFilename)
-	nucleiTemplates.Completed = utils.WasModifiedWithin(nucleiTemplatesFile, nucleiTemplates.Range) || nucleiTemplates.Completed
-	nucleiTemplatesWorker := func(path string) error {
-		if !providers.IsNucleiTemplate(path) {
-			return nil
+	nucleiDatesCache := utils.LoadCache(nucleiCacheFilename)
+	nucleiTemplatesFilePath := filepath.Join(nucleiTemplates.Folder, nucleiTemplatesFilename)
+	nucleiTemplates.Completed = utils.WasModifiedWithin(nucleiTemplatesFilePath, nucleiTemplates.Range) || nucleiTemplates.Completed
+	nucleiTemplatesWorker := func(fileInfo types.FileJob) ([]*types.Nuclei, error) {
+		if !providers.IsNucleiTemplate(fileInfo.Path) {
+			return nil, nil
 		}
-		var results []*types.Nuclei
-		results, err = providers.ParseNucleiTemplate(nucleiTemplates.Folder, path)
-		if err != nil {
-			return err
-		}
-		for _, result := range results {
-			newNuclei = append(newNuclei, result)
-		}
-		return nil
+		return providers.ParseNucleiTemplate(fileInfo.Folder, fileInfo.Path, nucleiDatesCache)
 	}
 
 	if !nucleiTemplates.Completed {
 		fmt.Println("Download Nuclei Templates.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", nucleiTemplates.URL, nucleiTemplates.Folder, 1); err == nil {
+		if err = utils.GitClone("", nucleiTemplates.URL, nucleiTemplates.Folder, 0); err == nil {
 			nucleiTemplates.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", nucleiTemplates.URL, err)
@@ -348,7 +333,13 @@ func main() {
 	if nucleiTemplates.Completed && !disableNucleiTemplates {
 		fmt.Println("Process Nuclei Templates Results.")
 		// Parses And Adds Each JSON To Nuclei Templates
-		if err = utils.ProcessFiles(nucleiTemplates.Folder, nucleiTemplatesWorker); err != nil {
+		if newNuclei, err = utils.ProcessFiles(nucleiTemplates.Folder, 8, nucleiTemplatesWorker); err == nil {
+			// Save the latest version of the cache
+			err = utils.SaveCache(nucleiCacheFilename, nucleiDatesCache)
+			if err != nil {
+				fmt.Printf("Error caching %s: %v\n", nucleiTemplates.Folder, err)
+			}
+		} else {
 			fmt.Printf("Error processing %s: %v\n", nucleiTemplates.URL, err)
 		}
 	}
