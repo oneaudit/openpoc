@@ -7,22 +7,24 @@ import (
 )
 
 type AggregatorResult struct {
-	ExploitDB []providertypes.ExploitDB `json:"exploitdb"`
-	InTheWild []providertypes.InTheWild `json:"itw"`
-	Trickest  []providertypes.Trickest  `json:"trickest"`
-	Nomisec   []providertypes.Nomisec   `json:"nomisec"`
-	Nuclei    []providertypes.Nuclei    `json:"nuclei"`
-	Openpoc   []OpenpocProduct          `json:"openpoc"`
+	ExploitDB  []providertypes.ExploitDB  `json:"exploitdb"`
+	InTheWild  []providertypes.InTheWild  `json:"itw"`
+	Trickest   []providertypes.Trickest   `json:"trickest"`
+	Nomisec    []providertypes.Nomisec    `json:"nomisec"`
+	Nuclei     []providertypes.Nuclei     `json:"nuclei"`
+	Metasploit []providertypes.Metasploit `json:"metasploit"`
+	Openpoc    []OpenpocProduct           `json:"openpoc"`
 }
 
 func NewAggregatorResult() *AggregatorResult {
 	return &AggregatorResult{
-		InTheWild: []providertypes.InTheWild{},
-		ExploitDB: []providertypes.ExploitDB{},
-		Trickest:  []providertypes.Trickest{},
-		Nomisec:   []providertypes.Nomisec{},
-		Nuclei:    []providertypes.Nuclei{},
-		Openpoc:   []OpenpocProduct{},
+		InTheWild:  []providertypes.InTheWild{},
+		ExploitDB:  []providertypes.ExploitDB{},
+		Trickest:   []providertypes.Trickest{},
+		Nomisec:    []providertypes.Nomisec{},
+		Nuclei:     []providertypes.Nuclei{},
+		Metasploit: []providertypes.Metasploit{},
+		Openpoc:    []OpenpocProduct{},
 	}
 }
 
@@ -41,6 +43,9 @@ func (a *AggregatorResult) ComputeOpenPoc() {
 		addToMerger(&exploit, &merger)
 	}
 	for _, exploit := range a.Nuclei { // fifth, no impact
+		addToMerger(&exploit, &merger)
+	}
+	for _, exploit := range a.Metasploit { // sixth, no impact
 		addToMerger(&exploit, &merger)
 	}
 	for _, url := range merger {
@@ -63,6 +68,9 @@ func (a *AggregatorResult) Sort() {
 	})
 	sort.Slice(a.Nuclei, func(i, j int) bool {
 		return a.Nuclei[i].GetURL() < a.Nuclei[j].GetURL()
+	})
+	sort.Slice(a.Metasploit, func(i, j int) bool {
+		return a.Metasploit[i].GetURL() < a.Metasploit[j].GetURL()
 	})
 	sort.Slice(a.Openpoc, func(i, j int) bool {
 		return a.Openpoc[i].URL < a.Openpoc[j].URL

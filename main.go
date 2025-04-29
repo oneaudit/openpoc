@@ -24,10 +24,11 @@ const (
 	disableTrickest        = false
 	disableNomisec         = false
 	disableNucleiTemplates = false
+	disableMetasploit      = false
 )
 
 const (
-	version         = "0.5.4"
+	version         = "0.6.0"
 	versionFilename = ".version"
 )
 
@@ -78,6 +79,16 @@ var (
 	}
 	nucleiTemplatesFilename = ".new-additions"
 	nucleiCacheFilename     = "datasources/nuclei.cache"
+
+	metasploit = types.Target{
+		URL:       "https://github.com/rapid7/metasploit-framework.git",
+		Folder:    "datasources/metasploit",
+		Branch:    "master",
+		Completed: false, // fixme: ...
+		Range:     24,
+	}
+	metasploitFilename      = ".new-additions"
+	metasploitCacheFilename = "datasources/metasploit.cache"
 )
 
 func main() {
@@ -346,6 +357,58 @@ func main() {
 	}
 
 	//
+	// Metasploit
+	//
+	var newMetasploit []*providertypes.Metasploit
+	metasploitDatesCache := utils.LoadCache(metasploitCacheFilename)
+	metasploitTemplatesFilePath := filepath.Join(metasploit.Folder, metasploitFilename)
+	metasploit.Completed = utils.WasModifiedWithin(metasploitTemplatesFilePath, metasploit.Range) || metasploit.Completed
+	metasploitWorker := func(fileInfo types.FileJob) ([]*providertypes.Metasploit, error) {
+		if !providers.IsMetasploit(fileInfo.Path) {
+			return nil, nil
+		}
+		return providers.ParseMetasploit(fileInfo.Folder, fileInfo.Path, metasploitDatesCache)
+	}
+
+	if !metasploit.Completed {
+		// Clone repository (no checkout)
+		if err = utils.GitClone("", metasploit.URL, metasploit.Folder, 0, "--no-checkout"); err == nil {
+			// We will only plan to clone specific folders
+			if err = utils.RunCommandDir(metasploit.Folder, "git", "sparse-checkout", "init", "--cone"); err == nil {
+				// We will only plan to clone specific folders
+				if err = utils.RunCommandDir(metasploit.Folder, "git", "sparse-checkout", "set", "modules"); err == nil {
+					// We can process with the fetch
+					if err = utils.RunCommandDir(metasploit.Folder, "git", "checkout", metasploit.Branch); err == nil {
+						metasploit.Completed = true
+					} else {
+						fmt.Printf("Error setting sparseCheckout folder for metasploit: %v\n", err)
+					}
+				} else {
+					fmt.Printf("Error setting sparseCheckout folder for metasploit: %v\n", err)
+				}
+			} else {
+				fmt.Printf("Error setting sparseCheckout for metasploit: %v\n", err)
+			}
+		} else {
+			fmt.Printf("Error cloning %s: %v\n", metasploit.URL, err)
+		}
+	}
+
+	if metasploit.Completed && !disableMetasploit {
+		fmt.Println("Process Metasploit Results.")
+		// Parses And Adds Each JSON To Metasploit
+		if newMetasploit, err = utils.ProcessFiles(metasploit.Folder, 8, metasploitWorker); err == nil {
+			// Save the latest version of the cache
+			err = utils.SaveCache(metasploitCacheFilename, metasploitDatesCache)
+			if err != nil {
+				fmt.Printf("Error caching %s: %v\n", metasploit.Folder, err)
+			}
+		} else {
+			fmt.Printf("Error processing %s: %v\n", metasploit.URL, err)
+		}
+	}
+
+	//
 	// Add to the map
 	//
 	fmt.Println("Prepare results.")
@@ -377,6 +440,12 @@ func main() {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Nuclei = append(yearMap[year][jsonFilePath].Nuclei, *exploit)
+		}
+	}
+	for _, exploit := range newMetasploit {
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].Metasploit = append(yearMap[year][jsonFilePath].Metasploit, *exploit)
 		}
 	}
 
@@ -517,6 +586,9 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 			_, v.Score = providers.InspectAggregatorURL(v.GetURL(), v.GetCve(), false)
 			newResult.Trickest[i] = v
 		}
+	}
+	if !metasploit.Completed {
+		newResult.Metasploit = oldResult.Metasploit
 	}
 	if !nucleiTemplates.Completed {
 		newResult.Nuclei = oldResult.Nuclei
