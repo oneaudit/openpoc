@@ -57,7 +57,7 @@ var (
 		Range:     24,
 	}
 	trickestFilename      = "references.txt"
-	trickestCacheFilename = "datasources/trickest.json"
+	trickestCacheFilename = "datasources/trickest.cache"
 
 	nomisec = types.Target{
 		URL:       "https://github.com/nomi-sec/PoC-in-GitHub.git",
@@ -76,7 +76,7 @@ var (
 		Range:     24,
 	}
 	nucleiTemplatesFilename = ".new-additions"
-	nucleiCacheFilename     = "datasources/nuclei.json"
+	nucleiCacheFilename     = "datasources/nuclei.cache"
 )
 
 func main() {
