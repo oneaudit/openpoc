@@ -25,6 +25,10 @@ func GitClone(pwd string, url string, dest string, depth int, extraArgs ...strin
 
 func GetDateFromGitFile(pwd string, target string, cache *sync.Map, defaultDate time.Time) (parsedTime time.Time) {
 	// Load From Cache
+	if cache == nil {
+		return defaultDate
+	}
+
 	if cachedTime, found := cache.Load(target); found {
 		parsedTime = cachedTime.(time.Time)
 		return

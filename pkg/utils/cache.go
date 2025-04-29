@@ -11,7 +11,8 @@ import (
 	"time"
 )
 
-var key []byte
+// It takes hours to compute the cache
+var key = []byte(os.Getenv("PRECOMPUTED_CACHE_KEY"))
 
 func SaveCache(filename string, cache *sync.Map) error {
 	// Nothing to load as there are no keys
@@ -34,6 +35,9 @@ func SaveCache(filename string, cache *sync.Map) error {
 		return nil
 	}
 	ciphertext := Encipher(plaintext)
+	if ciphertext == nil {
+		return nil
+	}
 	return os.WriteFile(filename, ciphertext, 0644)
 }
 
@@ -42,7 +46,7 @@ func LoadCache(filename string) *sync.Map {
 
 	// Nothing to load as there are no keys
 	if len(key) == 0 {
-		return &cache
+		return nil
 	}
 
 	// Load the cache
@@ -60,9 +64,14 @@ func LoadCache(filename string) *sync.Map {
 		return nil
 	}
 
+	plaintext := Decipher(ciphertext)
+	if plaintext == nil {
+		return nil
+	}
+
 	// Parse the cache
 	tempMap := make(map[string]time.Time)
-	if err = json.Unmarshal(Decipher(ciphertext), &tempMap); err != nil {
+	if err = json.Unmarshal(plaintext, &tempMap); err != nil {
 		fmt.Printf("Could not open cache %s: %v\n", filename, err)
 		return nil
 	}

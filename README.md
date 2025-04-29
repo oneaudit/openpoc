@@ -37,7 +37,7 @@ The main issue with their database is that it contains many dead links or irrele
 * ✅ Automated continuous integration
 * ✅ Manual filtering using a deny/allow list approach
 * ✅ Trust score implementation based on the source
-* ❌ Date exploits using the commit date
+* ✅ Exploits are associated with the earliest commit date
 
 ```
 > Source: https://github.com/trickest/cve
@@ -93,7 +93,7 @@ Their database was available on GitHub, and the API is still available for free 
 
 * ✅ Automated continuous integration
 * ✅ Trust score set to `1.0`
-* ❌ Date exploits using the commit date
+* ✅ Exploits are associated with the earliest commit date
 
 ```
 > Source: https://github.com/projectdiscovery/nuclei-templates

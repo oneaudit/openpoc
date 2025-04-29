@@ -1,4 +1,6 @@
 datasources/**/*
 !datasources/inthewild
+!datasources/nuclei.cache
+!datasources/trickest.cache
 datasources/inthewild/*
 !datasources/inthewild/pocs.json
