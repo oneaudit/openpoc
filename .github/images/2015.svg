@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2015</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>4426</strong>
+                    <span class="stat-title">POC Count:</span> <strong>4565</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>2438</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>2412</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.82</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.89</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -49,6 +49,15 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
+                        CVE-2015-1635
+                        <small>40</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
                         CVE-2015-7547
                         <small>27</small>
                     </div>
@@ -59,16 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2015-3306
-                        <small>21</small>
-                    </div>
-                    
-                    
-                    <div class="field">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                        </svg>
-                        CVE-2015-1635
-                        <small>19</small>
+                        <small>24</small>
                     </div>
                     
                     
@@ -77,12 +77,21 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2015-8562
-                        <small>16</small>
+                        <small>17</small>
                     </div>
                     
                     
                     </section>
                     <section>
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2015-6668
+                        <small>17</small>
+                    </div>
+                    
                     
                     <div class="field">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
@@ -106,7 +115,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2015-9251
+                        CVE-2015-6967
                         <small>12</small>
                     </div>
                     
@@ -115,17 +124,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2015-6967
-                        <small>11</small>
-                    </div>
-                    
-                    
-                    <div class="field">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                        </svg>
-                        CVE-2015-4852
-                        <small>11</small>
+                        CVE-2015-9251
+                        <small>12</small>
                     </div>
                     
                 </section>

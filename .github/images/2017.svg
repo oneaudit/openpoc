@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2017</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>7903</strong>
+                    <span class="stat-title">POC Count:</span> <strong>8107</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>5154</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>5178</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.53</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.57</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -41,7 +41,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-5638
-                        <small>83</small>
+                        <small>86</small>
                     </div>
                     
                     
@@ -50,7 +50,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-11882
-                        <small>47</small>
+                        <small>49</small>
                     </div>
                     
                     
@@ -59,7 +59,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-7269
-                        <small>39</small>
+                        <small>42</small>
                     </div>
                     
                     
@@ -68,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-10271
-                        <small>34</small>
+                        <small>38</small>
                     </div>
                     
                     
@@ -77,7 +77,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-0199
-                        <small>32</small>
+                        <small>36</small>
                     </div>
                     
                     
@@ -89,7 +89,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-0143
-                        <small>29</small>
+                        <small>30</small>
                     </div>
                     
                     
@@ -98,7 +98,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-1000117
-                        <small>26</small>
+                        <small>27</small>
                     </div>
                     
                     
@@ -107,7 +107,16 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-7494
-                        <small>22</small>
+                        <small>26</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2017-9841
+                        <small>24</small>
                     </div>
                     
                     
@@ -117,15 +126,6 @@
                         </svg>
                         CVE-2017-0144
                         <small>22</small>
-                    </div>
-                    
-                    
-                    <div class="field">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                        </svg>
-                        CVE-2017-7529
-                        <small>21</small>
                     </div>
                     
                 </section>
