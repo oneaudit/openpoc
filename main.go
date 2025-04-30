@@ -421,37 +421,37 @@ func main() {
 	for _, exploit := range newExploitDB {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
-			yearMap[year][jsonFilePath].ExploitDB = append(yearMap[year][jsonFilePath].ExploitDB, *exploit)
+			yearMap[year][jsonFilePath].ExploitDB = append(yearMap[year][jsonFilePath].ExploitDB, exploit)
 		}
 	}
 	for _, exploit := range newInTheWild {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
-			yearMap[year][jsonFilePath].InTheWild = append(yearMap[year][jsonFilePath].InTheWild, *exploit)
+			yearMap[year][jsonFilePath].InTheWild = append(yearMap[year][jsonFilePath].InTheWild, exploit)
 		}
 	}
 	for _, exploit := range newTrickest {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
-			yearMap[year][jsonFilePath].Trickest = append(yearMap[year][jsonFilePath].Trickest, *exploit)
+			yearMap[year][jsonFilePath].Trickest = append(yearMap[year][jsonFilePath].Trickest, exploit)
 		}
 	}
 	for _, exploit := range newNomisec {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
-			yearMap[year][jsonFilePath].Nomisec = append(yearMap[year][jsonFilePath].Nomisec, *exploit)
+			yearMap[year][jsonFilePath].Nomisec = append(yearMap[year][jsonFilePath].Nomisec, exploit)
 		}
 	}
 	for _, exploit := range newNuclei {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
-			yearMap[year][jsonFilePath].Nuclei = append(yearMap[year][jsonFilePath].Nuclei, *exploit)
+			yearMap[year][jsonFilePath].Nuclei = append(yearMap[year][jsonFilePath].Nuclei, exploit)
 		}
 	}
 	for _, exploit := range newMetasploit {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
-			yearMap[year][jsonFilePath].Metasploit = append(yearMap[year][jsonFilePath].Metasploit, *exploit)
+			yearMap[year][jsonFilePath].Metasploit = append(yearMap[year][jsonFilePath].Metasploit, exploit)
 		}
 	}
 
