@@ -19,8 +19,9 @@ type Stats struct {
 }
 
 type ProviderDetails struct {
-	Count int
-	CVE   int
+	Count     int
+	CVE       int
+	Exclusive int
 }
 
 type DomainCount struct {

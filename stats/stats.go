@@ -27,7 +27,7 @@ const baseTemplate = `<svg xmlns="http://www.w3.org/2000/svg" width="{{.Width}}"
     <linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
     <g>
         <rect width="{{.FirstX}}" height="20" fill="#555"/>
-        <rect x="{{.FirstX}}" width="267" height="20" fill="#0cccff"/>
+        <rect x="{{.FirstX}}" width="267" height="20" fill="{{.Color}}"/>
     </g>
     <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
         <text x="{{.SecondX}}" y="140" transform="scale(.1)" fill="#fff">
@@ -46,6 +46,7 @@ type baseTemplateData struct {
 	FirstX  int
 	SecondX int
 	ThirdX  int
+	Color   string
 }
 
 var (
@@ -56,6 +57,7 @@ func main() {
 	fmt.Println(time.Now().String())
 
 	templateMap["count"] = baseTemplateData{
+		Color:   "#0cccff",
 		Width:   125,
 		FirstX:  75,
 		SecondX: 375,
@@ -63,11 +65,20 @@ func main() {
 		Title:   "POC Count",
 	}
 	templateMap["cves"] = baseTemplateData{
+		Color:   "#0cccff",
 		Width:   150,
 		FirstX:  90,
 		SecondX: 450,
 		ThirdX:  1200,
 		Title:   "CVEs with POC",
+	}
+	templateMap["exclusive"] = baseTemplateData{
+		Color:   "#ffcc33",
+		Width:   150,
+		FirstX:  90,
+		SecondX: 450,
+		ThirdX:  1200,
+		Title:   "Exclusive POCs",
 	}
 
 	knownValidatedSources := providers.ComputeValidatedSources()
@@ -114,6 +125,7 @@ func main() {
 	}()
 
 	aggStats := make(map[string]*stats.Stats)
+	urlsFromProvider := make(map[string][]string)
 	for r := range results {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
 			aggStats[r.FileJob.Folder] = &stats.Stats{Year: r.FileJob.Folder}
@@ -142,12 +154,21 @@ func main() {
 		for _, providerData := range knownProviders {
 			providerName := getProviderName(providerData.provider)
 			if _, ok := aggStats[r.FileJob.Folder].ProviderMap[providerName]; !ok {
-				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0}
+				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0}
 			}
 			count := len(providerData.result)
 			aggStats[r.FileJob.Folder].ProviderMap[providerName].Count += count
 			if count > 0 {
 				aggStats[r.FileJob.Folder].ProviderMap[providerName].CVE += 1
+			}
+
+			// Track which provider returned which URL
+			for _, d := range providerData.result {
+				dataURL := (*d).GetURL()
+				if _, found := urlsFromProvider[dataURL]; !found {
+					urlsFromProvider[dataURL] = make([]string, 0)
+				}
+				urlsFromProvider[dataURL] = append(urlsFromProvider[dataURL], providerName)
 			}
 		}
 
@@ -247,6 +268,20 @@ func main() {
 				urlCollector[urlCount.URL].Count += urlCount.Count
 			}
 		}
+		for _, urlFromProvider := range urlsFromProvider {
+			// If a provider returned the same URL multiple times, we only count as once
+			providersThatGotIt := make(map[string]struct{})
+			for _, provider := range urlFromProvider {
+				providersThatGotIt[provider] = struct{}{}
+			}
+			// Update scoring
+			for provider := range providersThatGotIt {
+				if _, ok := stat.ProviderMap[provider]; !ok {
+					stat.ProviderMap[provider] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0}
+				}
+				stat.ProviderMap[provider].Exclusive += 1
+			}
+		}
 	}
 
 	var dCounts []stats.DomainCount
@@ -334,6 +369,8 @@ func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 				templateData.Value = strconv.Itoa(providerData.Count)
 			case "cves":
 				templateData.Value = strconv.Itoa(providerData.CVE)
+			case "exclusive":
+				templateData.Value = strconv.Itoa(providerData.Exclusive)
 			}
 			err = providerStatsExampleTemplate.Execute(providerCountOutputFile, templateData)
 			if err != nil {
