@@ -265,6 +265,86 @@ func main() {
 		return uCounts[i].Count > uCounts[j].Count
 	})
 
+	OutputAsString(aggStats, dCounts, uCounts)
+	OutputTemplateFile(aggStats)
+
+	fmt.Println(time.Now().String())
+}
+
+func OutputTemplateFile(aggStats map[string]*stats.Stats) {
+	templateFileName := "stats/stats_example.svg"
+	statExampleTemplate, err := template.ParseFiles(templateFileName)
+	if err != nil {
+		fmt.Printf("Could not open template file %s: %v\n", templateFileName, err)
+		return
+	}
+
+	providerStatsExampleTemplate, err := template.New("svg").Parse(baseTemplate)
+	if err != nil {
+		fmt.Printf("Could not parse base template: %v\n", err)
+		return
+	}
+
+	finalStat := stats.Stats{
+		ProviderMap: make(map[string]*stats.ProviderDetails),
+	}
+	for year, stat := range aggStats {
+		yearlyOutputFileName := fmt.Sprintf("%s.svg", year)
+		yearlyOutputFile, err := os.Create(".github/images/" + yearlyOutputFileName)
+		if err != nil {
+			fmt.Printf("Could not open output file %s: %v\n", yearlyOutputFileName, err)
+			break
+		}
+		err = statExampleTemplate.Execute(yearlyOutputFile, stat)
+		if err != nil {
+			fmt.Printf("Could not open run template on file %s: %v\n", yearlyOutputFileName, err)
+		}
+		yearlyOutputFile.Close()
+
+		for k, v := range stat.ProviderMap {
+			if _, ok := finalStat.ProviderMap[k]; !ok {
+				finalStat.ProviderMap[k] = v
+			} else {
+				finalStat.ProviderMap[k].Count += v.Count
+				finalStat.ProviderMap[k].CVE += v.CVE
+			}
+		}
+	}
+
+	for providerName, providerData := range finalStat.ProviderMap {
+		// Create provider folder
+		providerOutputFolder := fmt.Sprintf(".github/images/%s/", providerName)
+		if _, err = os.Stat(providerOutputFolder); os.IsNotExist(err) {
+			err = os.Mkdir(providerOutputFolder, 0755)
+			if err != nil {
+				fmt.Printf("Could not create output folder %s: %v\n", providerOutputFolder, err)
+				continue
+			}
+		}
+
+		for statType, templateData := range templateMap {
+			providerCountOutputFileName := fmt.Sprintf("%s/%s.svg", providerOutputFolder, statType)
+			providerCountOutputFile, err := os.Create(providerCountOutputFileName)
+			if err != nil {
+				fmt.Printf("Could not open output file %s: %v\n", providerCountOutputFileName, err)
+				break
+			}
+			switch statType {
+			case "count":
+				templateData.Value = strconv.Itoa(providerData.Count)
+			case "cves":
+				templateData.Value = strconv.Itoa(providerData.CVE)
+			}
+			err = providerStatsExampleTemplate.Execute(providerCountOutputFile, templateData)
+			if err != nil {
+				fmt.Printf("Could not open run template on file %s: %v\n", providerCountOutputFileName, err)
+			}
+			providerCountOutputFile.Close()
+		}
+	}
+}
+
+func OutputAsString(aggStats map[string]*stats.Stats, dCounts []stats.DomainCount, uCounts []stats.URLCount) {
 	// Statistics computed for year: 1999
 	// Total CVEs with an exploit: 568
 	// Total Exploit Count: 827
@@ -321,75 +401,6 @@ func main() {
 		fmt.Printf("%d. URL: %s, Count: %d\n", i+1, entry.URL, entry.Count)
 	}
 	fmt.Println()
-
-	templateFileName := "stats/stats_example.svg"
-	statExampleTemplate, err := template.ParseFiles(templateFileName)
-	if err != nil {
-		fmt.Printf("Could not open template file %s: %v\n", templateFileName, err)
-		return
-	}
-
-	providerStatsExampleTemplate, err := template.New("svg").Parse(baseTemplate)
-	if err != nil {
-		fmt.Printf("Could not parse base template: %v\n", err)
-		return
-	}
-
-	currentYear := time.Now().Format(time.DateOnly)[:4]
-
-	for year, stat := range aggStats {
-		yearlyOutputFileName := fmt.Sprintf("%s.svg", year)
-		yearlyOutputFile, err := os.Create(".github/images/" + yearlyOutputFileName)
-		if err != nil {
-			fmt.Printf("Could not open output file %s: %v\n", yearlyOutputFileName, err)
-			break
-		}
-		err = statExampleTemplate.Execute(yearlyOutputFile, stat)
-		if err != nil {
-			fmt.Printf("Could not open run template on file %s: %v\n", yearlyOutputFileName, err)
-		}
-		yearlyOutputFile.Close()
-
-		// Only the current year
-		if year != currentYear {
-			continue
-		}
-
-		for providerName, providerData := range stat.ProviderMap {
-			// Create provider folder
-			providerOutputFolder := fmt.Sprintf(".github/images/%s/", providerName)
-			if _, err = os.Stat(providerOutputFolder); os.IsNotExist(err) {
-				err = os.Mkdir(providerOutputFolder, 0755)
-				if err != nil {
-					fmt.Printf("Could not create output folder %s: %v\n", providerOutputFolder, err)
-					continue
-				}
-			}
-
-			for statType, templateData := range templateMap {
-				providerCountOutputFileName := fmt.Sprintf("%s/%s_%s.svg", providerOutputFolder, year, statType)
-				providerCountOutputFile, err := os.Create(providerCountOutputFileName)
-				if err != nil {
-					fmt.Printf("Could not open output file %s: %v\n", providerCountOutputFileName, err)
-					break
-				}
-				switch statType {
-				case "count":
-					templateData.Value = strconv.Itoa(providerData.Count)
-				case "cves":
-					templateData.Value = strconv.Itoa(providerData.CVE)
-				}
-				err = providerStatsExampleTemplate.Execute(providerCountOutputFile, templateData)
-				if err != nil {
-					fmt.Printf("Could not open run template on file %s: %v\n", providerCountOutputFileName, err)
-				}
-				providerCountOutputFile.Close()
-			}
-			break
-		}
-	}
-
-	fmt.Println(time.Now().String())
 }
 
 func toMetadata[T types.OpenPocMetadata](input []T) (output []*types.OpenPocMetadata) {
