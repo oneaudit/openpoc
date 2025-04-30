@@ -1,5 +1,7 @@
 # Open PoCs [<img src="https://github.com/oneaudit/openpoc/actions/workflows/main.yaml/badge.svg" alt="" align="right">](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml)
 
+Aggregates multiple data sources related to CVE exploits/PoC. [**Please read the license terms**](#license-).
+
 <table>
   <tr>
     <th align="center">2025</th>
