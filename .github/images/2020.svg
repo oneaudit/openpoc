@@ -25,7 +25,7 @@
                     <span class="stat-title">POC Count:</span> <strong>13212</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>8011</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>8012</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.65</strong>
@@ -50,7 +50,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2020-1472
-                        <small>81</small>
+                        <small>82</small>
                     </div>
                     
                     
@@ -68,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2020-10391
-                        <small>50</small>
+                        <small>66</small>
                     </div>
                     
                     
@@ -98,7 +98,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2020-0601
-                        <small>41</small>
+                        <small>42</small>
                     </div>
                     
                     
@@ -125,7 +125,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2020-9484
-                        <small>27</small>
+                        <small>28</small>
                     </div>
                     
                 </section>

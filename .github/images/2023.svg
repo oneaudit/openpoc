@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2023</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>14454</strong>
+                    <span class="stat-title">POC Count:</span> <strong>14458</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>10034</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>10038</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.44</strong>
@@ -40,7 +40,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-23752
+                        CVE-2023-38831
                         <small>67</small>
                     </div>
                     
@@ -49,7 +49,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-38831
+                        CVE-2023-23752
                         <small>67</small>
                     </div>
                     
@@ -88,8 +88,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-23397
-                        <small>35</small>
+                        CVE-2023-22515
+                        <small>38</small>
                     </div>
                     
                     
@@ -106,8 +106,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2023-22515
-                        <small>33</small>
+                        CVE-2023-23397
+                        <small>35</small>
                     </div>
                     
                     
@@ -116,7 +116,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2023-4220
-                        <small>31</small>
+                        <small>32</small>
                     </div>
                     
                     
