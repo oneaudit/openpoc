@@ -7,49 +7,49 @@ import (
 )
 
 type AggregatorResult struct {
-	ExploitDB  []providertypes.ExploitDB  `json:"exploitdb"`
-	InTheWild  []providertypes.InTheWild  `json:"itw"`
-	Trickest   []providertypes.Trickest   `json:"trickest"`
-	Nomisec    []providertypes.Nomisec    `json:"nomisec"`
-	Nuclei     []providertypes.Nuclei     `json:"nuclei"`
-	Metasploit []providertypes.Metasploit `json:"metasploit"`
-	Openpoc    []OpenpocProduct           `json:"openpoc"`
+	ExploitDB  []*providertypes.ExploitDB  `json:"exploitdb"`
+	InTheWild  []*providertypes.InTheWild  `json:"itw"`
+	Trickest   []*providertypes.Trickest   `json:"trickest"`
+	Nomisec    []*providertypes.Nomisec    `json:"nomisec"`
+	Nuclei     []*providertypes.Nuclei     `json:"nuclei"`
+	Metasploit []*providertypes.Metasploit `json:"metasploit"`
+	Openpoc    []*OpenpocProduct           `json:"openpoc"`
 }
 
 func NewAggregatorResult() *AggregatorResult {
 	return &AggregatorResult{
-		InTheWild:  []providertypes.InTheWild{},
-		ExploitDB:  []providertypes.ExploitDB{},
-		Trickest:   []providertypes.Trickest{},
-		Nomisec:    []providertypes.Nomisec{},
-		Nuclei:     []providertypes.Nuclei{},
-		Metasploit: []providertypes.Metasploit{},
-		Openpoc:    []OpenpocProduct{},
+		InTheWild:  []*providertypes.InTheWild{},
+		ExploitDB:  []*providertypes.ExploitDB{},
+		Trickest:   []*providertypes.Trickest{},
+		Nomisec:    []*providertypes.Nomisec{},
+		Nuclei:     []*providertypes.Nuclei{},
+		Metasploit: []*providertypes.Metasploit{},
+		Openpoc:    []*OpenpocProduct{},
 	}
 }
 
 func (a *AggregatorResult) ComputeOpenPoc() {
 	merger := make(map[string]*OpenpocProduct)
 	for _, exploit := range a.Trickest { // dirty, first
-		addToMerger(&exploit, &merger)
+		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.InTheWild { // not often updated, second
-		addToMerger(&exploit, &merger)
+		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.ExploitDB { // good third
-		addToMerger(&exploit, &merger)
+		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.Nomisec { // the best, fourth
-		addToMerger(&exploit, &merger)
+		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.Nuclei { // fifth, no impact
-		addToMerger(&exploit, &merger)
+		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.Metasploit { // sixth, no impact
-		addToMerger(&exploit, &merger)
+		addToMerger(exploit, &merger)
 	}
 	for _, url := range merger {
-		a.Openpoc = append(a.Openpoc, *url)
+		a.Openpoc = append(a.Openpoc, url)
 	}
 }
 

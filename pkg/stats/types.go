@@ -8,16 +8,26 @@ type Stats struct {
 	ExploitCount        int
 	ExploitCountAverage float64
 	CveScoreBoard       []CVEStat
-	DomainMap           map[string]int
-	DomainScoreBoard    []DomainCount
-	URLMap              map[string]int
-	URLScoreBoard       []URLCount
+
+	DomainMap        map[string]int
+	DomainScoreBoard []DomainCount
+
+	URLMap        map[string]int
+	URLScoreBoard []URLCount
+
+	ProviderMap map[string]*ProviderDetails
+}
+
+type ProviderDetails struct {
+	Count int
+	CVE   int
 }
 
 type DomainCount struct {
 	Domain string
 	Count  int
 }
+
 type URLCount struct {
 	URL   string
 	Count int

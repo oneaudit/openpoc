@@ -102,7 +102,7 @@ Their database was available on GitHub, and the API is still available for free 
 
 ## Metasploit Repository 🚢
 
-Metasploit is a well-known security framework. The main downside is that they only have a limited number of CVE exploits.
+Metasploit is a well-known security framework. Note that they only have a limited number of CVE exploits.
 
 * ✅ Automated continuous integration
 * ✅ Trust score set to `1.0`

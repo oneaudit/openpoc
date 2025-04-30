@@ -6,10 +6,14 @@ import (
 	"net/url"
 	"openpoc/pkg/providers"
 	"openpoc/pkg/stats"
+	"openpoc/pkg/types"
+	"openpoc/pkg/types/public"
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"text/template"
@@ -19,9 +23,52 @@ import (
 const scoreboardTop = 10
 const domainTop = 3
 const urlTop = 3
+const baseTemplate = `<svg xmlns="http://www.w3.org/2000/svg" width="{{.Width}}" height="20" role="img">
+    <linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
+    <g>
+        <rect width="{{.FirstX}}" height="20" fill="#555"/>
+        <rect x="{{.FirstX}}" width="267" height="20" fill="#0cccff"/>
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" text-rendering="geometricPrecision" font-size="110">
+        <text x="{{.SecondX}}" y="140" transform="scale(.1)" fill="#fff">
+            {{.Title}}
+        </text>
+        <text x="{{.ThirdX}}" y="140" transform="scale(.1)" fill="#333">
+            {{.Value}}
+        </text>
+    </g>
+</svg>`
+
+type baseTemplateData struct {
+	Title   string
+	Value   string
+	Width   int
+	FirstX  int
+	SecondX int
+	ThirdX  int
+}
+
+var (
+	templateMap = make(map[string]baseTemplateData)
+)
 
 func main() {
 	fmt.Println(time.Now().String())
+
+	templateMap["count"] = baseTemplateData{
+		Width:   125,
+		FirstX:  75,
+		SecondX: 375,
+		ThirdX:  1000,
+		Title:   "POC Count",
+	}
+	templateMap["cves"] = baseTemplateData{
+		Width:   150,
+		FirstX:  90,
+		SecondX: 450,
+		ThirdX:  1200,
+		Title:   "CVEs with POC",
+	}
 
 	knownValidatedSources := providers.ComputeValidatedSources()
 	directories := utils.GetDirectories()
@@ -72,11 +119,37 @@ func main() {
 			aggStats[r.FileJob.Folder] = &stats.Stats{Year: r.FileJob.Folder}
 			aggStats[r.FileJob.Folder].DomainMap = make(map[string]int)
 			aggStats[r.FileJob.Folder].URLMap = make(map[string]int)
+			aggStats[r.FileJob.Folder].ProviderMap = make(map[string]*stats.ProviderDetails)
 		}
 		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: len(r.Result.Openpoc)}
 		aggStats[r.FileJob.Folder].CVECount += 1
 		aggStats[r.FileJob.Folder].ExploitCount += cveStats.ExploitCount
 		aggStats[r.FileJob.Folder].CveScoreBoard = append(aggStats[r.FileJob.Folder].CveScoreBoard, cveStats)
+
+		knownProviders := []struct {
+			provider interface{}
+			result   []*types.OpenPocMetadata
+		}{
+			{public.InTheWild{}, toMetadata(r.Result.InTheWild)},
+			{public.Nuclei{}, toMetadata(r.Result.Nuclei)},
+			{public.Nomisec{}, toMetadata(r.Result.Nomisec)},
+			{public.Trickest{}, toMetadata(r.Result.Trickest)},
+			{public.ExploitDB{}, toMetadata(r.Result.ExploitDB)},
+			{public.Metasploit{}, toMetadata(r.Result.Metasploit)},
+		}
+
+		// Compute the total number of exploits
+		for _, providerData := range knownProviders {
+			providerName := getProviderName(providerData.provider)
+			if _, ok := aggStats[r.FileJob.Folder].ProviderMap[providerName]; !ok {
+				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0}
+			}
+			count := len(providerData.result)
+			aggStats[r.FileJob.Folder].ProviderMap[providerName].Count += count
+			if count > 0 {
+				aggStats[r.FileJob.Folder].ProviderMap[providerName].CVE += 1
+			}
+		}
 
 		for _, poc := range r.Result.Openpoc {
 			parsedUrl, err := url.Parse(poc.URL)
@@ -222,10 +295,15 @@ func main() {
 			entry := stat.DomainScoreBoard[i]
 			fmt.Printf("%d. Domain: %s, Count: %d\n", i+1, entry.Domain, entry.Count)
 		}
-		fmt.Println("Top domains with the most exploits:")
+		fmt.Println("Top URLs with the most exploits:")
 		for i := 0; i < urlTop && i < len(stat.URLScoreBoard); i++ {
 			entry := stat.URLScoreBoard[i]
 			fmt.Printf("%d. URL: %s, Count: %d\n", i+1, entry.URL, entry.Count)
+		}
+		fmt.Println()
+		fmt.Println("Scores per provider:")
+		for provider, providerScore := range stat.ProviderMap {
+			fmt.Printf("%s. Total: %d, CVE: %d\n", provider, providerScore.Count, providerScore.CVE)
 		}
 		fmt.Println()
 	}
@@ -245,25 +323,83 @@ func main() {
 	fmt.Println()
 
 	templateFileName := "stats/stats_example.svg"
-	tmpl, err := template.ParseFiles(templateFileName)
+	statExampleTemplate, err := template.ParseFiles(templateFileName)
 	if err != nil {
 		fmt.Printf("Could not open template file %s: %v\n", templateFileName, err)
 		return
 	}
 
+	providerStatsExampleTemplate, err := template.New("svg").Parse(baseTemplate)
+	if err != nil {
+		fmt.Printf("Could not parse base template: %v\n", err)
+		return
+	}
+
+	currentYear := time.Now().Format(time.DateOnly)[:4]
+
 	for year, stat := range aggStats {
-		outputFileName := fmt.Sprintf("%s.svg", year)
-		outputFile, err := os.Create(".github/images/" + outputFileName)
+		yearlyOutputFileName := fmt.Sprintf("%s.svg", year)
+		yearlyOutputFile, err := os.Create(".github/images/" + yearlyOutputFileName)
 		if err != nil {
-			fmt.Printf("Could not open output file %s: %v\n", outputFileName, err)
+			fmt.Printf("Could not open output file %s: %v\n", yearlyOutputFileName, err)
 			break
 		}
-		err = tmpl.Execute(outputFile, stat)
+		err = statExampleTemplate.Execute(yearlyOutputFile, stat)
 		if err != nil {
-			fmt.Printf("Could not open run template on file %s: %v\n", outputFileName, err)
+			fmt.Printf("Could not open run template on file %s: %v\n", yearlyOutputFileName, err)
 		}
-		outputFile.Close()
+		yearlyOutputFile.Close()
+
+		// Only the current year
+		if year != currentYear {
+			continue
+		}
+
+		for providerName, providerData := range stat.ProviderMap {
+			// Create provider folder
+			providerOutputFolder := fmt.Sprintf(".github/images/%s/", providerName)
+			if _, err = os.Stat(providerOutputFolder); os.IsNotExist(err) {
+				err = os.Mkdir(providerOutputFolder, 0755)
+				if err != nil {
+					fmt.Printf("Could not create output folder %s: %v\n", providerOutputFolder, err)
+					continue
+				}
+			}
+
+			for statType, templateData := range templateMap {
+				providerCountOutputFileName := fmt.Sprintf("%s/%s_%s.svg", providerOutputFolder, year, statType)
+				providerCountOutputFile, err := os.Create(providerCountOutputFileName)
+				if err != nil {
+					fmt.Printf("Could not open output file %s: %v\n", providerCountOutputFileName, err)
+					break
+				}
+				switch statType {
+				case "count":
+					templateData.Value = strconv.Itoa(providerData.Count)
+				case "cves":
+					templateData.Value = strconv.Itoa(providerData.CVE)
+				}
+				err = providerStatsExampleTemplate.Execute(providerCountOutputFile, templateData)
+				if err != nil {
+					fmt.Printf("Could not open run template on file %s: %v\n", providerCountOutputFileName, err)
+				}
+				providerCountOutputFile.Close()
+			}
+			break
+		}
 	}
 
 	fmt.Println(time.Now().String())
+}
+
+func toMetadata[T types.OpenPocMetadata](input []T) (output []*types.OpenPocMetadata) {
+	for _, v := range input {
+		metadata := any(v).(types.OpenPocMetadata)
+		output = append(output, &metadata)
+	}
+	return
+}
+
+func getProviderName(obj any) string {
+	return reflect.TypeOf(obj).Name()
 }

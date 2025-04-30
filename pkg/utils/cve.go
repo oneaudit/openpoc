@@ -36,7 +36,7 @@ func CleanCVE(cve string) string {
 
 func GetCvePartsAsInt(cve string) (int64, int64) {
 	matches := cveMatcher.FindStringSubmatch(cve)
-	if len(matches) == 2 {
+	if len(matches) == 3 {
 		year, _ := strconv.ParseInt(matches[1], 10, 64)
 		rid, _ := strconv.ParseInt(matches[2], 10, 64)
 		return year, rid
