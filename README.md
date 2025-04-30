@@ -31,6 +31,9 @@ Aggregates multiple data sources related to CVE exploits/PoC. [Please read the l
 
 ## Trickest Repository 🗺️
 
+![Trickest Stats: CVEs with a PoC](.github/images/Trickest/cves.svg)
+![Trickest Stats: Number of PoCs](.github/images/Trickest/count.svg)
+
 [Trickest](https://github.com/trickest/cve) is one of the most popular open-source projects for monitoring exploits.<br>
 The main issue with their database is that it contains many dead links or irrelevant content.<br>
 
@@ -47,6 +50,9 @@ The main issue with their database is that it contains many dead links or irrele
 
 ## Nomisec Repository 👑
 
+![Nomisec Stats: CVEs with a PoC](.github/images/Nomisec/cves.svg)
+![Nomisec Stats: Number of PoCs](.github/images/Nomisec/count.svg)
+
 [Nomisec](https://github.com/nomi-sec/PoC-in-GitHub/) is another popular open-source project for monitoring exploits.<br>
  While their content is more limited than Trickest, almost all of their links are relevant.
 
@@ -60,6 +66,9 @@ The main issue with their database is that it contains many dead links or irrele
 ```
 
 ## Exploit Database 🪲
+
+![ExploitDB Stats: CVEs with a PoC](.github/images/ExploitDB/cves.svg)
+![ExploitDB Stats: Number of PoCs](.github/images/ExploitDB/count.svg)
 
 [Exploit Database](https://www.exploit-db.com/) is a well-known and popular website with a large collection of PoCs.<br>
 Their database is available in CSV format and is hosted on GitLab.
@@ -75,6 +84,9 @@ Their database is available in CSV format and is hosted on GitLab.
 
 ## In The Wild API 🫏
 
+![InTheWild Stats: CVEs with a PoC](.github/images/InTheWild/cves.svg)
+![InTheWild Stats: Number of PoCs](.github/images/InTheWild/count.svg)
+
 [InTheWild](https://inthewild.io/) is a lesser-known but useful source for finding rare and hard-to-find exploits.<br>
 Their database was available on GitHub, and the API is still available for free use.
 
@@ -89,6 +101,9 @@ Their database was available on GitHub, and the API is still available for free 
 
 ## Nuclei Repository 🐲
 
+![Nuclei Stats: CVEs with a PoC](.github/images/Nuclei/cves.svg)
+![Nuclei Stats: Number of PoCs](.github/images/Nuclei/count.svg)
+
 [Nuclei](https://github.com/projectdiscovery/nuclei) is popular vulnerability scanner. Nuclei [templates](https://github.com/projectdiscovery/nuclei-templates) cover many CVEs.
 
 * ✅ Automated continuous integration
@@ -101,6 +116,9 @@ Their database was available on GitHub, and the API is still available for free 
 ```
 
 ## Metasploit Repository 🚢
+
+![Metasploit Stats: CVEs with a PoC](.github/images/Metasploit/cves.svg)
+![Metasploit Stats: Number of PoCs](.github/images/Metasploit/count.svg)
 
 Metasploit is a well-known security framework. Note that they only have a limited number of CVE exploits.
 
