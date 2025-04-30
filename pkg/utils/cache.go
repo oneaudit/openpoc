@@ -20,6 +20,10 @@ func SaveCache(filename string, cache *sync.Map) error {
 		return nil
 	}
 
+	if cache == nil {
+		return nil
+	}
+
 	tempMap := make(map[string]time.Time)
 	cache.Range(func(key, value interface{}) bool {
 		if k, ok := key.(string); ok {
@@ -34,7 +38,7 @@ func SaveCache(filename string, cache *sync.Map) error {
 	if err != nil {
 		return nil
 	}
-	ciphertext := Encipher(plaintext)
+	ciphertext := Encipher(filename, plaintext)
 	if ciphertext == nil {
 		return nil
 	}
@@ -64,7 +68,7 @@ func LoadCache(filename string) *sync.Map {
 		return nil
 	}
 
-	plaintext := Decipher(ciphertext)
+	plaintext := Decipher(filename, ciphertext)
 	if plaintext == nil {
 		return nil
 	}
@@ -82,16 +86,16 @@ func LoadCache(filename string) *sync.Map {
 	return &cache
 }
 
-func Decipher(ciphertext []byte) []byte {
+func Decipher(filename string, ciphertext []byte) []byte {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		fmt.Printf("Could not create cipher: %v\n", err)
+		fmt.Printf("Could not create cipher %s: %v\n", filename, err)
 		return nil
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		fmt.Printf("Could not create gcm: %v\n", err)
+		fmt.Printf("Could not create gcm %s: %v\n", filename, err)
 		return nil
 	}
 	nonceSize := aesGCM.NonceSize()
@@ -99,29 +103,29 @@ func Decipher(ciphertext []byte) []byte {
 
 	plaintext, err := aesGCM.Open(nil, nonce, cipherData, nil)
 	if err != nil {
-		fmt.Printf("Could not read data: %v\n", err)
+		fmt.Printf("Could not read data %s: %v\n", filename, err)
 		return nil
 
 	}
 	return plaintext
 }
 
-func Encipher(jsonData []byte) []byte {
+func Encipher(filename string, jsonData []byte) []byte {
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		fmt.Printf("Could not create cipher: %v\n", err)
+		fmt.Printf("Could not create cipher %s: %v\n", filename, err)
 		return nil
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		fmt.Printf("Could not create gcm: %v\n", err)
+		fmt.Printf("Could not create gcm %s: %v\n", filename, err)
 		return nil
 	}
 
 	nonce := make([]byte, aesGCM.NonceSize())
 	if _, err = rand.Read(nonce); err != nil {
-		fmt.Printf("Could not read nonce: %v\n", err)
+		fmt.Printf("Could not read nonce %s: %v\n", filename, err)
 		return nil
 	}
 

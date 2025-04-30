@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/dustin/go-humanize"
 	"io/fs"
 	"net/url"
 	"openpoc/pkg/providers"
@@ -13,7 +14,6 @@ import (
 	"path/filepath"
 	"reflect"
 	"sort"
-	"strconv"
 	"strings"
 	"sync"
 	"text/template"
@@ -156,7 +156,7 @@ func main() {
 			if _, ok := aggStats[r.FileJob.Folder].ProviderMap[providerName]; !ok {
 				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0}
 			}
-			count := len(providerData.result)
+			count := int64(len(providerData.result))
 			aggStats[r.FileJob.Folder].ProviderMap[providerName].Count += count
 			if count > 0 {
 				aggStats[r.FileJob.Folder].ProviderMap[providerName].CVE += 1
@@ -308,7 +308,9 @@ func main() {
 
 func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 	templateFileName := "stats/stats_example.svg"
-	statExampleTemplate, err := template.ParseFiles(templateFileName)
+	statExampleTemplate, err := template.New("stat").Funcs(template.FuncMap{
+		"formatInt": humanize.Comma,
+	}).ParseFiles(templateFileName)
 	if err != nil {
 		fmt.Printf("Could not open template file %s: %v\n", templateFileName, err)
 		return
@@ -366,11 +368,11 @@ func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 			}
 			switch statType {
 			case "count":
-				templateData.Value = strconv.Itoa(providerData.Count)
+				templateData.Value = humanize.Comma(providerData.Count)
 			case "cves":
-				templateData.Value = strconv.Itoa(providerData.CVE)
+				templateData.Value = humanize.Comma(providerData.CVE)
 			case "exclusive":
-				templateData.Value = strconv.Itoa(providerData.Exclusive)
+				templateData.Value = humanize.Comma(providerData.Exclusive)
 			}
 			err = providerStatsExampleTemplate.Execute(providerCountOutputFile, templateData)
 			if err != nil {
