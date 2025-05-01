@@ -16,12 +16,10 @@ jobs:
           ref: update
 
       - name: Fetch Holloways
-        uses: actions/checkout@v4
-        with:
-          repository: oneaudit/trickest-extended
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: datasources/holloways
-          ref: main
+        run: |
+          git clone  https://github.com/oneaudit/trickest-extended.git testlm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install golang
         uses: actions/setup-go@v5
@@ -36,6 +34,7 @@ jobs:
         run: |
           go run main.go
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PRECOMPUTED_CACHE_KEY: ${{ secrets.PRECOMPUTED_CACHE_KEY }}
           CAN_ACCESS_HOLLOWAYS: true
 
