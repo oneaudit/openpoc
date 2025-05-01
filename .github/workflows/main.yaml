@@ -24,7 +24,7 @@ jobs:
 
       - name: Fetch Holloways
         run: |
-          git clone https://github.com/oneaudit/trickest-extended.git testlm
+          git clone git@github.com:oneaudit/trickest-extended.git testlm
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
