@@ -20,12 +20,12 @@ jobs:
           mkdir -p ~/.ssh
           eval `ssh-agent -s`
           ssh-add - <<< '${{ secrets.SSH_PRIVATE_KEY }}'
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
 
       - name: Fetch Holloways
         run: |
-          git clone git@github.com:oneaudit/trickest-extended.git testlm
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git clone https://git@github.com:oneaudit/trickest-extended.git testlm
 
       - name: Install golang
         uses: actions/setup-go@v5
