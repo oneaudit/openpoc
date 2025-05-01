@@ -109,7 +109,7 @@ Their database was available on GitHub, and the API is still available for free 
 ![Holloways Stats: Number of PoCs](.github/images/Holloways/count.svg)
 ![Holloways Stats: Exclusive PoCs](.github/images/Holloways/exclusive.svg)
 
-Holloways has a private repository adding support for additional sources. While the implementation is private, the results are still open to everyone.
+Holloways has a private repository adding support for additional sources. While the implementation is private, the results are still open to everyone through the automated continuous integration.
 
 * ✅ Automated continuous integration
 * ✅ For fun and profit, enjoy ✨
@@ -169,7 +169,7 @@ A few candidates indirectly scrapped by Trickest:
 * `securitylab.github.com`
 * `medium.com`
 * `vulnerability-lab.com`
-* `whitesourcesoftware.com`
+* `whitesourcesoftware.com`, `www.mend.io`
 * `osv.dev`, `osvdb.org`
 * `cyberwarzone.com`
 

@@ -49,7 +49,7 @@ var (
 		Folder:    "datasources/inthewild",
 		Branch:    "",
 		Completed: statusByDefault,
-		Range:     3600,
+		Range:     24 * 7,
 	}
 	inTheWildFilename = "pocs.json"
 
