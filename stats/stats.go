@@ -308,7 +308,7 @@ func main() {
 
 func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 	templateFileName := "stats/stats_example.svg"
-	statExampleTemplate, err := template.New("stat").Funcs(template.FuncMap{
+	statExampleTemplate, err := template.New(filepath.Base(templateFileName)).Funcs(template.FuncMap{
 		"formatInt": humanize.Comma,
 	}).ParseFiles(templateFileName)
 	if err != nil {
