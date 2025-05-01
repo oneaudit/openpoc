@@ -104,6 +104,7 @@ func addToMerger[T OpenPocMetadata](exploit T, merger *map[string]*OpenpocProduc
 		if exploit.GetTrustScore() > value.TrustScore {
 			value.TrustScore = exploit.GetTrustScore()
 		}
+
 		if exploit.GetPublishDate() == DefaultDate {
 			return
 		}

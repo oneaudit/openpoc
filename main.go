@@ -182,6 +182,8 @@ func main() {
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err != nil {
 			fmt.Printf("Error parsing exploitdb database %s: %v\n", exploitDBFile, err)
 		}
+	} else {
+		fmt.Println("Skip ExploitDB Results.")
 	}
 
 	//
@@ -234,11 +236,7 @@ func main() {
 					outFile, err = os.Create(inTheWildFile)
 					if err == nil {
 						if _, err = io.Copy(outFile, response.Body); err == nil {
-							if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err == nil {
-								inTheWild.Completed = true
-							} else {
-								fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)
-							}
+							inTheWild.Completed = true
 						} else {
 							fmt.Printf("Error storing response in file %s: %v\n", inTheWildFile, err)
 						}
@@ -258,11 +256,15 @@ func main() {
 		} else {
 			fmt.Printf("Error creating in the wild folder: %v\n", err)
 		}
-	} else if !disableInTheWild {
+	}
+
+	if inTheWild.Completed && !disableInTheWild {
 		fmt.Println("Process InTheWild Results.")
 		if newInTheWild, err = providers.ParseInTheWild(inTheWildFile); err != nil {
 			fmt.Printf("Error parsing database %s: %v\n", inTheWildFile, err)
 		}
+	} else {
+		fmt.Println("Skip InTheWild Results.")
 	}
 
 	//
@@ -302,9 +304,12 @@ func main() {
 					for _, ref := range referencesTrickest {
 						if ref.CveID == candidate.CveID && candidate.GetURL() == ref.GetURL() {
 							found = true
-							ref.AddedAt = candidate.AddedAt
-							ref.Score = candidate.Score
-							break
+							if ref.AddedAt == types.DefaultDate || candidate.AddedAt.Before(ref.AddedAt) {
+								ref.AddedAt = candidate.AddedAt
+							}
+							if candidate.Score > ref.Score {
+								ref.Score = candidate.Score
+							}
 						}
 					}
 					if !found {
@@ -324,6 +329,8 @@ func main() {
 		if err != nil {
 			fmt.Printf("Error caching %s: %v\n", trickestCacheFilename, err)
 		}
+	} else {
+		fmt.Println("Skip Trickest Results.")
 	}
 
 	//
@@ -354,6 +361,8 @@ func main() {
 		if newNomisec, err = utils.ProcessFiles(nomisec.Folder, 8, nomisecWorker); err != nil {
 			fmt.Printf("Error processing %s: %v\n", nomisec.URL, err)
 		}
+	} else {
+		fmt.Println("Skip NomiSec Results.")
 	}
 
 	//
@@ -392,6 +401,8 @@ func main() {
 		if err != nil {
 			fmt.Printf("Error caching %s: %v\n", nucleiCacheFilename, err)
 		}
+	} else {
+		fmt.Println("Skip Nuclei Templates Results.")
 	}
 
 	//
@@ -450,6 +461,8 @@ func main() {
 		if err != nil {
 			fmt.Printf("Error caching %s: %v\n", metasploitCacheFilename, err)
 		}
+	} else {
+		fmt.Println("Skip Metasploit Results.")
 	}
 
 	//
