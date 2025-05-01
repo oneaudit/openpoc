@@ -15,6 +15,13 @@ jobs:
         with:
           ref: update
 
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
       - name: Fetch Holloways
         run: |
           git clone https://github.com/oneaudit/trickest-extended.git testlm
