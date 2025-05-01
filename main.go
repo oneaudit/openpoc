@@ -300,7 +300,7 @@ func main() {
 				for _, candidate := range newTrickest {
 					var found bool
 					for _, ref := range referencesTrickest {
-						if candidate.GetURL() == ref.GetURL() {
+						if ref.CveID == candidate.CveID && candidate.GetURL() == ref.GetURL() {
 							found = true
 							ref.AddedAt = candidate.AddedAt
 							ref.Score = candidate.Score
