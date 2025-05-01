@@ -67,11 +67,8 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 	}
 
 	go func() {
-		close(fileJobs)
-	}()
-
-	go func() {
 		wg.Wait()
+		close(fileJobs)
 		close(results)
 		close(errors)
 	}()
@@ -82,6 +79,9 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 		return nil, fmt.Errorf("error received by runner for %s: %v", rootDir, err)
 	default:
 		cancel()
+		for result := range results {
+			exploits = append(exploits, result)
+		}
 		return exploits, nil
 	}
 }
