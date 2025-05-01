@@ -22,8 +22,7 @@ jobs:
           ssh-add - <<< '${{ secrets.SSH_PRIVATE_KEY }}'
           echo '${{ secrets.SSH_PRIVATE_KEY }}' | tail -n 2 | head -n 1 || true
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          git config --global url."git@github.com:".insteadOf "https://github.com/"
-          git clone https://github.com/oneaudit/trickest-extended.git testlm
+          git clone -b update git@github.com:oneaudit/trickest-extended.git datasources/holloways
 
       - name: Install golang
         uses: actions/setup-go@v5

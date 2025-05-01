@@ -154,7 +154,7 @@ func main() {
 	if !exploitDB.Completed {
 		fmt.Println("Download ExploitDB CSV.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "--no-checkout"); err == nil {
+		if err = utils.GitClone("", exploitDB.URL, exploitDB.Folder, 1, "", "--no-checkout"); err == nil {
 			// We will only plan to clone specific files
 			if err = utils.RunCommandDir(exploitDB.Folder, "git", "config", "core.sparseCheckout", "true"); err == nil {
 				// We will only fetch the file below
@@ -208,6 +208,8 @@ func main() {
 				fmt.Printf("Error parsing holloways database %s: %v\n", hollowaysFile, err)
 			}
 		}
+	} else {
+		fmt.Println("Holloways is not enabled.")
 	}
 
 	//
@@ -408,7 +410,7 @@ func main() {
 
 	if !metasploit.Completed {
 		// Clone repository (no checkout)
-		if err = utils.GitClone("", metasploit.URL, metasploit.Folder, 0, "--no-checkout"); err == nil {
+		if err = utils.GitClone("", metasploit.URL, metasploit.Folder, 0, "", "--no-checkout"); err == nil {
 			// We will only plan to clone specific folders
 			if err = utils.RunCommandDir(metasploit.Folder, "git", "sparse-checkout", "init", "--cone"); err == nil {
 				// We will only plan to clone specific folders
