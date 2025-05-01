@@ -133,7 +133,7 @@ func main() {
 			aggStats[r.FileJob.Folder].URLMap = make(map[string]int)
 			aggStats[r.FileJob.Folder].ProviderMap = make(map[string]*stats.ProviderDetails)
 		}
-		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: len(r.Result.Openpoc)}
+		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: int64(len(r.Result.Openpoc))}
 		aggStats[r.FileJob.Folder].CVECount += 1
 		aggStats[r.FileJob.Folder].ExploitCount += cveStats.ExploitCount
 		aggStats[r.FileJob.Folder].CveScoreBoard = append(aggStats[r.FileJob.Folder].CveScoreBoard, cveStats)

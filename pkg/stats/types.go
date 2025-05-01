@@ -4,8 +4,8 @@ import "openpoc/pkg/types"
 
 type Stats struct {
 	Year                string
-	CVECount            int
-	ExploitCount        int
+	CVECount            int64
+	ExploitCount        int64
 	ExploitCountAverage float64
 	CveScoreBoard       []CVEStat
 
@@ -36,7 +36,7 @@ type URLCount struct {
 
 type CVEStat struct {
 	CveID        string
-	ExploitCount int
+	ExploitCount int64
 }
 
 type FileJob struct {
