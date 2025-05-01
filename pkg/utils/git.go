@@ -11,11 +11,14 @@ import (
 // we never use go-git, especially for large repositories
 // as it didn't work well with shallow clones
 
-func GitClone(pwd string, url string, dest string, depth int, extraArgs ...string) error {
+func GitClone(pwd string, url string, dest string, depth int, branch string, extraArgs ...string) error {
 	var args []string
 	args = append(args, "clone")
 	if depth >= 1 {
 		args = append(args, "--depth", strconv.Itoa(depth))
+	}
+	if branch != "" {
+		args = append(args, "--branch", branch)
 	}
 	args = append(args, extraArgs...)
 	args = append(args, url, dest)

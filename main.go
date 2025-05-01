@@ -27,8 +27,10 @@ const (
 	disableMetasploit      = false
 )
 
+var disableHolloways = os.Getenv("CAN_ACCESS_HOLLOWAYS") == ""
+
 const (
-	version         = "0.7.0"
+	version         = "0.7.1"
 	versionFilename = ".version"
 )
 
@@ -186,16 +188,25 @@ func main() {
 	// Holloways
 	//
 	var newHolloways []*providertypes.Holloways
-	hollowaysFile := filepath.Join(holloways.Folder, hollowaysFilename)
-	exploitDB.Completed = utils.WasModifiedWithin(hollowaysFile, holloways.Range) || holloways.Completed
+	if !disableHolloways {
+		hollowaysFile := filepath.Join(holloways.Folder, hollowaysFilename)
+		holloways.Completed = utils.WasModifiedWithin(hollowaysFile, holloways.Range) || holloways.Completed
 
-	if !holloways.Completed {
-		fmt.Println("Download Holloways JSON.")
-		// Clone repository (shallow)
-		if err = utils.GitClone("", holloways.URL, holloways.Folder, 1); err == nil {
-			holloways.Completed = true
-		} else {
-			fmt.Printf("Error cloning %s: %v\n", holloways.URL, err)
+		if !holloways.Completed {
+			fmt.Println("Download Holloways JSON.")
+			// Clone repository (shallow)
+			if err = utils.GitClone("", holloways.URL, holloways.Folder, 1, holloways.Branch); err == nil {
+				holloways.Completed = true
+			} else {
+				fmt.Printf("Error cloning %s: %v\n", holloways.URL, err)
+			}
+		}
+
+		if holloways.Completed {
+			fmt.Println("Process Holloways Results.")
+			if newHolloways, err = providers.ParseHolloways(hollowaysFile); err != nil {
+				fmt.Printf("Error parsing holloways database %s: %v\n", hollowaysFile, err)
+			}
 		}
 	}
 
@@ -269,7 +280,7 @@ func main() {
 	if !trickest.Completed {
 		fmt.Println("Download Trickest.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", trickest.URL, trickest.Folder, 0); err == nil {
+		if err = utils.GitClone("", trickest.URL, trickest.Folder, 0, trickest.Branch); err == nil {
 			trickest.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", trickest.URL, err)
@@ -329,7 +340,7 @@ func main() {
 	if !nomisec.Completed {
 		fmt.Println("Download NomiSec.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", nomisec.URL, nomisec.Folder, 1); err == nil {
+		if err = utils.GitClone("", nomisec.URL, nomisec.Folder, 1, nomisec.Branch); err == nil {
 			nomisec.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", nomisec.URL, err)
@@ -360,7 +371,7 @@ func main() {
 	if !nucleiTemplates.Completed {
 		fmt.Println("Download Nuclei Templates.")
 		// Clone repository (shallow and no checkout)
-		if err = utils.GitClone("", nucleiTemplates.URL, nucleiTemplates.Folder, 0); err == nil {
+		if err = utils.GitClone("", nucleiTemplates.URL, nucleiTemplates.Folder, 0, nucleiTemplates.Branch); err == nil {
 			nucleiTemplates.Completed = true
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", nucleiTemplates.URL, err)

@@ -148,6 +148,7 @@ func main() {
 			{public.Trickest{}, toMetadata(r.Result.Trickest)},
 			{public.ExploitDB{}, toMetadata(r.Result.ExploitDB)},
 			{public.Metasploit{}, toMetadata(r.Result.Metasploit)},
+			{public.Holloways{}, toMetadata(r.Result.Holloways)},
 		}
 
 		// Compute the total number of exploits
