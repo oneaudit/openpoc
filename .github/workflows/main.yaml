@@ -21,6 +21,7 @@ jobs:
           repository: oneaudit/trickest-extended
           token: ${{ secrets.GITHUB_TOKEN }}
           path: datasources/holloways
+          ref: main
 
       - name: Install golang
         uses: actions/setup-go@v5
