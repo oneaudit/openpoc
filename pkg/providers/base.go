@@ -93,7 +93,7 @@ var knownValidatedButNotTrustedSources = []string{
 	"https://www.zeroscience.mk/",
 	"https://evuln.com/",
 	"https://www.evuln.com/",
-	"https://securityreason.com/",
+	"https://securityreason.com/", "https://cxsecurity.com/",
 	"https://crbug.com/", "https://bugs.chromium.org/", "https://issues.chromium.org/",
 	"https://code.google.com/", // some are dead
 	"https://fluidattacks.com/",

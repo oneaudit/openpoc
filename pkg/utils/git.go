@@ -2,6 +2,7 @@ package utils
 
 import (
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -31,6 +32,8 @@ func GetDateFromGitFile(pwd string, target string, cache *sync.Map, defaultDate 
 	if cache == nil {
 		return defaultDate
 	}
+
+	target = filepath.ToSlash(target)
 
 	if cachedTime, found := cache.Load(target); found {
 		parsedTime = cachedTime.(time.Time)
