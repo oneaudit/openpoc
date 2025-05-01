@@ -25,7 +25,7 @@ jobs:
 
       - name: Fetch Holloways
         run: |
-          git clone https://git@github.com:oneaudit/trickest-extended.git testlm
+          git clone https://git@github.com/oneaudit/trickest-extended.git testlm
 
       - name: Install golang
         uses: actions/setup-go@v5
