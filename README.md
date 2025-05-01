@@ -103,6 +103,22 @@ Their database was available on GitHub, and the API is still available for free 
 > Update schedule: once a week
 ```
 
+## Holloways Repository 🧁
+
+![Holloways Stats: CVEs with a PoC](.github/images/Holloways/cves.svg)
+![Holloways Stats: Number of PoCs](.github/images/Holloways/count.svg)
+![Holloways Stats: Exclusive PoCs](.github/images/Holloways/exclusive.svg)
+
+Holloways has a private repository adding support for additional sources. While the implementation is private, the results are still open to everyone.
+
+* ✅ Automated continuous integration
+* ✅ For fun and profit, enjoy ✨
+
+```
+> Source: https://github.com/oneaudit/trickest-extended/
+> Update schedule: once a day
+```
+
 ## Nuclei Repository 🐲
 
 ![Nuclei Stats: CVEs with a PoC](.github/images/Nuclei/cves.svg)
@@ -170,6 +186,8 @@ The process is not straightforward but relatively easy:
 * ✅ Add the logic inside `main.go` to generate results
 * ✅ Do not forget to add results to `yearMap`
 * ✅ Bump the version inside `main.go`
+* ✅ Update `stats.go` to support the new provider
+* ✅ Update `README.md` with a summary about the provider
 
 ## License 📄
 

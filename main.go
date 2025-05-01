@@ -28,7 +28,7 @@ const (
 )
 
 const (
-	version         = "0.6.1"
+	version         = "0.7.0"
 	versionFilename = ".version"
 )
 
@@ -47,7 +47,7 @@ var (
 		Folder:    "datasources/inthewild",
 		Branch:    "",
 		Completed: statusByDefault,
-		Range:     96,
+		Range:     3600,
 	}
 	inTheWildFilename = "pocs.json"
 
@@ -89,6 +89,16 @@ var (
 	}
 	metasploitFilename      = "Gemfile.lock"
 	metasploitCacheFilename = "datasources/metasploit.cache"
+
+	// Holloways' code is private, but results from openpoc are public
+	holloways = types.Target{
+		URL:       "https://github.com/oneaudit/trickest-extended.git",
+		Folder:    "datasources/holloways",
+		Branch:    "update",
+		Completed: statusByDefault,
+		Range:     24,
+	}
+	hollowaysFilename = "results/database.json"
 )
 
 func main() {
@@ -150,11 +160,7 @@ func main() {
 				if err = os.WriteFile(sparsePath, []byte(exploitDBFilename+"\n"), 0644); err == nil {
 					// We can process with the fetch
 					if err = utils.RunCommandDir(exploitDB.Folder, "git", "checkout", exploitDB.Branch); err == nil {
-						if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err == nil {
-							exploitDB.Completed = true
-						} else {
-							fmt.Printf("Error parsing database %s: %v\n", exploitDBFile, err)
-						}
+						exploitDB.Completed = true
 					} else {
 						fmt.Printf("Error setting sparseCheckout file for exploitdb: %v\n", err)
 					}
@@ -167,10 +173,29 @@ func main() {
 		} else {
 			fmt.Printf("Error cloning %s: %v\n", exploitDB.URL, err)
 		}
-	} else if !disableExploitDB {
+	}
+
+	if exploitDB.Completed && !disableExploitDB {
 		fmt.Println("Process ExploitDB Results.")
 		if newExploitDB, err = providers.ParseExploitDB(exploitDBFile); err != nil {
 			fmt.Printf("Error parsing exploitdb database %s: %v\n", exploitDBFile, err)
+		}
+	}
+
+	//
+	// Holloways
+	//
+	var newHolloways []*providertypes.Holloways
+	hollowaysFile := filepath.Join(holloways.Folder, hollowaysFilename)
+	exploitDB.Completed = utils.WasModifiedWithin(hollowaysFile, holloways.Range) || holloways.Completed
+
+	if !holloways.Completed {
+		fmt.Println("Download Holloways JSON.")
+		// Clone repository (shallow)
+		if err = utils.GitClone("", holloways.URL, holloways.Folder, 1); err == nil {
+			holloways.Completed = true
+		} else {
+			fmt.Printf("Error cloning %s: %v\n", holloways.URL, err)
 		}
 	}
 
@@ -454,6 +479,12 @@ func main() {
 			yearMap[year][jsonFilePath].Metasploit = append(yearMap[year][jsonFilePath].Metasploit, exploit)
 		}
 	}
+	for _, exploit := range newHolloways {
+		year, jsonFilePath := addToYearMap(exploit, &yearMap)
+		if year != "" && jsonFilePath != "" {
+			yearMap[year][jsonFilePath].Holloways = append(yearMap[year][jsonFilePath].Holloways, exploit)
+		}
+	}
 
 	//
 	// Write to Disk
@@ -601,6 +632,9 @@ func MergeAggregatorResults(newResult *types.AggregatorResult, oldResult *types.
 	}
 	if !nomisec.Completed {
 		newResult.Nomisec = oldResult.Nomisec
+	}
+	if !holloways.Completed {
+		newResult.Holloways = oldResult.Holloways
 	}
 	return newResult
 }

@@ -13,6 +13,7 @@ type AggregatorResult struct {
 	Nomisec    []*providertypes.Nomisec    `json:"nomisec"`
 	Nuclei     []*providertypes.Nuclei     `json:"nuclei"`
 	Metasploit []*providertypes.Metasploit `json:"metasploit"`
+	Holloways  []*providertypes.Holloways  `json:"holloways"`
 	Openpoc    []*OpenpocProduct           `json:"openpoc"`
 }
 
@@ -24,6 +25,7 @@ func NewAggregatorResult() *AggregatorResult {
 		Nomisec:    []*providertypes.Nomisec{},
 		Nuclei:     []*providertypes.Nuclei{},
 		Metasploit: []*providertypes.Metasploit{},
+		Holloways:  []*providertypes.Holloways{},
 		Openpoc:    []*OpenpocProduct{},
 	}
 }
@@ -33,10 +35,10 @@ func (a *AggregatorResult) ComputeOpenPoc() {
 	for _, exploit := range a.Trickest { // dirty, first
 		addToMerger(exploit, &merger)
 	}
-	for _, exploit := range a.InTheWild { // not often updated, second
+	for _, exploit := range a.InTheWild { // dirty too, second
 		addToMerger(exploit, &merger)
 	}
-	for _, exploit := range a.ExploitDB { // good third
+	for _, exploit := range a.ExploitDB { // good, third
 		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.Nomisec { // the best, fourth
@@ -46,6 +48,9 @@ func (a *AggregatorResult) ComputeOpenPoc() {
 		addToMerger(exploit, &merger)
 	}
 	for _, exploit := range a.Metasploit { // sixth, no impact
+		addToMerger(exploit, &merger)
+	}
+	for _, exploit := range a.Holloways { // seventh, may impact but trusted
 		addToMerger(exploit, &merger)
 	}
 	for _, url := range merger {
@@ -72,6 +77,9 @@ func (a *AggregatorResult) Sort() {
 	sort.Slice(a.Metasploit, func(i, j int) bool {
 		return a.Metasploit[i].GetURL() < a.Metasploit[j].GetURL()
 	})
+	sort.Slice(a.Holloways, func(i, j int) bool {
+		return a.Holloways[i].GetURL() < a.Holloways[j].GetURL()
+	})
 	sort.Slice(a.Openpoc, func(i, j int) bool {
 		return a.Openpoc[i].URL < a.Openpoc[j].URL
 	})
@@ -87,7 +95,7 @@ func addToMerger[T OpenPocMetadata](exploit T, merger *map[string]*OpenpocProduc
 		value = &OpenpocProduct{
 			Cve:         exploit.GetCve(),
 			URL:         exploit.GetURL(),
-			AddedAt:     exploit.GetPublishDate().Format(time.RFC3339),
+			AddedAt:     exploit.GetPublishDate().Format(timeFormat),
 			TrustScore:  exploit.GetTrustScore(),
 			TemplateFor: exploit.GetTemplateFor(),
 		}
@@ -96,13 +104,17 @@ func addToMerger[T OpenPocMetadata](exploit T, merger *map[string]*OpenpocProduc
 		if exploit.GetTrustScore() > value.TrustScore {
 			value.TrustScore = exploit.GetTrustScore()
 		}
+		if exploit.GetPublishDate() == DefaultDate {
+			return
+		}
+
 		// Ensure the date is the best we can find
-		if value.AddedAt == DefaultDate.Format(time.RFC3339) {
-			value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
+		if value.AddedAt == DefaultDate.Format(timeFormat) {
+			value.AddedAt = exploit.GetPublishDate().Format(timeFormat)
 		} else {
-			// We trust the date of the most trusted exploit
-			if exploit.GetTrustScore() > value.TrustScore && exploit.GetPublishDate() != DefaultDate {
-				value.AddedAt = exploit.GetPublishDate().Format(time.RFC3339)
+			var valueAddedAt, _ = time.Parse(timeFormat, value.AddedAt)
+			if exploit.GetPublishDate().Before(valueAddedAt) {
+				value.AddedAt = exploit.GetPublishDate().Format(timeFormat)
 			}
 		}
 	}
