@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2018</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>10,906</strong>
+                    <span class="stat-title">POC Count:</span> <strong>10,940</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>7,146</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>7,177</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.53</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.52</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>

@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2012</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>3,203</strong>
+                    <span class="stat-title">POC Count:</span> <strong>3,206</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>1,830</strong>
