@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="250">
+    <defs>
+        <style/>
+    </defs>
+    <style>
+        .container {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 14px;color: #333;background-color: #fff;padding: 15px;}
+        .title {font-size: 18px;color: #0366d6;margin-bottom: 10px;}
+        .stats-row {display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 15px;}
+        .stat {flex: 1;display: flex;align-items: center;margin: 0px 0px;white-space: nowrap;}
+        .stat svg{margin-right: 8px; fill: #959da5; flex-shrink: 0;}
+        .stat-title{margin-right: 4px;}
+        .margin-top{margin-top: 4px;}
+        .list-header{font-weight: bold;margin-top: 10px;margin-bottom: 10px;}
+        .row{display:flex;flex-wrap:wrap;}
+        .row section{flex: 1 1 0;padding: 0 8px;}
+        .field {margin: 5px 0;display: flex;align-items: center; white-space: nowrap;}
+        .field svg{margin:0 8px;fill:#959da5;flex-shrink:0;}
+        .field,.field small{display:flex;justify-content:space-between;align-items:center;}
+    </style>
+    <foreignObject x="0" y="0" width="500" height="350">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+            <div class="title">POC Statistics for Year 2025</div>
+            <div class="stats-row">
+                <div class="stat">
+                    <span class="stat-title">POC Count:</span> <strong>2,066</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-title">CVEs with POC:</span> <strong>1,695</strong>
+                </div>
+                <div class="stat">
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.22</strong>
+                </div>
+            </div>
+            <div class="list-header">Top 10 CVEs with the most exploits:</div>
+            <div class="row">
+                <section>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-24813
+                        <small>35</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-1974
+                        <small>17</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-0282
+                        <small>15</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-24071
+                        <small>10</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-27840
+                        <small>7</small>
+                    </div>
+                    
+                    
+                    </section>
+                    <section>
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-21692
+                        <small>7</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-3102
+                        <small>7</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-2825
+                        <small>7</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-2294
+                        <small>7</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
+                        CVE-2025-0108
+                        <small>7</small>
+                    </div>
+                    
+                </section>
+            </div>
+        </div>
+    </foreignObject>
+</svg>
