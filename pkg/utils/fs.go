@@ -36,7 +36,7 @@ func GetDirectories() (dirs []string) {
 }
 
 func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.ProcessFunction[T]) ([]*T, error) {
-	var wg sync.WaitGroup
+	var wg, wg2 sync.WaitGroup
 	var exploits []*T
 	fileJobs := make(chan types.FileJob, 100)
 	results := make(chan *T, 100)
@@ -47,15 +47,45 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 		go worker[T](ctx, fileJobs, results, errors, &wg, processFile)
 	}
 
+	wg2.Add(1)
+	go iterator(rootDir, fileJobs, errors, &wg2)
+
 	go func() {
 		for result := range results {
 			exploits = append(exploits, result)
 		}
 	}()
 
-	// Do not close anything
-	// unless you were allowed to
-	wg.Add(1)
+	fmt.Println("We are waiting 2.")
+	wg2.Wait()
+
+	go func() {
+		fmt.Println("We are waiting 2.")
+		wg2.Wait()
+		fmt.Println("We are waiting.")
+		wg.Wait()
+		fmt.Println("We stopped waiting.")
+		close(fileJobs)
+		close(results)
+		close(errors)
+	}()
+
+	select {
+	case err := <-errors:
+		cancel()
+		return nil, fmt.Errorf("error received by runner for %s: %v", rootDir, err)
+	default:
+		cancel()
+		for result := range results {
+			exploits = append(exploits, result)
+		}
+		return exploits, nil
+	}
+}
+
+func iterator(rootDir string, fileJobs chan types.FileJob, errors chan error, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	err := filepath.Walk(rootDir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return fmt.Errorf("error browsing %s: %v", path, err)
@@ -63,33 +93,15 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 
 		if info.Mode().IsRegular() {
 			for _, t := range []string{
-				"CVE-2025-3102.json",
-				"CVE-2025-29810.json",
-				"CVE-2025-29927.json",
-				"CVE-2025-30065.json",
-				"CVE-2025-30066.json",
-				"CVE-2025-30144.json",
-				"CVE-2025-30208.json",
-				"CVE-2025-30216.json",
-				"CVE-2025-30349.json",
-				"CVE-2025-30406.json",
-				"CVE-2025-30567.json",
-				"CVE-2025-31131.json",
-				"CVE-2025-31137.json",
-				"CVE-2025-31161.json",
-				"CVE-2025-31200.json",
-				"CVE-2025-31486.json",
-				"CVE-2025-31650.json",
-				"CVE-2025-31864.json",
-				"CVE-2025-32395.json",
-				"CVE-2025-3243.json",
-				"CVE-2025-32432.json",
-				"CVE-2025-3248.json",
-				"CVE-2025-34028.json",
-				"CVE-2025-3568.json",
-				"CVE-2025-42599.json",
-				"CVE-2025-43864.json",
-				"CVE-2025-46657.json",
+				"CVE-2025-3102.json", "CVE-2025-29810.json", "CVE-2025-29927.json",
+				"CVE-2025-30065.json", "CVE-2025-30066.json", "CVE-2025-30144.json",
+				"CVE-2025-30208.json", "CVE-2025-30216.json", "CVE-2025-30349.json",
+				"CVE-2025-30406.json", "CVE-2025-30567.json", "CVE-2025-31131.json",
+				"CVE-2025-31137.json", "CVE-2025-31161.json", "CVE-2025-31200.json",
+				"CVE-2025-31486.json", "CVE-2025-31650.json", "CVE-2025-31864.json",
+				"CVE-2025-32395.json", "CVE-2025-3243.json", "CVE-2025-32432.json",
+				"CVE-2025-3248.json", "CVE-2025-34028.json", "CVE-2025-3568.json",
+				"CVE-2025-42599.json", "CVE-2025-43864.json", "CVE-2025-46657.json",
 			} {
 				if strings.HasSuffix(path, t) {
 					fmt.Printf("[%s] Found from iterator.\n", path)
@@ -100,32 +112,10 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 		}
 		return nil
 	})
+
 	fmt.Println("We finished walking the folder.")
-	wg.Done()
 	if err != nil {
-		cancel()
-		return nil, fmt.Errorf("error walking the directory %s: %v", rootDir, err)
-	}
-
-	go func() {
-		fmt.Println("We are waiting.")
-		wg.Wait()
-		fmt.Println("We stopped waiting.")
-		close(fileJobs)
-		close(results)
-		close(errors)
-	}()
-
-	select {
-	case err = <-errors:
-		cancel()
-		return nil, fmt.Errorf("error received by runner for %s: %v", rootDir, err)
-	default:
-		cancel()
-		for result := range results {
-			exploits = append(exploits, result)
-		}
-		return exploits, nil
+		errors <- fmt.Errorf("error walking the directory %s: %v", rootDir, err)
 	}
 }
 
