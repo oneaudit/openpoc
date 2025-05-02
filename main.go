@@ -11,6 +11,7 @@ import (
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -30,7 +31,7 @@ const (
 var disableHolloways = os.Getenv("CAN_ACCESS_HOLLOWAYS") == ""
 
 const (
-	version         = "0.7.1"
+	version         = "0.7.2"
 	versionFilename = ".version"
 )
 
@@ -293,30 +294,40 @@ func main() {
 	if trickest.Completed && !disableTrickest {
 		fmt.Println("Process Trickest Results.")
 		// Parses And Add To Trickest Each Markdown
-		if newTrickest, err = utils.ProcessFiles(trickest.Folder, 15, trickestWorker); err == nil {
+		if newTrickest, err = utils.ProcessFiles(trickest.Folder, 50, trickestWorker); err == nil {
 			// Add references
 			var referencesTrickest []*providertypes.Trickest
 			if referencesTrickest, err = providers.ParseTrickestReferences(trickestFile); err == nil {
 				// References are more trustworthy, but not all CVEs are in "references"
 				// And we don't have a "date" for references
+				var finalTrickest []*providertypes.Trickest
+				known := make(map[string]map[string]*providertypes.Trickest)
 				for _, candidate := range newTrickest {
-					var found bool
-					for _, ref := range referencesTrickest {
-						if ref.CveID == candidate.CveID && candidate.GetURL() == ref.GetURL() {
-							found = true
-							if ref.AddedAt == types.DefaultDate || candidate.AddedAt.Before(ref.AddedAt) {
-								ref.AddedAt = candidate.AddedAt
-							}
-							if candidate.Score > ref.Score {
-								ref.Score = candidate.Score
-							}
-						}
+					if _, found := known[candidate.CveID]; !found {
+						known[candidate.CveID] = make(map[string]*providertypes.Trickest)
 					}
-					if !found {
-						referencesTrickest = append(referencesTrickest, candidate)
+					if _, found := known[candidate.CveID][candidate.URL]; !found {
+						known[candidate.CveID][candidate.URL] = candidate
+					} else {
+						// we could assert it, but the candidate are exactly the same
 					}
 				}
-				newTrickest = referencesTrickest
+				for _, candidate := range referencesTrickest {
+					if _, found := known[candidate.CveID]; !found {
+						known[candidate.CveID] = make(map[string]*providertypes.Trickest)
+					}
+					if _, found := known[candidate.CveID][candidate.URL]; !found {
+						known[candidate.CveID][candidate.URL] = candidate
+					} else {
+						// we ignore duplicates, as trickest references have less information
+					}
+				}
+				for _, list := range known {
+					for _, candidate := range list {
+						finalTrickest = append(finalTrickest, candidate)
+					}
+				}
+				newTrickest = finalTrickest
 			} else {
 				fmt.Printf("Error processing %s: %v\n", trickestFile, err)
 			}
@@ -355,6 +366,7 @@ func main() {
 			fmt.Printf("Error cloning %s: %v\n", nomisec.URL, err)
 		}
 	}
+
 	if nomisec.Completed && !disableNomisec {
 		fmt.Println("Process NomiSec Results.")
 		// Parses And Adds Each JSON To NomiSec
@@ -565,6 +577,50 @@ func main() {
 			// Create OpenPoC which is a sort of summary of all sources
 			finalResult.ComputeOpenPoc()
 			finalResult.Sort()
+
+			// #6 Nomisec kept removing and adding back results
+			for _, problem := range []string{
+				"CVE-2025-3102.json",
+				"CVE-2025-29810.json",
+				"CVE-2025-29927.json",
+				"CVE-2025-30065.json",
+				"CVE-2025-30066.json",
+				"CVE-2025-30144.json",
+				"CVE-2025-30208.json",
+				"CVE-2025-30216.json",
+				"CVE-2025-30349.json",
+				"CVE-2025-30406.json",
+				"CVE-2025-30567.json",
+			} {
+				if strings.HasSuffix(jsonFilePath, problem) {
+					if len(finalResult.Nomisec) == 0 {
+						fmt.Printf("Missing Nomisec pocs for [%s]\n", jsonFilePath)
+						fmt.Printf("Is openpoc empty? %v", finalResult.IsEmpty())
+						fmt.Printf("OpenPoc Length: %d", len(finalResult.Openpoc))
+						fmt.Printf("Nomisec completed: %v", nomisec.Completed)
+						fmt.Printf("Has existing file: %v", info.Size())
+						fmt.Printf("Base result length: %d", len(result.Nomisec))
+						panic("Cannot accept this")
+					}
+				}
+			}
+
+			// #7 Trickest kept swapping the date back to default
+			if strings.HasSuffix(jsonFilePath, "CVE-2025-46654.json") {
+				if len(finalResult.Trickest) == 0 {
+					fmt.Printf("Missing Trickest pocs for [%s]\n", jsonFilePath)
+				}
+				for _, trick := range finalResult.Trickest {
+					if trick.AddedAt == types.DefaultDate {
+						fmt.Printf("Found default date for %s.%s", trick.CveID, trick.URL)
+						fmt.Printf("Trickest completed: %v", trickest.Completed)
+						fmt.Printf("Trickest cache loaded: %v", trickestDatesCache != nil)
+						fmt.Printf("Has existing file: %v", info.Size())
+						fmt.Printf("Trickest cache date: %s", utils.GetDateFromGitFile(trickest.Folder, "2025/CVE-2025-46654.md", trickestDatesCache, types.DefaultDate).String())
+						panic("Cannot accept this")
+					}
+				}
+			}
 
 			// If there are no PoCs anymore, delete the file
 			if finalResult.IsEmpty() {
