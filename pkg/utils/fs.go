@@ -74,6 +74,22 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 				"CVE-2025-30349.json",
 				"CVE-2025-30406.json",
 				"CVE-2025-30567.json",
+				"CVE-2025-31131.json",
+				"CVE-2025-31137.json",
+				"CVE-2025-31161.json",
+				"CVE-2025-31200.json",
+				"CVE-2025-31486.json",
+				"CVE-2025-31650.json",
+				"CVE-2025-31864.json",
+				"CVE-2025-32395.json",
+				"CVE-2025-3243.json",
+				"CVE-2025-32432.json",
+				"CVE-2025-3248.json",
+				"CVE-2025-34028.json",
+				"CVE-2025-3568.json",
+				"CVE-2025-42599.json",
+				"CVE-2025-43864.json",
+				"CVE-2025-46657.json",
 			} {
 				if strings.HasSuffix(path, t) {
 					fmt.Printf("[%s] Found from iterator.\n", path)
