@@ -74,7 +74,7 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 	}()
 
 	select {
-	case err := <-errors:
+	case err = <-errors:
 		cancel()
 		return nil, fmt.Errorf("error received by runner for %s: %v", rootDir, err)
 	default:

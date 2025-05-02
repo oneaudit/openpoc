@@ -485,42 +485,56 @@ func main() {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].ExploitDB = append(yearMap[year][jsonFilePath].ExploitDB, exploit)
+		} else {
+			fmt.Printf("[ExploitDB] Skipping %s [%s].\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 	for _, exploit := range newInTheWild {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].InTheWild = append(yearMap[year][jsonFilePath].InTheWild, exploit)
+		} else {
+			fmt.Printf("[InTheWild] Skipping %s [%s].\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 	for _, exploit := range newTrickest {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Trickest = append(yearMap[year][jsonFilePath].Trickest, exploit)
+		} else {
+			fmt.Printf("[Trickest] Skipping %s [%s].\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 	for _, exploit := range newNomisec {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Nomisec = append(yearMap[year][jsonFilePath].Nomisec, exploit)
+		} else {
+			fmt.Printf("[Nomisec] Skipping %s [%s].\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 	for _, exploit := range newNuclei {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Nuclei = append(yearMap[year][jsonFilePath].Nuclei, exploit)
+		} else {
+			fmt.Printf("[Nuclei] Skipping %s [%s].\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 	for _, exploit := range newMetasploit {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Metasploit = append(yearMap[year][jsonFilePath].Metasploit, exploit)
+		} else {
+			fmt.Printf("[Metasploit] Skipping %s [%s].\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 	for _, exploit := range newHolloways {
 		year, jsonFilePath := addToYearMap(exploit, &yearMap)
 		if year != "" && jsonFilePath != "" {
 			yearMap[year][jsonFilePath].Holloways = append(yearMap[year][jsonFilePath].Holloways, exploit)
+		} else {
+			fmt.Printf("[Holloways] Skipping %s.%s\n", exploit.GetCve(), exploit.GetURL())
 		}
 	}
 
@@ -579,19 +593,7 @@ func main() {
 			finalResult.Sort()
 
 			// #6 Nomisec kept removing and adding back results
-			for _, problem := range []string{
-				"CVE-2025-3102.json",
-				"CVE-2025-29810.json",
-				"CVE-2025-29927.json",
-				"CVE-2025-30065.json",
-				"CVE-2025-30066.json",
-				"CVE-2025-30144.json",
-				"CVE-2025-30208.json",
-				"CVE-2025-30216.json",
-				"CVE-2025-30349.json",
-				"CVE-2025-30406.json",
-				"CVE-2025-30567.json",
-			} {
+			for _, problem := range providers.NomisecMissing {
 				if strings.HasSuffix(jsonFilePath, problem) {
 					if len(finalResult.Nomisec) == 0 {
 						fmt.Printf("Missing Nomisec pocs for [%s]\n", jsonFilePath)
