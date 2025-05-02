@@ -19,9 +19,14 @@ type Stats struct {
 }
 
 type ProviderDetails struct {
-	Count     int64
-	CVE       int64
+	// Count is the number of POC
+	Count int64
+	// Exclusive is the number of exclusive POC
 	Exclusive int64
+	// CVE is the number of CVEs having a POC
+	CVE int64
+	// ExclusiveCVE is the number of exclusive CVEs
+	ExclusiveCVE int64
 }
 
 type DomainCount struct {
