@@ -53,6 +53,9 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 		}
 	}()
 
+	// Do not close anything
+	// unless you were allowed to
+	wg.Add(1)
 	err := filepath.Walk(rootDir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return fmt.Errorf("error browsing %s: %v", path, err)
@@ -81,13 +84,17 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 		}
 		return nil
 	})
+	fmt.Println("We finished walking the folder.")
+	wg.Done()
 	if err != nil {
 		cancel()
 		return nil, fmt.Errorf("error walking the directory %s: %v", rootDir, err)
 	}
 
 	go func() {
+		fmt.Println("We are waiting.")
 		wg.Wait()
+		fmt.Println("We stopped waiting.")
 		close(fileJobs)
 		close(results)
 		close(errors)
