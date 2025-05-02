@@ -34,6 +34,7 @@ Aggregates multiple data sources related to CVE exploits/PoC. [**Please read the
 ![Trickest Stats: CVEs with a PoC](.github/images/Trickest/cves.svg)
 ![Trickest Stats: Number of PoCs](.github/images/Trickest/count.svg)
 ![Trickest Stats: Exclusive PoCs](.github/images/Trickest/exclusive.svg)
+![Trickest Stats: Exclusive CVEs](.github/images/Trickest/exclusive_cve.svg)
 
 [Trickest](https://github.com/trickest/cve) is one of the most popular open-source projects for monitoring exploits.<br>
 The main issue with their database is that it contains many dead links or irrelevant content.<br>
@@ -54,6 +55,7 @@ The main issue with their database is that it contains many dead links or irrele
 ![Nomisec Stats: CVEs with a PoC](.github/images/Nomisec/cves.svg)
 ![Nomisec Stats: Number of PoCs](.github/images/Nomisec/count.svg)
 ![Nomisec Stats: Exclusive PoCs](.github/images/Nomisec/exclusive.svg)
+![Nomisec Stats: Exclusive CVEs](.github/images/Nomisec/exclusive_cve.svg)
 
 [Nomisec](https://github.com/nomi-sec/PoC-in-GitHub/) is another popular open-source project for monitoring exploits.<br>
  While their content is more limited than Trickest, almost all of their links are relevant.
@@ -72,6 +74,7 @@ The main issue with their database is that it contains many dead links or irrele
 ![ExploitDB Stats: CVEs with a PoC](.github/images/ExploitDB/cves.svg)
 ![ExploitDB Stats: Number of PoCs](.github/images/ExploitDB/count.svg)
 ![ExploitDB Stats: Exclusive PoCs](.github/images/ExploitDB/exclusive.svg)
+![ExploitDB Stats: Exclusive CVEs](.github/images/ExploitDB/exclusive_cve.svg)
 
 [Exploit Database](https://www.exploit-db.com/) is a well-known and popular website with a large collection of PoCs.<br>
 Their database is available in CSV format and is hosted on GitLab.
@@ -90,6 +93,7 @@ Their database is available in CSV format and is hosted on GitLab.
 ![InTheWild Stats: CVEs with a PoC](.github/images/InTheWild/cves.svg)
 ![InTheWild Stats: Number of PoCs](.github/images/InTheWild/count.svg)
 ![InTheWild Stats: Exclusive PoCs](.github/images/InTheWild/exclusive.svg)
+![InTheWild Stats: Exclusive CVEs](.github/images/InTheWild/exclusive_cve.svg)
 
 [InTheWild](https://inthewild.io/) is a lesser-known but useful source for finding rare and hard-to-find exploits.<br>
 Their database was available on GitHub, and the API is still available for free use.
@@ -108,6 +112,7 @@ Their database was available on GitHub, and the API is still available for free 
 ![Holloways Stats: CVEs with a PoC](.github/images/Holloways/cves.svg)
 ![Holloways Stats: Number of PoCs](.github/images/Holloways/count.svg)
 ![Holloways Stats: Exclusive PoCs](.github/images/Holloways/exclusive.svg)
+![Holloways Stats: Exclusive CVEs](.github/images/Holloways/exclusive_cve.svg)
 
 Holloways has a private repository adding support for additional sources. While the implementation is private, the results are still open to everyone through the automated continuous integration.
 
@@ -124,6 +129,7 @@ Holloways has a private repository adding support for additional sources. While 
 ![Nuclei Stats: CVEs with a PoC](.github/images/Nuclei/cves.svg)
 ![Nuclei Stats: Number of PoCs](.github/images/Nuclei/count.svg)
 ![Nuclei Stats: Exclusive PoCs](.github/images/Nuclei/exclusive.svg)
+![Nuclei Stats: Exclusive CVEs](.github/images/Nuclei/exclusive_cve.svg)
 
 [Nuclei](https://github.com/projectdiscovery/nuclei) is popular vulnerability scanner. Nuclei [templates](https://github.com/projectdiscovery/nuclei-templates) cover many CVEs.
 
@@ -141,6 +147,7 @@ Holloways has a private repository adding support for additional sources. While 
 ![Metasploit Stats: CVEs with a PoC](.github/images/Metasploit/cves.svg)
 ![Metasploit Stats: Number of PoCs](.github/images/Metasploit/count.svg)
 ![Metasploit Stats: Exclusive PoCs](.github/images/Metasploit/exclusive.svg)
+![Metasploit Stats: Exclusive CVEs](.github/images/Metasploit/exclusive_cve.svg)
 
 Metasploit is a well-known security framework. Note that they only have a limited number of CVE exploits.
 

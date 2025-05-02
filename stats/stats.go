@@ -80,6 +80,14 @@ func main() {
 		ThirdX:  1200,
 		Title:   "Exclusive POCs",
 	}
+	templateMap["exclusive_cve"] = baseTemplateData{
+		Color:   "#ffcc33",
+		Width:   150,
+		FirstX:  90,
+		SecondX: 450,
+		ThirdX:  1200,
+		Title:   "Exclusive CVEs",
+	}
 
 	knownValidatedSources := providers.ComputeValidatedSources()
 	directories := utils.GetDirectories()
@@ -124,8 +132,12 @@ func main() {
 		close(results)
 	}()
 
+	type providerNameWithCve struct {
+		providerName string
+		cve          string
+	}
 	aggStats := make(map[string]*stats.Stats)
-	urlsFromProvider := make(map[string][]string)
+	urlsFromProvider := make(map[string][]providerNameWithCve)
 	for r := range results {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
 			aggStats[r.FileJob.Folder] = &stats.Stats{Year: r.FileJob.Folder}
@@ -155,7 +167,7 @@ func main() {
 		for _, providerData := range knownProviders {
 			providerName := getProviderName(providerData.provider)
 			if _, ok := aggStats[r.FileJob.Folder].ProviderMap[providerName]; !ok {
-				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0}
+				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0, ExclusiveCVE: 0}
 			}
 			count := int64(len(providerData.result))
 			aggStats[r.FileJob.Folder].ProviderMap[providerName].Count += count
@@ -167,9 +179,9 @@ func main() {
 			for _, d := range providerData.result {
 				dataURL := (*d).GetURL()
 				if _, found := urlsFromProvider[dataURL]; !found {
-					urlsFromProvider[dataURL] = make([]string, 0)
+					urlsFromProvider[dataURL] = make([]providerNameWithCve, 0)
 				}
-				urlsFromProvider[dataURL] = append(urlsFromProvider[dataURL], providerName)
+				urlsFromProvider[dataURL] = append(urlsFromProvider[dataURL], providerNameWithCve{providerName, (*d).GetCve()})
 			}
 		}
 
@@ -269,18 +281,26 @@ func main() {
 				urlCollector[urlCount.URL].Count += urlCount.Count
 			}
 		}
+
+		alreadyMarkedAsExclusive := make(map[string]bool)
 		for _, urlFromProvider := range urlsFromProvider {
 			// If a provider returned the same URL multiple times, we only count as once
-			providersThatGotIt := make(map[string]struct{})
+			// While in practice, there is another problem... As this should not occur anymore.
+			providersThatGotIt := make(map[string]string)
 			for _, provider := range urlFromProvider {
-				providersThatGotIt[provider] = struct{}{}
+				providersThatGotIt[provider.providerName] = provider.cve
+			}
+			// If only one provider returned the URL
+			if len(providersThatGotIt) > 1 {
+				continue
 			}
 			// Update scoring
-			for provider := range providersThatGotIt {
-				if _, ok := stat.ProviderMap[provider]; !ok {
-					stat.ProviderMap[provider] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0}
-				}
+			for provider, cve := range providersThatGotIt {
 				stat.ProviderMap[provider].Exclusive += 1
+				if _, found := alreadyMarkedAsExclusive[cve]; !found {
+					stat.ProviderMap[provider].ExclusiveCVE += 1
+					alreadyMarkedAsExclusive[cve] = true
+				}
 			}
 		}
 	}
@@ -374,6 +394,8 @@ func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 				templateData.Value = humanize.Comma(providerData.CVE)
 			case "exclusive":
 				templateData.Value = humanize.Comma(providerData.Exclusive)
+			case "exclusive_cve":
+				templateData.Value = humanize.Comma(providerData.ExclusiveCVE)
 			}
 			err = providerStatsExampleTemplate.Execute(providerCountOutputFile, templateData)
 			if err != nil {
