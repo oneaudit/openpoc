@@ -249,7 +249,7 @@ func main() {
 						fmt.Printf("Error creating file: %v\n", err)
 					}
 				} else {
-					fmt.Printf("Unexpected status code for in the wild: %d", response.StatusCode)
+					fmt.Printf("Unexpected status code for in the wild: %d\n", response.StatusCode)
 				}
 			} else {
 				fmt.Printf("Could not fetch %s: %v\n", inTheWild.URL, err)
@@ -537,7 +537,7 @@ func main() {
 		fmt.Printf("Write results for year [%s] to disk.\n", year)
 		err := os.MkdirAll(year, 0755)
 		if err != nil {
-			fmt.Printf("error creating directory %s: %v", year, err)
+			fmt.Printf("error creating directory %s: %v\n", year, err)
 			return
 		}
 		for jsonFilePath, result := range results {
@@ -595,11 +595,11 @@ func main() {
 				if strings.HasSuffix(jsonFilePath, problem) {
 					if len(finalResult.Nomisec) == 0 {
 						fmt.Printf("Missing Nomisec pocs for [%s]\n", jsonFilePath)
-						fmt.Printf("Is openpoc empty? %v", finalResult.IsEmpty())
-						fmt.Printf("OpenPoc Length: %d", len(finalResult.Openpoc))
-						fmt.Printf("Nomisec completed: %v", nomisec.Completed)
-						fmt.Printf("Has existing file: %v", info.Size())
-						fmt.Printf("Base result length: %d", len(result.Nomisec))
+						fmt.Printf("Is openpoc empty? %v\n", finalResult.IsEmpty())
+						fmt.Printf("OpenPoc Length: %d\n", len(finalResult.Openpoc))
+						fmt.Printf("Nomisec completed: %v\n", nomisec.Completed)
+						fmt.Printf("Has existing file: %v\n", info.Size())
+						fmt.Printf("Base result length: %d\n", len(result.Nomisec))
 						panic("Cannot accept this")
 					}
 				}
@@ -612,11 +612,11 @@ func main() {
 				}
 				for _, trick := range finalResult.Trickest {
 					if trick.AddedAt == types.DefaultDate {
-						fmt.Printf("Found default date for %s.%s", trick.CveID, trick.URL)
-						fmt.Printf("Trickest completed: %v", trickest.Completed)
-						fmt.Printf("Trickest cache loaded: %v", trickestDatesCache != nil)
-						fmt.Printf("Has existing file: %v", info.Size())
-						fmt.Printf("Trickest cache date: %s", utils.GetDateFromGitFile(trickest.Folder, "2025/CVE-2025-46654.md", trickestDatesCache, types.DefaultDate).String())
+						fmt.Printf("Found default date for %s.%s\n", trick.CveID, trick.URL)
+						fmt.Printf("Trickest completed: %v\n", trickest.Completed)
+						fmt.Printf("Trickest cache loaded: %v\n", trickestDatesCache != nil)
+						fmt.Printf("Has existing file: %v\n", info.Size())
+						fmt.Printf("Trickest cache date: %s\n", utils.GetDateFromGitFile(trickest.Folder, "2025/CVE-2025-46654.md", trickestDatesCache, types.DefaultDate).String())
 						panic("Cannot accept this")
 					}
 				}
