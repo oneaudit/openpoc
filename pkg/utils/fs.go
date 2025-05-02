@@ -55,7 +55,6 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 
 	// Do not close anything
 	// unless you were allowed to
-	wg.Add(1)
 	err := filepath.Walk(rootDir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return fmt.Errorf("error browsing %s: %v", path, err)
@@ -63,33 +62,15 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 
 		if info.Mode().IsRegular() {
 			for _, t := range []string{
-				"CVE-2025-3102.json",
-				"CVE-2025-29810.json",
-				"CVE-2025-29927.json",
-				"CVE-2025-30065.json",
-				"CVE-2025-30066.json",
-				"CVE-2025-30144.json",
-				"CVE-2025-30208.json",
-				"CVE-2025-30216.json",
-				"CVE-2025-30349.json",
-				"CVE-2025-30406.json",
-				"CVE-2025-30567.json",
-				"CVE-2025-31131.json",
-				"CVE-2025-31137.json",
-				"CVE-2025-31161.json",
-				"CVE-2025-31200.json",
-				"CVE-2025-31486.json",
-				"CVE-2025-31650.json",
-				"CVE-2025-31864.json",
-				"CVE-2025-32395.json",
-				"CVE-2025-3243.json",
-				"CVE-2025-32432.json",
-				"CVE-2025-3248.json",
-				"CVE-2025-34028.json",
-				"CVE-2025-3568.json",
-				"CVE-2025-42599.json",
-				"CVE-2025-43864.json",
-				"CVE-2025-46657.json",
+				"CVE-2025-3102.json", "CVE-2025-29810.json", "CVE-2025-29927.json",
+				"CVE-2025-30065.json", "CVE-2025-30066.json", "CVE-2025-30144.json",
+				"CVE-2025-30208.json", "CVE-2025-30216.json", "CVE-2025-30349.json",
+				"CVE-2025-30406.json", "CVE-2025-30567.json", "CVE-2025-31131.json",
+				"CVE-2025-31137.json", "CVE-2025-31161.json", "CVE-2025-31200.json",
+				"CVE-2025-31486.json", "CVE-2025-31650.json", "CVE-2025-31864.json",
+				"CVE-2025-32395.json", "CVE-2025-3243.json", "CVE-2025-32432.json",
+				"CVE-2025-3248.json", "CVE-2025-34028.json", "CVE-2025-3568.json",
+				"CVE-2025-42599.json", "CVE-2025-43864.json", "CVE-2025-46657.json",
 			} {
 				if strings.HasSuffix(path, t) {
 					fmt.Printf("[%s] Found from iterator.\n", path)
