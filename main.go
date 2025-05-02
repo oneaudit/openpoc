@@ -11,7 +11,6 @@ import (
 	"openpoc/pkg/utils"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
@@ -591,38 +590,6 @@ func main() {
 			// Create OpenPoC which is a sort of summary of all sources
 			finalResult.ComputeOpenPoc()
 			finalResult.Sort()
-
-			// #6 Nomisec kept removing and adding back results
-			for _, problem := range providers.NomisecMissing {
-				if strings.HasSuffix(jsonFilePath, problem) {
-					if len(finalResult.Nomisec) == 0 {
-						fmt.Printf("Missing Nomisec pocs for [%s]\n", jsonFilePath)
-						fmt.Printf("Is openpoc empty? %v\n", finalResult.IsEmpty())
-						fmt.Printf("OpenPoc Length: %d\n", len(finalResult.Openpoc))
-						fmt.Printf("Nomisec completed: %v\n", nomisec.Completed)
-						fmt.Printf("Has existing file: %v\n", info.Size())
-						fmt.Printf("Base result length: %d\n", len(result.Nomisec))
-						panic("Cannot accept this")
-					}
-				}
-			}
-
-			// #7 Trickest kept swapping the date back to default
-			if strings.HasSuffix(jsonFilePath, "CVE-2025-46654.json") {
-				if len(finalResult.Trickest) == 0 {
-					fmt.Printf("Missing Trickest pocs for [%s]\n", jsonFilePath)
-				}
-				for _, trick := range finalResult.Trickest {
-					if trick.AddedAt == types.DefaultDate {
-						fmt.Printf("Found default date for %s.%s\n", trick.CveID, trick.URL)
-						fmt.Printf("Trickest completed: %v\n", trickest.Completed)
-						fmt.Printf("Trickest cache loaded: %v\n", trickestDatesCache != nil)
-						fmt.Printf("Has existing file: %v\n", info.Size())
-						fmt.Printf("Trickest cache date: %s\n", utils.GetDateFromGitFile(trickest.Folder, "2025/CVE-2025-46654.md", trickestDatesCache, types.DefaultDate).String())
-						panic("Cannot accept this")
-					}
-				}
-			}
 
 			// If there are no PoCs anymore, delete the file
 			if finalResult.IsEmpty() {
