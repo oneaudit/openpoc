@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2022</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>23,007</strong>
+                    <span class="stat-title">POC Count:</span> <strong>23,009</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>14,498</strong>
