@@ -7,6 +7,7 @@ import (
 	"openpoc/pkg/types"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
@@ -56,7 +57,26 @@ func ProcessFiles[T any](rootDir string, numWorkers int, processFile types.Proce
 		if err != nil {
 			return fmt.Errorf("error browsing %s: %v", path, err)
 		}
+
 		if info.Mode().IsRegular() {
+			for _, t := range []string{
+				"CVE-2025-3102.json",
+				"CVE-2025-29810.json",
+				"CVE-2025-29927.json",
+				"CVE-2025-30065.json",
+				"CVE-2025-30066.json",
+				"CVE-2025-30144.json",
+				"CVE-2025-30208.json",
+				"CVE-2025-30216.json",
+				"CVE-2025-30349.json",
+				"CVE-2025-30406.json",
+				"CVE-2025-30567.json",
+			} {
+				if strings.HasSuffix(path, t) {
+					fmt.Printf("[%s] Found from iterator.\n", path)
+					break
+				}
+			}
 			fileJobs <- types.FileJob{Path: path, Folder: rootDir, FileInfo: info}
 		}
 		return nil
@@ -95,6 +115,7 @@ func worker[T any](ctx context.Context, fileJobs <-chan types.FileJob, final cha
 			return
 		case job, ok := <-fileJobs:
 			if !ok { // done
+				fmt.Println("file job channel closed")
 				return
 			}
 
