@@ -25,11 +25,12 @@ func ParseInTheWild(jsonFilePath string) ([]*providertypes.InTheWild, error) {
 		candidate.CveID = utils.CleanCVE(candidate.CveID)
 		candidate.ReportURL, candidate.Score = InspectAggregatorURL(candidate.ReportURL, candidate.CveID, true)
 		if candidate.ReportURL != "" {
-			if _, exists := addedURLs[candidate.ReportURL]; exists {
+			// Only add URLs once
+			key := candidate.CveID + "_" + candidate.ReportURL
+			if _, exists := addedURLs[key]; exists {
 				continue
 			}
-			// Only add URLs once
-			addedURLs[candidate.ReportURL] = struct{}{}
+			addedURLs[key] = struct{}{}
 			// Add to the list
 			final = append(final, candidate)
 		}
