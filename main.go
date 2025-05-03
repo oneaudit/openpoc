@@ -30,7 +30,7 @@ const (
 var disableHolloways = os.Getenv("CAN_ACCESS_HOLLOWAYS") == ""
 
 const (
-	version         = "0.7.2"
+	version         = "0.8.1"
 	versionFilename = ".version"
 )
 
@@ -87,9 +87,9 @@ var (
 		Folder:    "datasources/metasploit",
 		Branch:    "master",
 		Completed: statusByDefault,
-		Range:     24,
+		Range:     6,
 	}
-	metasploitFilename      = "Gemfile.lock"
+	metasploitFilename      = "db/modules_metadata_base.json"
 	metasploitCacheFilename = "datasources/metasploit.cache"
 
 	// Holloways' code is private, but results from openpoc are public

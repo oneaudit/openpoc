@@ -25,12 +25,8 @@ var knownValidatedSources = []string{
 	// Less than 200 stars
 	"https://github.com/tzwlhack/Vulnerability",
 	"https://github.com/NyxAzrael/Goby_POC",
-	"https://github.com/ARPSyndicate/kenzer-templates",
 	"https://github.com/DMW11525708/wiki",
 	"https://github.com/JlSakuya/Linux-Privilege-Escalation-Exploits",
-
-	// I have chosen to trust this source, even if it's archived
-	"https://github.com/ARPSyndicate/kenzer-templates",
 
 	// Not very good, but still valid
 	"https://github.com/n0-traces/cve_monitor",
