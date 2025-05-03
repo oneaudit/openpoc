@@ -6,7 +6,6 @@ import (
 	"io/fs"
 	"net/url"
 	"openpoc/pkg/providers"
-	"openpoc/pkg/stats"
 	"openpoc/pkg/types"
 	"openpoc/pkg/types/public"
 	"openpoc/pkg/utils"
@@ -93,12 +92,12 @@ func main() {
 	directories := utils.GetDirectories()
 
 	var wg sync.WaitGroup
-	fileJobs := make(chan stats.FileJob, 100)
-	results := make(chan *stats.StatResult, 100)
+	fileJobs := make(chan FileJob, 100)
+	results := make(chan *StatResult, 100)
 	numWorkers := 8
 	for i := 0; i < numWorkers; i++ {
 		wg.Add(1)
-		go stats.Worker(i, fileJobs, results, &wg)
+		go Worker(i, fileJobs, results, &wg)
 	}
 	var walkWg sync.WaitGroup
 
@@ -112,7 +111,7 @@ func main() {
 					return nil
 				}
 				if info.Mode().IsRegular() && strings.HasSuffix(strings.ToLower(info.Name()), ".json") {
-					fileJobs <- stats.FileJob{Path: path, Folder: folder, CVE: strings.TrimSuffix(info.Name(), ".json")}
+					fileJobs <- FileJob{Path: path, Folder: folder, CVE: strings.TrimSuffix(info.Name(), ".json")}
 				}
 				return nil
 			})
@@ -136,16 +135,16 @@ func main() {
 		providerName string
 		cve          string
 	}
-	aggStats := make(map[string]*stats.Stats)
+	aggStats := make(map[string]*Stats)
 	urlsFromProvider := make(map[string][]providerNameWithCve)
 	for r := range results {
 		if _, ok := aggStats[r.FileJob.Folder]; !ok {
-			aggStats[r.FileJob.Folder] = &stats.Stats{Year: r.FileJob.Folder}
+			aggStats[r.FileJob.Folder] = &Stats{Year: r.FileJob.Folder}
 			aggStats[r.FileJob.Folder].DomainMap = make(map[string]int)
 			aggStats[r.FileJob.Folder].URLMap = make(map[string]int)
-			aggStats[r.FileJob.Folder].ProviderMap = make(map[string]*stats.ProviderDetails)
+			aggStats[r.FileJob.Folder].ProviderMap = make(map[string]*ProviderDetails)
 		}
-		cveStats := stats.CVEStat{CveID: r.FileJob.CVE, ExploitCount: int64(len(r.Result.Openpoc))}
+		cveStats := CVEStat{CveID: r.FileJob.CVE, ExploitCount: int64(len(r.Result.Openpoc))}
 		aggStats[r.FileJob.Folder].CVECount += 1
 		aggStats[r.FileJob.Folder].ExploitCount += cveStats.ExploitCount
 		aggStats[r.FileJob.Folder].CveScoreBoard = append(aggStats[r.FileJob.Folder].CveScoreBoard, cveStats)
@@ -167,7 +166,7 @@ func main() {
 		for _, providerData := range knownProviders {
 			providerName := getProviderName(providerData.provider)
 			if _, ok := aggStats[r.FileJob.Folder].ProviderMap[providerName]; !ok {
-				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &stats.ProviderDetails{Count: 0, CVE: 0, Exclusive: 0, ExclusiveCVE: 0}
+				aggStats[r.FileJob.Folder].ProviderMap[providerName] = &ProviderDetails{Count: 0, CVE: 0, Exclusive: 0, ExclusiveCVE: 0}
 			}
 			count := int64(len(providerData.result))
 			aggStats[r.FileJob.Folder].ProviderMap[providerName].Count += count
@@ -203,8 +202,8 @@ func main() {
 		}
 	}
 
-	domainCollector := make(map[string]*stats.DomainCount)
-	urlCollector := make(map[string]*stats.URLCount)
+	domainCollector := make(map[string]*DomainCount)
+	urlCollector := make(map[string]*URLCount)
 	for _, stat := range aggStats {
 		// Compute Frequencies
 		if stat.CVECount > 0 {
@@ -225,7 +224,7 @@ func main() {
 			stat.CveScoreBoard = stat.CveScoreBoard[:scoreboardTop]
 		}
 		// Compute Top Domains
-		var dCount []stats.DomainCount
+		var dCount []DomainCount
 		for domain, count := range stat.DomainMap {
 			found := false
 			for _, knownValidatedSource := range knownValidatedSources {
@@ -237,7 +236,7 @@ func main() {
 			if found {
 				continue
 			}
-			dCount = append(dCount, stats.DomainCount{Domain: domain, Count: count})
+			dCount = append(dCount, DomainCount{Domain: domain, Count: count})
 		}
 		sort.Slice(dCount, func(i, j int) bool {
 			if dCount[i].Count == dCount[j].Count {
@@ -251,9 +250,9 @@ func main() {
 		stat.DomainScoreBoard = dCount
 
 		// Compute Top URLs
-		var uCount []stats.URLCount
+		var uCount []URLCount
 		for pocURL, count := range stat.URLMap {
-			uCount = append(uCount, stats.URLCount{URL: pocURL, Count: count})
+			uCount = append(uCount, URLCount{URL: pocURL, Count: count})
 		}
 		sort.Slice(uCount, func(i, j int) bool {
 			if uCount[i].Count == uCount[j].Count {
@@ -269,14 +268,14 @@ func main() {
 		// Global collectors
 		for _, domainCount := range stat.DomainScoreBoard {
 			if _, found := domainCollector[domainCount.Domain]; !found {
-				domainCollector[domainCount.Domain] = &stats.DomainCount{Domain: domainCount.Domain, Count: domainCount.Count}
+				domainCollector[domainCount.Domain] = &DomainCount{Domain: domainCount.Domain, Count: domainCount.Count}
 			} else {
 				domainCollector[domainCount.Domain].Count += domainCount.Count
 			}
 		}
 		for _, urlCount := range stat.URLScoreBoard {
 			if _, found := urlCollector[urlCount.URL]; !found {
-				urlCollector[urlCount.URL] = &stats.URLCount{URL: urlCount.URL, Count: urlCount.Count}
+				urlCollector[urlCount.URL] = &URLCount{URL: urlCount.URL, Count: urlCount.Count}
 			} else {
 				urlCollector[urlCount.URL].Count += urlCount.Count
 			}
@@ -305,7 +304,7 @@ func main() {
 		}
 	}
 
-	var dCounts []stats.DomainCount
+	var dCounts []DomainCount
 	for _, domainCount := range domainCollector {
 		dCounts = append(dCounts, *domainCount)
 	}
@@ -313,7 +312,7 @@ func main() {
 		return dCounts[i].Count > dCounts[j].Count
 	})
 
-	var uCounts []stats.URLCount
+	var uCounts []URLCount
 	for _, urlCount := range urlCollector {
 		uCounts = append(uCounts, *urlCount)
 	}
@@ -327,7 +326,7 @@ func main() {
 	fmt.Println(time.Now().String())
 }
 
-func OutputTemplateFile(aggStats map[string]*stats.Stats) {
+func OutputTemplateFile(aggStats map[string]*Stats) {
 	templateFileName := "stats/stats_example.svg"
 	statExampleTemplate, err := template.New(filepath.Base(templateFileName)).Funcs(template.FuncMap{
 		"formatInt": humanize.Comma,
@@ -343,8 +342,8 @@ func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 		return
 	}
 
-	finalStat := stats.Stats{
-		ProviderMap: make(map[string]*stats.ProviderDetails),
+	finalStat := Stats{
+		ProviderMap: make(map[string]*ProviderDetails),
 	}
 	for year, stat := range aggStats {
 		yearlyOutputFileName := fmt.Sprintf("%s.svg", year)
@@ -406,7 +405,7 @@ func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 	}
 }
 
-func OutputAsString(aggStats map[string]*stats.Stats, dCounts []stats.DomainCount, uCounts []stats.URLCount) {
+func OutputAsString(aggStats map[string]*Stats, dCounts []DomainCount, uCounts []URLCount) {
 	// Statistics computed for year: 1999
 	// Total CVEs with an exploit: 568
 	// Total Exploit Count: 827
