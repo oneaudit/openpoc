@@ -159,6 +159,9 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.manageengine.com/",                                                   // junk
 	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
+	// GitHub Removed Aggregators
+	"https://github.com/ARPSyndicate/kenzer-templates/",
+	"https://github.com/jaeles-project/jaeles-signatures/",
 }
 
 func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64) {

@@ -1,6 +1,9 @@
 package public
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 type Trickest struct {
 	CveID   string    `json:"id"`
@@ -26,5 +29,12 @@ func (t *Trickest) GetTrustScore() float64 {
 }
 
 func (t *Trickest) GetTemplateFor() string {
+	return IsTemplateForURL(t.GetURL())
+}
+
+func IsTemplateForURL(url string) string {
+	if strings.HasPrefix(url, "https://seclists.org/fulldisclosure/") {
+		return "nmap"
+	}
 	return ""
 }
