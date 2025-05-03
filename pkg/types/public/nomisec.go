@@ -52,7 +52,7 @@ func (n *Nomisec) GetPublishDate() time.Time {
 func (n *Nomisec) GetTrustScore() float64 {
 	// Having a lot of stars means it is somewhat trustworthy?
 	stars := float64(n.StargazersCount)
-	return min(stars/100, 1.0)
+	return min(0.4+stars/100, 1.0)
 }
 
 func (n *Nomisec) GetTemplateFor() string {
