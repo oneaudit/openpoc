@@ -33,7 +33,7 @@ func (i *InTheWild) GetTrustScore() float64 {
 }
 
 func (i *InTheWild) GetTemplateFor() string {
-	return ""
+	return IsTemplateForURL(i.GetURL())
 }
 
 func (t *Timestamp) UnmarshalJSON(data []byte) error {
