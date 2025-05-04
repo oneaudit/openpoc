@@ -9,14 +9,11 @@ var knownValidatedSources = []string{
 	// More than 2k stars
 	"https://github.com/qazbnm456/awesome-cve-poc",
 	"https://github.com/xairy/linux-kernel-exploitation",
-	"https://github.com/Threekiii/Awesome-POC",
 	"https://github.com/Mr-xn/Penetration_Testing_POC",
 
 	// Less than 1k stars
 	"https://github.com/ycdxsb/WindowsPrivilegeEscalation",
 	"https://github.com/GhostTroops/TOP",
-	"https://github.com/eeeeeeeeee-code/POC",
-	"https://github.com/adysec/POC",
 	"https://github.com/jiayy/android_vuln_poc-exp",
 	"https://github.com/nu11secur1ty/Windows10Exploits",
 	"https://github.com/Al1ex/LinuxEelvation",
@@ -162,6 +159,10 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://github.com/ARPSyndicate/kenzer-templates/",
 	"https://github.com/jaeles-project/jaeles-signatures/",
 	"https://github.com/tunz/js-vuln-db/",
+	"https://github.com/adysec/POC/",
+	"https://github.com/wooluo/POC00/",
+	"https://github.com/eeeeeeeeee-code/POC/",
+	"https://github.com/Threekiii/Awesome-POC/",
 }
 
 func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64) {
