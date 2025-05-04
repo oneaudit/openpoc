@@ -9,16 +9,13 @@ var knownValidatedSources = []string{
 	// More than 2k stars
 	"https://github.com/qazbnm456/awesome-cve-poc",
 	"https://github.com/xairy/linux-kernel-exploitation",
-	"https://github.com/Mr-xn/Penetration_Testing_POC",
 
 	// Less than 1k stars
 	"https://github.com/ycdxsb/WindowsPrivilegeEscalation",
 	"https://github.com/GhostTroops/TOP",
-	"https://github.com/Al1ex/LinuxEelvation",
 
 	// Less than 200 stars
 	"https://github.com/NyxAzrael/Goby_POC",
-	"https://github.com/JlSakuya/Linux-Privilege-Escalation-Exploits",
 
 	// Not very good, but still valid
 	"https://github.com/n0-traces/cve_monitor",
@@ -151,6 +148,7 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.manageengine.com/",                                                   // junk
 	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
+	"https://github.com/Live-Hack-CVE/CVE-",                                           // dead user
 	// GitHub Removed Aggregators And Forks
 	"https://github.com/ARPSyndicate/kenzer-templates/",
 	"https://github.com/jaeles-project/jaeles-signatures/",
@@ -165,6 +163,8 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://github.com/jiayy/android_vuln_poc-exp/",
 	"https://github.com/tzwlhack/Vulnerability/",
 	"https://github.com/vulhub/vulhub/",
+	"https://github.com/JlSakuya/Linux-Privilege-Escalation-Exploits/",
+	"https://github.com/Al1ex/LinuxEelvation/",
 }
 
 func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64) {
