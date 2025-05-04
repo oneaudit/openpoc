@@ -14,14 +14,10 @@ var knownValidatedSources = []string{
 	// Less than 1k stars
 	"https://github.com/ycdxsb/WindowsPrivilegeEscalation",
 	"https://github.com/GhostTroops/TOP",
-	"https://github.com/jiayy/android_vuln_poc-exp",
-	"https://github.com/nu11secur1ty/Windows10Exploits",
 	"https://github.com/Al1ex/LinuxEelvation",
 
 	// Less than 200 stars
-	"https://github.com/tzwlhack/Vulnerability",
 	"https://github.com/NyxAzrael/Goby_POC",
-	"https://github.com/DMW11525708/wiki",
 	"https://github.com/JlSakuya/Linux-Privilege-Escalation-Exploits",
 
 	// Not very good, but still valid
@@ -155,7 +151,7 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.manageengine.com/",                                                   // junk
 	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
-	// GitHub Removed Aggregators
+	// GitHub Removed Aggregators And Forks
 	"https://github.com/ARPSyndicate/kenzer-templates/",
 	"https://github.com/jaeles-project/jaeles-signatures/",
 	"https://github.com/tunz/js-vuln-db/",
@@ -163,6 +159,12 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://github.com/wooluo/POC00/",
 	"https://github.com/eeeeeeeeee-code/POC/",
 	"https://github.com/Threekiii/Awesome-POC/",
+	"https://github.com/DMW11525708/wiki/",
+	"https://github.com/Mr-xn/Penetration_Testing_POC/",
+	"https://github.com/nu11secur1ty/Windows10Exploits/",
+	"https://github.com/jiayy/android_vuln_poc-exp/",
+	"https://github.com/tzwlhack/Vulnerability/",
+	"https://github.com/vulhub/vulhub/",
 }
 
 func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64) {
