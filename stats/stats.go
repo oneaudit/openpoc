@@ -187,6 +187,9 @@ func main() {
 			if count > 0 {
 				aggStats[r.FileJob.Folder].ProviderMap[providerName].CVE += 1
 			}
+			if isExclusiveCVE[cveStats.CveID] && count != 0 {
+				aggStats[r.FileJob.Folder].ProviderMap[providerName].ExclusiveCVE += 1
+			}
 
 			// Track which provider returned which URL
 			for _, d := range providerData.result {
@@ -295,7 +298,6 @@ func main() {
 			}
 		}
 
-		alreadyGotExclusive := make(map[string]struct{})
 		for _, urlFromProvider := range urlsFromProvider {
 			// If a provider returned the same URL multiple times, we only count as once
 			// While in practice, there is another problem... As this should not occur anymore.
@@ -308,14 +310,8 @@ func main() {
 				continue
 			}
 			// Update scoring
-			for provider, cve := range providersThatGotIt {
+			for provider := range providersThatGotIt {
 				stat.ProviderMap[provider].Exclusive += 1
-				if _, ok := alreadyGotExclusive[provider]; !ok {
-					if _, found := isExclusiveCVE[cve]; found {
-						stat.ProviderMap[provider].ExclusiveCVE += 1
-					}
-					alreadyGotExclusive[provider] = struct{}{}
-				}
 			}
 		}
 	}
