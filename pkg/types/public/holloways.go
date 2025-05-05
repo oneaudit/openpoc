@@ -3,14 +3,15 @@ package public
 import "time"
 
 type Holloways struct {
-	CveID   string    `json:"cve"`
-	URL     string    `json:"url"`
-	AddedAt time.Time `json:"addedAt"`
-	Score   float64   `json:"score"`
+	Cve         string    `json:"cve"`
+	URL         string    `json:"url"`
+	AddedAt     time.Time `json:"added_at"`
+	TrustScore  float64   `json:"score"`
+	TemplateFor string    `json:"template_for"`
 }
 
 func (h *Holloways) GetCve() string {
-	return h.CveID
+	return h.Cve
 }
 
 func (h *Holloways) GetURL() string {
@@ -22,9 +23,9 @@ func (h *Holloways) GetPublishDate() time.Time {
 }
 
 func (h *Holloways) GetTrustScore() float64 {
-	return 1.0
+	return h.TrustScore
 }
 
 func (h *Holloways) GetTemplateFor() string {
-	return "nuclei"
+	return h.TemplateFor
 }

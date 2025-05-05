@@ -30,7 +30,7 @@ const (
 var disableHolloways = os.Getenv("CAN_ACCESS_HOLLOWAYS") == ""
 
 const (
-	version         = "0.8.6"
+	version         = "0.9.0"
 	versionFilename = ".version"
 )
 
@@ -100,7 +100,7 @@ var (
 		Completed: statusByDefault,
 		Range:     24,
 	}
-	hollowaysFilename = "results/database.json"
+	hollowaysFilename = "datasources/database.json"
 )
 
 func main() {

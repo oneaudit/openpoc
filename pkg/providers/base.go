@@ -184,6 +184,7 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://github.com/vulhub/vulhub/",
 	"https://github.com/JlSakuya/Linux-Privilege-Escalation-Exploits/",
 	"https://github.com/Al1ex/LinuxEelvation/",
+	"https://github.com/minhquan202/Vuln-Netbox/",
 }
 
 func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64) {
