@@ -309,7 +309,7 @@ func main() {
 			// Update scoring
 			for provider, cve := range providersThatGotIt {
 				stat.ProviderMap[provider].Exclusive += 1
-				if _, found := isExclusiveCVE[cve]; !found {
+				if _, found := isExclusiveCVE[cve]; found {
 					stat.ProviderMap[provider].ExclusiveCVE += 1
 				}
 			}
