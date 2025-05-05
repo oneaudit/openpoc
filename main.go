@@ -30,7 +30,7 @@ const (
 var disableHolloways = os.Getenv("CAN_ACCESS_HOLLOWAYS") == ""
 
 const (
-	version         = "0.8.5"
+	version         = "0.8.6"
 	versionFilename = ".version"
 )
 

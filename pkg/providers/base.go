@@ -156,6 +156,18 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.tibco.com/mk/advisory.jsp",                                           // dead
 	"https://ffmpeg.org/",                                                             // dead
 	"https://www.adobe.com/",                                                          // advisory
+	"https://opcfoundation.org/security/",                                             // advisory
+	"https://www.siemens-healthineers.com/",                                           // advisory
+	"https://www.telecomitalia.com/",                                                  // junk
+	"https://online.com/",                                                             // junk
+	"https://www.secomea.com/support/cybersecurity-advisory/",                         // advisory
+	"https://applied-risk.com/labs/advisories",                                        // dead
+	"https://www.jsof-tech.com/ripple20/",                                             // dead
+	"https://mail.openjdk.java.net/pipermail/",                                        // vendor
+	"https://www.intel.com/",                                                          // advisory
+	"https://www.first.org/cvss/calculator/3.1",                                       // why???
+	"https://support.norton.com/",                                                     // dead
+	"https://corp.mediatek.com/",                                                      // junk
 	// GitHub Removed Aggregators And Forks
 	"https://github.com/ARPSyndicate/kenzer-templates/",
 	"https://github.com/jaeles-project/jaeles-signatures/",
@@ -207,6 +219,10 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64
 	// Renamed
 	if strings.HasPrefix(url, "https://antoniocannito.it/phpkb1") {
 		url = strings.Replace(url, "https://antoniocannito.it/phpkb1", "https://antoniocannito.it/en/phpkb", 1)
+	}
+	// Private content
+	if strings.Contains(url, ".zendesk.com/") {
+		return "", trusted
 	}
 
 	// Common Repository (already index, but trickest often has a few
