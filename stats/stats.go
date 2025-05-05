@@ -295,6 +295,7 @@ func main() {
 			}
 		}
 
+		alreadyGotExclusive := make(map[string]struct{})
 		for _, urlFromProvider := range urlsFromProvider {
 			// If a provider returned the same URL multiple times, we only count as once
 			// While in practice, there is another problem... As this should not occur anymore.
@@ -309,8 +310,11 @@ func main() {
 			// Update scoring
 			for provider, cve := range providersThatGotIt {
 				stat.ProviderMap[provider].Exclusive += 1
-				if _, found := isExclusiveCVE[cve]; found {
-					stat.ProviderMap[provider].ExclusiveCVE += 1
+				if _, ok := alreadyGotExclusive[provider]; !ok {
+					if _, found := isExclusiveCVE[cve]; found {
+						stat.ProviderMap[provider].ExclusiveCVE += 1
+					}
+					alreadyGotExclusive[provider] = struct{}{}
 				}
 			}
 		}
