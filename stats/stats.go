@@ -376,6 +376,7 @@ func OutputTemplateFile(aggStats map[string]*stats.Stats) {
 			} else {
 				finalStat.ProviderMap[k].Count += v.Count
 				finalStat.ProviderMap[k].CVE += v.CVE
+				finalStat.ProviderMap[k].ExclusiveCVE += v.ExclusiveCVE
 			}
 		}
 	}
