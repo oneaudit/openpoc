@@ -149,6 +149,7 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
 	"https://github.com/Live-Hack-CVE/CVE-",                                           // dead user
+	"https://github.com/tensorflow/tensorflow/releases/tag/v2.7.2",                    // advisory
 	// GitHub Removed Aggregators And Forks
 	"https://github.com/ARPSyndicate/kenzer-templates/",
 	"https://github.com/jaeles-project/jaeles-signatures/",
