@@ -149,6 +149,13 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
 	"https://github.com/tensorflow/tensorflow/releases/tag/v2.7.2",                    // advisory
+	"https://www.dell.com/support/",                                                   // advisory
+	"https://launchpad.support.sap.com/",                                              // private?
+	"https://about.gitlab.com/",                                                       // advisory
+	"https://support.lenovo.com/",                                                     // advisory
+	"https://www.tibco.com/mk/advisory.jsp",                                           // dead
+	"https://ffmpeg.org/",                                                             // dead
+	"https://www.adobe.com/",                                                          // advisory
 	// GitHub Removed Aggregators And Forks
 	"https://github.com/ARPSyndicate/kenzer-templates/",
 	"https://github.com/jaeles-project/jaeles-signatures/",
@@ -258,6 +265,11 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64
 			found = true
 			trusted = 0.4
 		}
+	}
+
+	// This includes GitHub releases, but every release in general
+	if !found && strings.Contains(url, "/releases") {
+		return "", trusted
 	}
 
 	// Deny all
