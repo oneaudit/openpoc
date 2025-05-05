@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2007</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>5,382</strong>
+                    <span class="stat-title">POC Count:</span> <strong>5,389</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>3,547</strong>
