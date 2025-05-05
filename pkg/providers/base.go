@@ -148,7 +148,6 @@ var knownForbiddenSourcesPrefix = []string{
 	"https://www.manageengine.com/",                                                   // junk
 	"https://github.com/tats/w3m/blob/master/ChangeLog",                               // junk
 	"https://blog.jetbrains.com/blog/2021/05/07/jetbrains-security-bulletin-q1-2021/", // junk
-	"https://github.com/Live-Hack-CVE/CVE-",                                           // dead user
 	"https://github.com/tensorflow/tensorflow/releases/tag/v2.7.2",                    // advisory
 	// GitHub Removed Aggregators And Forks
 	"https://github.com/ARPSyndicate/kenzer-templates/",
@@ -193,6 +192,9 @@ func InspectAggregatorURL(url string, cveId string, quick bool) (string, float64
 	}
 	// Nothing useful in the context of PoC/Exploits
 	if url == "https://docs.google.com/spreadsheets/d/1t5GXwjw82SyunALVJb2w0zi3FoLRIkfGPc7AMjRF0r4/edit?usp=sharing" {
+		return "", trusted
+	}
+	if strings.HasPrefix(url, "https://github.com/Live-Hack-CVE/CVE-") {
 		return "", trusted
 	}
 	// Renamed
