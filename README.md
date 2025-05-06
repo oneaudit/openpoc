@@ -1,6 +1,8 @@
 # Open PoCs [<img src="https://github.com/oneaudit/openpoc/actions/workflows/main.yaml/badge.svg" alt="" align="right">](https://github.com/oneaudit/openpoc/actions/workflows/main.yaml)
 
-Aggregates multiple data sources related to CVE exploits/PoC. [**Please read the license terms**](#license-).
+### 🚨🚨🚨 [**Please read the license terms**](#license-) 🚨🚨🚨
+
+This project aggregates data from multiple sources related to exploits, proofs of concept (PoC), and technical articles. Links are organized by CVE identifiers to simplify navigation. All direct sources are listed in the README. Please note that we do not host the content ourselves and are not responsible for any misuse of the provided information.
 
 <table>
   <tr>
