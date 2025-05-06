@@ -4,6 +4,8 @@
 
 This project aggregates data from multiple sources related to exploits, proofs of concept (PoC), and technical articles. Links are organized by CVE identifiers to simplify navigation. All direct sources are listed in the README. Please note that we do not host the content ourselves and are not responsible for any misuse of the provided information.
 
+You can find the latest data in the [update branch](https://github.com/oneaudit/openpoc/tree/update) of this repository.
+
 <table>
   <tr>
     <th align="center">2025</th>
