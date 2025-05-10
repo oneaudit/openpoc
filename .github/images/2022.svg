@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2022</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>22,711</strong>
+                    <span class="stat-title">POC Count:</span> <strong>22,713</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>14,374</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>14,375</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.58</strong>
