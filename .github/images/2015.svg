@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2015</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>4,673</strong>
+                    <span class="stat-title">POC Count:</span> <strong>4,677</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>2,295</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>2,299</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>2.04</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>2.03</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
