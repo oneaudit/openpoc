@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2022</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>22,860</strong>
+                    <span class="stat-title">POC Count:</span> <strong>22,864</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>14,438</strong>
@@ -115,7 +115,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2022-26809
+                        CVE-2022-46169
                         <small>51</small>
                     </div>
                     
@@ -124,8 +124,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
-                        CVE-2022-46169
-                        <small>50</small>
+                        CVE-2022-26809
+                        <small>51</small>
                     </div>
                     
                 </section>
