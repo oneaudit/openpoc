@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2025</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>8,596</strong>
+                    <span class="stat-title">POC Count:</span> <strong>8,630</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>5,981</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>5,999</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.44</strong>
@@ -50,7 +50,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2025-32463
-                        <small>60</small>
+                        <small>61</small>
                     </div>
                     
                     
@@ -59,7 +59,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2025-24813
-                        <small>58</small>
+                        <small>60</small>
                     </div>
                     
                     
@@ -107,7 +107,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2025-24893
-                        <small>31</small>
+                        <small>32</small>
                     </div>
                     
                     
