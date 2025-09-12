@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2023</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>18,786</strong>
+                    <span class="stat-title">POC Count:</span> <strong>18,788</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>12,554</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>12,555</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.50</strong>
