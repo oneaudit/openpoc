@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2017</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>9,316</strong>
+                    <span class="stat-title">POC Count:</span> <strong>9,317</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>5,345</strong>
