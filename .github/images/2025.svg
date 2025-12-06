@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2025</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>13,040</strong>
+                    <span class="stat-title">POC Count:</span> <strong>13,166</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>8,892</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>8,941</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.47</strong>
@@ -49,6 +49,15 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
+                        CVE-2025-55182
+                        <small>111</small>
+                    </div>
+                    
+                    
+                    <div class="field">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
+                        </svg>
                         CVE-2025-32463
                         <small>88</small>
                     </div>
@@ -59,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2025-24813
-                        <small>64</small>
+                        <small>65</small>
                     </div>
                     
                     
@@ -69,15 +78,6 @@
                         </svg>
                         CVE-2025-53770
                         <small>58</small>
-                    </div>
-                    
-                    
-                    <div class="field">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
-                        </svg>
-                        CVE-2025-55182
-                        <small>55</small>
                     </div>
                     
                     

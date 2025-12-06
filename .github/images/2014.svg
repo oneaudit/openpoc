@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2014</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>5,514</strong>
+                    <span class="stat-title">POC Count:</span> <strong>5,516</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>2,595</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>2.12</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>2.13</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
@@ -41,7 +41,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2014-6271
-                        <small>155</small>
+                        <small>156</small>
                     </div>
                     
                     
