@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2007</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>5,448</strong>
+                    <span class="stat-title">POC Count:</span> <strong>5,449</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>3,590</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>3,591</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.52</strong>
