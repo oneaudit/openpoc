@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2015</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>4,780</strong>
+                    <span class="stat-title">POC Count:</span> <strong>4,781</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>2,341</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>2,342</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>2.04</strong>
