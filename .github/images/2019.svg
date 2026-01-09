@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2019</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>11,597</strong>
+                    <span class="stat-title">POC Count:</span> <strong>11,615</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>6,303</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>6,316</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.84</strong>
