@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2024</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>18,842</strong>
+                    <span class="stat-title">POC Count:</span> <strong>18,844</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>13,100</strong>
@@ -68,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2024-32002
-                        <small>82</small>
+                        <small>84</small>
                     </div>
                     
                     
