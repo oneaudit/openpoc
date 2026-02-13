@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2020</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>14,070</strong>
+                    <span class="stat-title">POC Count:</span> <strong>14,117</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>8,191</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>8,238</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.72</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.71</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
