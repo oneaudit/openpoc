@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 2021</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>16,919</strong>
+                    <span class="stat-title">POC Count:</span> <strong>16,920</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>9,319</strong>
