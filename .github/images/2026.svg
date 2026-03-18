@@ -22,13 +22,13 @@
             <div class="title">POC Statistics for Year 2026</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>1,043</strong>
+                    <span class="stat-title">POC Count:</span> <strong>1,055</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>715</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>726</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">Avg Per CVE:</span> <strong>1.46</strong>
+                    <span class="stat-title">Avg Per CVE:</span> <strong>1.45</strong>
                 </div>
             </div>
             <div class="list-header">Top 10 CVEs with the most exploits:</div>
