@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2026</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>2,895</strong>
+                    <span class="stat-title">POC Count:</span> <strong>2,928</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>2,131</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>2,158</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.36</strong>
