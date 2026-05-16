@@ -25,7 +25,7 @@
                     <span class="stat-title">POC Count:</span> <strong>9,490</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>5,406</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>5,407</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.76</strong>
@@ -107,7 +107,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2017-0144
-                        <small>41</small>
+                        <small>40</small>
                     </div>
                     
                     
