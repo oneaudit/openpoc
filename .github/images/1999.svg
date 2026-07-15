@@ -22,7 +22,7 @@
             <div class="title">POC Statistics for Year 1999</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>625</strong>
+                    <span class="stat-title">POC Count:</span> <strong>626</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">CVEs with POC:</span> <strong>467</strong>
