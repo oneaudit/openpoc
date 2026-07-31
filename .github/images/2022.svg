@@ -25,7 +25,7 @@
                     <span class="stat-title">POC Count:</span> <strong>24,133</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>14,769</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>14,770</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.63</strong>
@@ -50,7 +50,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-22965
-                        <small>141</small>
+                        <small>140</small>
                     </div>
                     
                     
@@ -68,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2022-26134
-                        <small>109</small>
+                        <small>108</small>
                     </div>
                     
                     
