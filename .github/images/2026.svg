@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2026</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>28,163</strong>
+                    <span class="stat-title">POC Count:</span> <strong>28,196</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>20,863</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>20,886</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.35</strong>
@@ -41,7 +41,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-109618
-                        <small>773</small>
+                        <small>776</small>
                     </div>
                     
                     
@@ -59,7 +59,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-43499
-                        <small>196</small>
+                        <small>197</small>
                     </div>
                     
                     
@@ -77,7 +77,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-98432
-                        <small>82</small>
+                        <small>84</small>
                     </div>
                     
                     
@@ -98,7 +98,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-41940
-                        <small>77</small>
+                        <small>76</small>
                     </div>
                     
                     
@@ -116,7 +116,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-43284
-                        <small>55</small>
+                        <small>56</small>
                     </div>
                     
                     
@@ -125,7 +125,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-98260
-                        <small>51</small>
+                        <small>52</small>
                     </div>
                     
                 </section>
