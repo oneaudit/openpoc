@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2021</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>17,637</strong>
+                    <span class="stat-title">POC Count:</span> <strong>17,641</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>9,533</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>9,534</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.85</strong>
