@@ -22,10 +22,10 @@
             <div class="title">POC Statistics for Year 2026</div>
             <div class="stats-row">
                 <div class="stat">
-                    <span class="stat-title">POC Count:</span> <strong>30,850</strong>
+                    <span class="stat-title">POC Count:</span> <strong>31,227</strong>
                 </div>
                 <div class="stat">
-                    <span class="stat-title">CVEs with POC:</span> <strong>23,052</strong>
+                    <span class="stat-title">CVEs with POC:</span> <strong>23,357</strong>
                 </div>
                 <div class="stat">
                     <span class="stat-title">Avg Per CVE:</span> <strong>1.34</strong>
@@ -41,7 +41,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-109618
-                        <small>780</small>
+                        <small>786</small>
                     </div>
                     
                     
@@ -68,7 +68,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-111497
-                        <small>100</small>
+                        <small>101</small>
                     </div>
                     
                     
@@ -107,7 +107,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-24061
-                        <small>72</small>
+                        <small>71</small>
                     </div>
                     
                     
@@ -116,7 +116,7 @@
                             <path fill="#56d364" fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"/>
                         </svg>
                         CVE-2026-98260
-                        <small>62</small>
+                        <small>64</small>
                     </div>
                     
                     
